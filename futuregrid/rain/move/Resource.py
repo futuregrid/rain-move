@@ -1,0 +1,282 @@
+"""
+This module contains the definitions of classes for
+Resource, Node, Cluster, and Service
+
+"""
+
+__author__ = 'Fugang Wang'
+__version__ = '0.1'
+
+import abc
+import json
+
+class Resource(object):
+    '''Abstract base class for Resource'''
+    __metaclass__ = abc.ABCMeta
+
+    # possible types
+    TYPE = dict(zip(("NODE", "VM", "IP"),
+                    ("Node", "VM", "IP"))
+               )
+    
+    @abc.abstractproperty
+    def type(self):
+        '''
+        abstract property - type of the resource
+        '''
+        return "abstrct property"
+
+    @abc.abstractproperty
+    def identifier(self):
+        '''
+        abstract property - identifier(name) of the resource
+        '''
+        return "abstract property"
+
+    @abc.abstractmethod
+    def info(self):
+        '''
+        abstract method - string info that represents the resource
+        '''
+        return "abstract method"
+        
+class Node(Resource):
+    '''Node implementation of the Resource abstract class'''
+
+    def __init__(self, id):
+        '''
+        constructor of node object
+
+        param id: node identifier
+        '''
+        self._id = id
+        self._ip = ""
+        self._type = Resource.TYPE["NODE"] # Resource type is set to 'Node'
+        self._allocated = "FREE" # Resource is initially free.
+        
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def identifier(self):
+        return self._id
+
+    @property
+    def allocated(self):
+        '''
+        Check if the node is allocated
+        
+        return: 'FREE' for a free node; or the service identifier that the node being allocated to
+        '''
+        return self._allocated
+
+    @allocated.setter
+    def allocated(self, svcName):
+        '''
+        Allocate a node to a service, or set to 'FREE'
+
+        param svcName: service identifier, or 'FREE'
+        '''
+        self._allocated = svcName
+
+    @property
+    def ip(self):
+        '''
+        Get Node's public IP address
+        '''
+        return self._ip
+        
+    @ip.setter
+    def ip(self, newip):
+        '''
+        Set/assign a public IP address to the node
+
+        param ip: string in format of 'xxx.xxx.xxx.xxx' which is a valid and available IP address
+        '''
+        self._ip = newip
+
+    def info(self):
+        '''
+        Implemented the abstract method to display the node info as a string
+
+        return: a string in json format represents the node
+        '''
+        return str(json.dumps(dict([('Type', self.type), ('Identifier', self.identifier), ('IP', self.ip), ('isAllocated', self.allocated)])))
+        
+    def __repr__(self):
+        '''
+        string representation of the object
+        '''
+        return self.info()
+
+class Cluster(object):
+    '''
+    Cluster class which is a set of nodes
+    '''
+    def __init__(self, hosts=()):
+        '''
+        constructor
+
+        param hosts: a list of strings that are typically the nodes' identifiers. By default will be empty
+        '''
+        self._hosts = dict()
+        for host in hosts:
+            # stored in dict format - node identifier as key and the node object constructed as value
+            self._hosts[host] = Node(host)
+
+    def add(self, ahost):
+        '''
+        add a new node into the cluster
+
+        param ahost: a string that is the node's identifier
+        '''
+        self._hosts[ahost] = Node(ahost)
+        
+    def list(self):
+        '''
+        list all nodes belong to the cluster
+        '''
+        return self._hosts
+
+class Service(object):
+    '''
+    Service abstract class
+    A service is a set of allocated resources organized in such a way that resources could be easily managed.
+    The resources could be node, public IP address, etc.
+    '''
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
+    def doadd(self, ares):
+        '''
+        abstract method to be implemented in concrete service implementation classes
+        It deals with the actual processing that add a node into the service
+
+        param ares: a resource to be added
+        type ares: Resource type, e.g., Node
+        '''
+        ###################################
+        # Implementation to add into a service
+        ###################################
+        print "abstract method. Will be implemented in concrete classes"
+        return True
+        
+    @abc.abstractmethod
+    def cbadd(self, ares):
+        '''
+        callback to deal with any data persistence as well as clean up
+        e.g., write the new allocation info into db
+        '''
+        ###################################
+        # TODO: node, service data Persistence; any clean up...
+        ###################################
+        print "abstract method. Will be implemented in concrete classes"
+        return True
+        
+    @abc.abstractmethod
+    def doremove(self, ares):
+        '''
+        abstract method to be implemented in concrete service implementation classes
+        It deals with the actual processing that remove a node from the service
+
+        param ares: a resource to be removed
+        type ares: Resource type, e.g., Node
+        '''
+        ###################################
+        # Need to check if the node is free, i.e., no job is running, no reseration, etc.
+        ###################################
+        print "abstract method. Will be implemented in concrete classes"
+        return True
+        
+    @abc.abstractmethod
+    def cbremove(self, ares):
+        '''
+        callback to deal with any data persistence as well as clean up
+        e.g., write the new allocation info into db
+        '''
+        ###################################
+        # TODO: node, service data Persistence; any clean up...
+        ###################################
+        print "abstract method. Will be implemented in concrete classes"
+        return True
+
+    ######################
+    # common properties
+    ######################
+    
+    @property
+    def identifier(self):
+        return self._id
+
+    @property
+    def type(self):
+        return self._type
+
+    def list(self):
+        return self._res
+
+    ######################
+    # common methods
+    ######################
+    def get(self, aresid):
+        '''
+        get a resource by its identifier
+
+        param aresid: resource identifier
+        return ares: the resource with the specified identifier
+        type ares: Resource type
+        '''
+        ret = None
+        if aresid in self._res:
+            ret = self._res[aresid]
+        return ret
+        
+    def add(self, ares):
+        '''
+        add a resource to the service.
+        This should be the one to call from outside. It deals with precondition check,
+        e.g. asserting the resource to be added is 'Free'. It will call the actual doadd()
+        implementation method for processing and cbadd() method for clean up
+
+        param ares: a resource to be added
+        type ares: Resource type, e.g., Node
+        '''
+        ret = False
+        # has to be a free node
+        if(ares.allocated == 'FREE'):
+            if self.doadd(ares):
+                self._res[ares.identifier] = ares
+                ares.allocated = self.identifier
+                self.cbadd(ares)
+                ret = True
+            else:
+                print "add operation failed"
+        else:
+            print ares.identifier + " is not free - allocated to: " + ares.allocated
+        return ret
+
+    def remove(self, aresid):
+        '''
+        remove a resource from the service.
+        This should be the one to call from outside. It deals with precondition check,
+        e.g. asserting the resource to be added is 'Free'. It will call the actual doremove()
+        implementation method for processing and cbremove() for clean up
+
+        param aresid: a resource to be removed
+        type aresid: identifier string of the resource to be removed
+        '''
+        ret = False
+        ares = self.get(aresid)
+        # has to be being allocated in THE service
+        if ares is not None:
+            if self.doremove(ares):
+                del self._res[ares.identifier]
+                ares.allocated = 'FREE'
+                self.cbremove(ares)
+                ret = True
+            else:
+                print "remove operation failed"
+        else:
+            print aresid + " does not belong to the service " + self.identifier
+        return ret
