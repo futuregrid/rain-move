@@ -10,7 +10,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to FuturGrid Development Projects &mdash; FutureGrid Cloud Code 0.1 documentation</title>
+    <title>Welcome to FuturGrid Move Project &mdash; FutureGrid Cloud Code 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -79,7 +79,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to FuturGrid Development Projects</a></li>
+<li><a class="reference internal" href="#">Welcome to FuturGrid Move Project</a></li>
 <li><a class="reference internal" href="#projects">Projects</a><ul>
 </ul>
 </li>
@@ -114,8 +114,53 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-futurgrid-development-projects">
-<h1>Welcome to FuturGrid Development Projects<a class="headerlink" href="#welcome-to-futurgrid-development-projects" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="welcome-to-futurgrid-move-project">
+<h1>Welcome to FuturGrid Move Project<a class="headerlink" href="#welcome-to-futurgrid-move-project" title="Permalink to this headline">¶</a></h1>
+<p>FutureGrid move deals with moving resources between multiple clouds
+and HPC services in a multicluster, multisite deployment.</p>
+<p>Assume you have a number of nodes in a cluster and what one day to use
+them for you r HPC services, but the next day as part of your cloud
+environment, or you want to move resources between different version
+of your cloudinstalation such as Opensatck Bexar and Essex.</p>
+<p>You can do this with:</p>
+<div class="highlight-python"><pre>fg-move -h &lt;list of hosts&gt; deactivate</pre>
+</div>
+<p>This will deactivate the ndes from the list and put them into a pool
+of available resources. To provide the state of the host you can use:</p>
+<div class="highlight-python"><pre>fg-move -h &lt;list of hosts&gt; -status</pre>
+</div>
+<p>For convenience you can create a group of hosts that are registered to
+a label:</p>
+<div class="highlight-python"><pre>fg-vgroup -h &lt;list of hosts&gt; -label &lt;label&gt;</pre>
+</div>
+<p>This will allow you to replace the hostlist with a group command with
+the -g option:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">fg</span><span class="o">-</span><span class="n">move</span> <span class="o">-</span><span class="n">g</span> <span class="o">&lt;</span><span class="n">groupname</span><span class="o">&gt;</span> <span class="n">status</span>
+</pre></div>
+</div>
+<p>The last gommand lists the status of all nodes in that group. To
+activate a service for that host, you simply specify:</p>
+<div class="highlight-python"><pre>fg-move -h &lt;hostlist&gt; -service &lt;servicename&gt;</pre>
+</div>
+<p>The service names are requstered with our framework and correspond to
+specific actions to be taken to activate and deacivate nodes from this
+service.</p>
+<p>We will support the following services:</p>
+<ul class="simple">
+<li>eucalyptus</li>
+<li>openstack</li>
+<li>nimbus</li>
+<li>opennebula</li>
+<li>hpc</li>
+</ul>
+<p>A version cnd a cluster name can be optionally provided. Thus the
+commands:</p>
+<div class="highlight-python"><pre>fg-move -g myEucalyptusCloud -h node1.machine.edu, node2.machine.edu
+fg-move -activate "eucalyptus" -v "3.0" -g myEucalyptusCloud</pre>
+</div>
+<p>Would provide a eucalyptus cloud with the node1 and node2 from
+machine.edu. The EUcalyptus zone name is tacken from the group name.</p>
+<p>Provides a status of the hosts.</p>
 <p>Within FutureGrid we provide a number of devellopment projects. This
 page is used to provide you with easy links to them. All projects
 listed are managed in github.</p>
