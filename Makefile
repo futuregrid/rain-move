@@ -4,7 +4,7 @@ all:
 	mkdir -p /tmp/move
 	cd /tmp/move; git clone git://github.com/futuregrid/rain-move.git
 	cd /tmp/move/rain-move/doc; ls; make html
-	cp -r /tmp/move/doc/doc/build/html/* .
+	cp -r /tmp/move/rain-move/doc/build/html/* .
 	git add .
 	git commit -a -m "updating the github pages"
 #	git commit -a _sources
