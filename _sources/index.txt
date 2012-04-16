@@ -50,10 +50,21 @@ A version cnd a cluster name can be optionally provided. Thus the
 commands::
 
   fg-move -g myEucalyptusCloud -h node1.machine.edu, node2.machine.edu
-  fg-move -activate "eucalyptus" -v "3.0" -g myEucalyptusCloud
+  fg-move -activate "eucalyptus" -v "3.0" -g myEucalyptusCloud-service myEucalyptusCloud
 
 Would provide a eucalyptus cloud with the node1 and node2 from
-machine.edu. The EUcalyptus zone name is tacken from the group name.
+machine.edu. The Eucalyptus zone name is tacken from the group name.
+
+Usecase 1: Adding more nodes to a cloud
+
+Assume you have the group 
+
+  indiaEuclyptusCloud that contains node[1-4].machine.edu
+
+You like to add the machines node[5-9].machine.edu. This can be done via::
+
+  fg-move -g newNodes -h node[5-9].machine.edu
+  fg-move -g newNodes -service indiaEucalyptus 
 
 
 
@@ -61,64 +72,6 @@ machine.edu. The EUcalyptus zone name is tacken from the group name.
 
 
 
-Provides a status of the hosts. 
-
-
-
-
-
-
-
-
-  
-
-
-
-
-Within FutureGrid we provide a number of devellopment projects. This
-page is used to provide you with easy links to them. All projects
-listed are managed in github.
-
-Projects
-============
-
-Code related to FutureGrid
-
-Rain
-  * A project to do bare metal and VM based dynamic provisioning
-  * Documentation: http://futuregrid.github.com/rain
-  * Source: https://github.com/futuregrid/rain
-
-Cloud Shift
-  * A project to move resources between different cloud and HPC services
-  * Documentation: todo
-  * Source: todo
-  * Issues: todo
-
-Cloud Metric
-  * A project to measure and display metric information about usage and utilization of your cloud 
-  * Documentation: https://portal.futuregrid.org/doc/metric/index.html
-  * Source: https://github.com/futuregrid/futuregrid-cloud-metrics
-  * Issues: https://github.com/futuregrid/futuregrid-cloud-metrics/issues
-..  Documentation: https://futuregrid.github.com/futuregrid-cloud-metrics
-
-Virtual Cluster
-  * A project to create a SLURM based cluster in your cloud and run MPI jobs on it
-  * Documentation: http://futuregrid.github.com/virtual-cluster
-  * Source: https://github.com/futuregrid/virtual-cluster
-  * Issues: https://github.com/futuregrid/virtual-cluster/issues
-
-Authentication
-  * A project to unify authentication between Eucalyptus, OpenStack, and Nimbus
-  * Documentation: todo
-  * Source: todo
-  * Issues: todo
-
-Mediawiki Jira Issues
-  * A project that can be used to automatically create reports based on comments submitted to jira, returning jira issues in mediawiki, and executing arbitrary queries from mediawiki to jira that are rendered in mediawiki
-  * Documentation: todo
-  * Source: todo
-  * Issues: todo
 
 
 .. toctree::

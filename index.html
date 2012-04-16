@@ -77,14 +77,6 @@
 
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Welcome to FuturGrid Move Project</a></li>
-<li><a class="reference internal" href="#projects">Projects</a><ul>
-</ul>
-</li>
-</ul>
-
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -156,69 +148,18 @@ service.</p>
 <p>A version cnd a cluster name can be optionally provided. Thus the
 commands:</p>
 <div class="highlight-python"><pre>fg-move -g myEucalyptusCloud -h node1.machine.edu, node2.machine.edu
-fg-move -activate "eucalyptus" -v "3.0" -g myEucalyptusCloud</pre>
+fg-move -activate "eucalyptus" -v "3.0" -g myEucalyptusCloud-service myEucalyptusCloud</pre>
 </div>
 <p>Would provide a eucalyptus cloud with the node1 and node2 from
-machine.edu. The EUcalyptus zone name is tacken from the group name.</p>
-<p>Provides a status of the hosts.</p>
-<p>Within FutureGrid we provide a number of devellopment projects. This
-page is used to provide you with easy links to them. All projects
-listed are managed in github.</p>
+machine.edu. The Eucalyptus zone name is tacken from the group name.</p>
+<p>Usecase 1: Adding more nodes to a cloud</p>
+<p>Assume you have the group</p>
+<blockquote>
+<div>indiaEuclyptusCloud that contains node[1-4].machine.edu</div></blockquote>
+<p>You like to add the machines node[5-9].machine.edu. This can be done via:</p>
+<div class="highlight-python"><pre>fg-move -g newNodes -h node[5-9].machine.edu
+fg-move -g newNodes -service indiaEucalyptus</pre>
 </div>
-<div class="section" id="projects">
-<h1>Projects<a class="headerlink" href="#projects" title="Permalink to this headline">¶</a></h1>
-<p>Code related to FutureGrid</p>
-<dl class="docutils">
-<dt>Rain</dt>
-<dd><ul class="first last simple">
-<li>A project to do bare metal and VM based dynamic provisioning</li>
-<li>Documentation: <a class="reference external" href="http://futuregrid.github.com/rain">http://futuregrid.github.com/rain</a></li>
-<li>Source: <a class="reference external" href="https://github.com/futuregrid/rain">https://github.com/futuregrid/rain</a></li>
-</ul>
-</dd>
-<dt>Cloud Shift</dt>
-<dd><ul class="first last simple">
-<li>A project to move resources between different cloud and HPC services</li>
-<li>Documentation: todo</li>
-<li>Source: todo</li>
-<li>Issues: todo</li>
-</ul>
-</dd>
-<dt>Cloud Metric</dt>
-<dd><ul class="first last simple">
-<li>A project to measure and display metric information about usage and utilization of your cloud</li>
-<li>Documentation: <a class="reference external" href="https://portal.futuregrid.org/doc/metric/index.html">https://portal.futuregrid.org/doc/metric/index.html</a></li>
-<li>Source: <a class="reference external" href="https://github.com/futuregrid/futuregrid-cloud-metrics">https://github.com/futuregrid/futuregrid-cloud-metrics</a></li>
-<li>Issues: <a class="reference external" href="https://github.com/futuregrid/futuregrid-cloud-metrics/issues">https://github.com/futuregrid/futuregrid-cloud-metrics/issues</a></li>
-</ul>
-</dd>
-</dl>
-<dl class="docutils">
-<dt>Virtual Cluster</dt>
-<dd><ul class="first last simple">
-<li>A project to create a SLURM based cluster in your cloud and run MPI jobs on it</li>
-<li>Documentation: <a class="reference external" href="http://futuregrid.github.com/virtual-cluster">http://futuregrid.github.com/virtual-cluster</a></li>
-<li>Source: <a class="reference external" href="https://github.com/futuregrid/virtual-cluster">https://github.com/futuregrid/virtual-cluster</a></li>
-<li>Issues: <a class="reference external" href="https://github.com/futuregrid/virtual-cluster/issues">https://github.com/futuregrid/virtual-cluster/issues</a></li>
-</ul>
-</dd>
-<dt>Authentication</dt>
-<dd><ul class="first last simple">
-<li>A project to unify authentication between Eucalyptus, OpenStack, and Nimbus</li>
-<li>Documentation: todo</li>
-<li>Source: todo</li>
-<li>Issues: todo</li>
-</ul>
-</dd>
-<dt>Mediawiki Jira Issues</dt>
-<dd><ul class="first last simple">
-<li>A project that can be used to automatically create reports based on comments submitted to jira, returning jira issues in mediawiki, and executing arbitrary queries from mediawiki to jira that are rendered in mediawiki</li>
-<li>Documentation: todo</li>
-<li>Source: todo</li>
-<li>Issues: todo</li>
-</ul>
-</dd>
-</dl>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
