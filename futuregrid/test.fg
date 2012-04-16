@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+#
+# buy a new node and add it to the resource list
+#
+fg-move -add node -name name -ip ip
+fg-move -add node name ip
+
+fg-move -list node
+# lists all nodes
+
+#
+
+#node1.machine.edu, "123.123.123.123", service
+
+fg-move -assign -node nodename servicename
+fg-move -assign -i ip servicename
+
+
+
+service, list of nodes
+cluster, list of nodes
+
+
+#fg-move -cluster clustername 
+#fg-move -list
+#fg-move -add nodename
+
+fg-move -cluster india.futuuregrid.org # < changes context
+fg-move -add i136.india.futuregrid.org
+fg-move -add i137.india.futuregrid.org
+
+
+fg-move -cluster hotel.futuuregrid.org
+fg-move -add i02.hotel.futuregrid.org
+fg-move -add i03.hotel.futuregrid.org
+
+
+fg-move -fabric -list 
+  i02.hotel.futuregrid.org
+  i03.hotel.futuregrid.org
+
+fg-move -fabric -list -cluster
+  india.futuregrid.org
+  hotel.futuregrid.org
+
+fg-move -list   # < lists in which context I am in 
+
+
+
+fg-move -service eucalyptus2.0.india.futuregird.org -type eucalyptus -v 2.0
+fg-move -add i02.hotel.futuregrid.org
+fg-move -add i03.hotel.futuregrid.org
+
+fg-move -service eucalyptus3.0.india.futuregird.org -type eucalyptus -v 3.0
+fg-move -add i02.hotel.futuregrid.org
+fg-move -add i03.hotel.futuregrid.org
+
+
+----------------------------------------
+
+
+fg-move  -g eucalyptus20
+
+fg-move -g eucalyptus20 -add i02.hotel.futuregrid.org
+
+fg-move  -g eucalyptus20 # < context switch
+fg-move -add i02.hotel.futuregrid.org
+fg-move -list
+i02.hotel.futuregrid.org
+
+
+fg-move  -g eucalyptus20 # < context switch
+fg-move -add i02.hotel.futuregrid.org
+fg-move -add i03.hotel.futuregrid.org
+
+ fg-move -cluster hotel.futuuregrid.org
+fg-move -add -g eucalyptus20
+
+time a
+
+
+???????
+
+fg-move  -g abc # < context switch
+fg-move -add i02.hotel.futuregrid.org
+fg-move -add i03.hotel.futuregrid.org
+
+
+fg-move -deactivate -g abc
+fg-move -activate -g abc -service eucalyptus
+...
+fg-move -deactivate -g abc
+fg-move -activate -g abc -service openstack
+....
+fg-move -deactivate -g abc
+
+
+fg-move search .... >
