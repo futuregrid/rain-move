@@ -29,89 +29,78 @@ Let us assume you like to rain an operating system onto this group, you can do t
   fabric> rain -image imagename -group "MyResources"
 
 Group commands
+~~~~~~~~~~~~~~
 
-::
+Creating a group with the given name::
+
   fabric group create <name>
 
-    creates a group with the given name
 
-::
+Deleting a group with the given name::
+
   fabric group delete <name>
 
-    deletes a group with the given name
 
-::
+Joining group a and b and putting them in a group with the name_c::
+
   fabric group join <name_a> <name_b> <name_c>
 
-    joins group a and be and puts them in a group with the name_c
 
-::
+Replacing the group a with group b::
+
    fabric group replace <name_a> <name_b> 
 
-    replaces the group a with group b
-
-:: 
+Printing the group members::
+ 
    fabric group list
 
-     prints the group members
-
-:: 
+Creating an empty group::
+ 
    fabric group empty <name>
 
-     creates an empty group
+All group commands such as adding deleting and so forth are
+applied to the group set with default:: 
 
-:: 
    fabric groug default <name>
 
-     all group commands such as adding deleting and so forth are
-     applied to the group set with default
-
-:: 
+Returning the ith obgect of name::
+ 
    fabric group get <i> of <name> 
 
-     returns the ith obgect of name
+Setting the ith object in the group to name:: 
 
-:: 
    fabric group set <i> in <name> to <value>
 
-
-     sets the ith object in the group to name
-
-:: 
+Loading the group from a file::
+ 
    fabric group load <filename>
 
-     loads the group from a file
 
-:: 
+Loading without parameter loads the groups from ~/.futuregrid/futuregrid.cfg::
+ 
    fabric group load
 
-     load without parameter loads the groups from ~/.futuregrid/futuregrid.cfg
-     
-:: 
+Saving the group from a file:: 
+
    fabric group save <filename>
 
-     saves the group from a file
 
-:: 
+Save without parameter saves the groups from ~/.futuregrid/futuregrid.cfg existing groups in that file will be deleted. So be careful if you want to keep your old groups. In doubt use a named file:: 
+
    fabric group load
 
-     save without parameter saves the groups from
-     ~/.futuregrid/futuregrid.cfg existing groups in that file will be
-     deleted. So be careful if you want to keep your old groups. In
-     doubt use a named file.
+Using Python syntax to interface with groups is easily possible as follows::
 
+   fabric group eval <string>
 
-Alternative Syntax
+Thus the command::
 
-  possibly we need to use python/ipython instead of cmd2?
+  fabric group eval "
+  a = [] \n
+  a = ["hostname1.university.edu", "hostname2.university.edu"] \n
+  b = ["hostname3.university.edu", "hostname4.university.edu"] \n
+  c = a + b \n
+  print c"
 
-  a = []
-  a = ["hostname1.university.edu", "hostname2.university.edu"] 
-  b = ["hostname3.university.edu", "hostname4.university.edu"] 
-  
-  c = a + b
+will create a group c with the strings in a and b combined.
 
-  print c
-
-  load group a
-  save group a
