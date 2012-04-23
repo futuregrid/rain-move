@@ -1,0 +1,27 @@
+bootstrap -f testinv
+set node
+add i100.india i100 111.111.111.111 india
+listall
+nodeinfo i100.india
+add i100.india i200 111.111.111.111 india
+listall
+nodeinfo i100.india
+set cluster
+listall
+set cluster india
+add i100.india
+listall
+set service
+listall
+set service indiahpc
+listall
+nodeinfo i01.india
+nodeinfo i05.india
+nodeinfo i08.india
+nodeinfo i100.india
+add i100.india
+listall
+nodeinfo i100.india
+remove i01.india
+listall
+nodeinfo i01.india
