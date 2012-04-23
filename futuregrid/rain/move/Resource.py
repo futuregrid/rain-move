@@ -29,7 +29,8 @@ class Resource(object):
     @abc.abstractproperty
     def identifier(self):
         '''
-        abstract property - identifier(name) of the resource
+        abstract property - identifier of the resource
+        It must be unique among all nodes from all clusters we have
         '''
         return "abstract property"
 
@@ -43,16 +44,18 @@ class Resource(object):
 class Node(Resource):
     '''Node implementation of the Resource abstract class'''
 
-    def __init__(self, id):
+    def __init__(self, id, name="", ip="", cluster=""):
         '''
         constructor of node object
 
         param id: node identifier
         '''
         self._id = id
-        self._ip = ""
+        self._name = name
+        self._ip = ip
+        self._cluster = cluster
         self._type = Resource.TYPE["NODE"] # Resource type is set to 'Node'
-        self._allocated = "FREE" # Resource is initially free.
+        self._allocated = "FREE" # Resource is initially free - not assigned to any service.
         
     @property
     def type(self):
@@ -95,14 +98,44 @@ class Node(Resource):
         param ip: string in format of 'xxx.xxx.xxx.xxx' which is a valid and available IP address
         '''
         self._ip = newip
-
+        
+    @property
+    def name(self):
+        '''
+        Internal name when calling within the cluster.
+        E.g., i55
+        '''
+        return self._name
+        
+    @name.setter
+    def name(self, newname):
+        '''
+        Set the internal name
+        '''
+        self._name = newname
+    
+    @property
+    def cluster(self):
+        '''
+        cluster name where the node belongs to
+        E.g., hotel
+        '''
+        return self._cluster
+        
+    @cluster.setter
+    def cluster(self, newname):
+        '''
+        Set the cluster name
+        '''
+        self._cluster = newname
+            
     def info(self):
         '''
         Implemented the abstract method to display the node info as a string
 
         return: a string in json format represents the node
         '''
-        return str(json.dumps(dict([('Type', self.type), ('Identifier', self.identifier), ('IP', self.ip), ('isAllocated', self.allocated)])))
+        return str(json.dumps(dict([('Type', self.type), ('Identifier', self.identifier), ('Name', self.name), ('IP', self.ip), ('Cluster', self.cluster), ('isAllocated', self.allocated)])))
         
     def __repr__(self):
         '''
@@ -114,25 +147,58 @@ class Cluster(object):
     '''
     Cluster class which is a set of nodes
     '''
-    def __init__(self, hosts=()):
+    def __init__(self, id, hosts=()):
         '''
         constructor
 
-        param hosts: a list of strings that are typically the nodes' identifiers. By default will be empty
+        param hosts: a list of Node object
         '''
+        self._id = id
         self._hosts = dict()
         for host in hosts:
             # stored in dict format - node identifier as key and the node object constructed as value
-            self._hosts[host] = Node(host)
+            self._hosts[host.identifier] = host
 
+    @property
+    def identifier(self):
+        return self._id
+        
     def add(self, ahost):
         '''
         add a new node into the cluster
 
-        param ahost: a string that is the node's identifier
+        param ahost: a node object
+        type ahost: Node
         '''
-        self._hosts[ahost] = Node(ahost)
-        
+        if not isinstance(ahost, Node):
+            ret = False
+        else:
+            ahost.cluster = self.identifier
+            self._hosts[ahost.identifier] = ahost
+    
+    def remove(self, ahost):
+        '''
+        remove a node from the cluster
+
+        param ahost: a node object
+        type ahost: Node
+        '''
+        self._hosts[ahost.identifier].cluster("")
+        del self._hosts[ahost.identifier]
+    
+    def get(self, ahostid):
+        '''
+        get a host by its identifier
+
+        param ahostid: host identifier
+        return ahost: the host with the specified identifier
+        type ahost: Node type
+        '''
+        ret = None
+        if ahostid in self._hosts:
+            ret = self._hosts[ahostid]
+        return ret
+                
     def list(self):
         '''
         list all nodes belong to the cluster
@@ -213,12 +279,14 @@ class Service(object):
     def type(self):
         return self._type
 
-    def list(self):
-        return self._res
 
     ######################
     # common methods
     ######################
+    
+    def list(self):
+        return self._res
+        
     def get(self, aresid):
         '''
         get a resource by its identifier
@@ -243,17 +311,18 @@ class Service(object):
         type ares: Resource type, e.g., Node
         '''
         ret = False
-        # has to be a free node
-        if(ares.allocated == 'FREE'):
-            if self.doadd(ares):
-                self._res[ares.identifier] = ares
-                ares.allocated = self.identifier
-                self.cbadd(ares)
-                ret = True
+        if isinstance(ares, Resource):
+            # has to be a free node
+            if(ares.allocated == 'FREE'):
+                if self.doadd(ares):
+                    self._res[ares.identifier] = ares
+                    ares.allocated = self.identifier
+                    self.cbadd(ares)
+                    ret = True
+                else:
+                    print "add operation failed"
             else:
-                print "add operation failed"
-        else:
-            print ares.identifier + " is not free - allocated to: " + ares.allocated
+                print ares.identifier + " is not free - allocated to: " + ares.allocated
         return ret
 
     def remove(self, aresid):

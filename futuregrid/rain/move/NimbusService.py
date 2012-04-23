@@ -1,10 +1,10 @@
 from Resource import Resource, Node, Cluster, Service
 
 class NimbusService(Service):
-    def __init__(self, id):
+    def __init__(self, id, res=dict()):
         self._id = id
         self._type = "Nimbus"
-        self._res = dict()
+        self._res = res
 
     def doadd(self, ares):
         print "INSIDE NimbusService:doadd: To be implemented: add into Nimbus service"

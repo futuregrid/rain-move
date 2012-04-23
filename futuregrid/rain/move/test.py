@@ -5,6 +5,7 @@ from HPCService import HPCService
 from EucaService import EucaService
 from OpenStackService import OpenStackService
 from NimbusService import NimbusService
+from Fabric import Fabric, Inventory, InventoryFile, InventoryDB
 
 def main():
     print "\n------Typing TEST---"
@@ -22,22 +23,22 @@ def main():
 
     print "\n------Cluster testing..."
     print "---Empty cluster..."
-    india = Cluster()
+    india = Cluster("india")
     print india.list()
     print "---Adding a node..."
-    india.add("i136.india.futuregrid.org")
+    india.add(Node("i136.india.futuregrid.org","i136"))
     print india.list()
     print "---Adding another node..."
-    india.add("i100.india.futuregrid.org")
+    india.add(Node("i100.india.futuregrid.org","i100","149.165.146.100"))
     print india.list()
     print "---Another cluster..."
-    hotel = Cluster(("i01.hotel.futuregrid.org", "i02.hotel.futuregrid.org"))
+    hotel = Cluster("hotel", (Node("i01.hotel.futuregrid.org"), Node("i02.hotel.futuregrid.org")))
     print hotel.list()
     print "---Adding a node..."
-    hotel.add("i10.hotel.futuregrid.org")
+    hotel.add(Node("i10.hotel.futuregrid.org"))
     print hotel.list()
     print "---Adding another node..."
-    hotel.add("i20.hotel.futuregrid.org")
+    hotel.add(Node("i20.hotel.futuregrid.org"))
     print hotel.list()
 
     
@@ -87,6 +88,22 @@ def main():
     print "---status of node1e after being tried to be removed from service HPC..."
     print node1e
     
+    print "\n------Fabric testing..."
+    fg = Fabric()
+    print fg
+    fg = Fabric((node1, node2),(india, hotel),(indiahpc,indiaeuca))
+    print fg
+    #inv = InventoryFile("testinv")
+    #fg.load(inv)
+    #invnew = InventoryDB("testinv2")
+    #fg.load(invnew)
+    print fg.getNode().keys()
+    print fg.getNode("i88.india.futuregrid.org")
+    print fg.getNode("i66.india.futuregrid.org")
+    print fg.getService().keys()
+    invreal = InventoryFile("FGResInventory")
+    fg.load(invreal)
+    print fg.info()
     
 if __name__ == "__main__":
     main()

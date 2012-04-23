@@ -1,10 +1,10 @@
 from Resource import Resource, Node, Cluster, Service
 
 class EucaService(Service):
-    def __init__(self, id):
+    def __init__(self, id, res=dict()):
         self._id = id
         self._type = "Eucalyptus"
-        self._res = dict()
+        self._res = res
 
     def doadd(self, ares):
         print "INSIDE EucaService:doadd: To be implemented: add into Euca service"
