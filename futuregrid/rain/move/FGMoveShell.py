@@ -45,7 +45,7 @@ class FGMoveShell(Cmd):
         print self.logo
 
     def postloop(self):
-        print "BYE FORM GREGOR"
+        print "You are leaving the FutureGrid Fabric Management/rain-move shell"
     
     @options([
         make_option('-f', '--file', type="string",
@@ -53,7 +53,10 @@ class FGMoveShell(Cmd):
         make_option('-d', '--db', type="string",
                     help="load from database")
         ])
-    def do_bootstrap(self, args, opts):        
+    def do_bootstrap(self, args, opts):
+        '''bootstrap the whole fabric from an inventory.
+        objects for nodes, clusters, and services would be created.
+        '''
         if opts.file:
             filename = opts.file
             #print filename
@@ -61,6 +64,10 @@ class FGMoveShell(Cmd):
             self.fgfabric.load(fginventory)
     
     def do_set(self, args, silent=False):
+        '''set default context - node, cluster, or service
+        If no name/identifier provided, following operations would be applied for that class/objects.
+        Otherwise operations would be applied on the specific object - e.g., a cluster called india.
+        '''
         args = ''.join(args)
         args = re.split(" ", args)
         cat = args[0]
@@ -70,7 +77,8 @@ class FGMoveShell(Cmd):
         else:
             obj = None
         self._currentObj = getattr(self.fgfabric, method)(obj)
-        
+
+        # context - class, general
         if isinstance(self._currentObj, dict):
             aobj = self._currentObj.values()[0]
             if isinstance(aobj, Node):
@@ -85,14 +93,17 @@ class FGMoveShell(Cmd):
                 print "Set default operation on Class: " + self._currentCls
             #for key in self._currentObj:
             #    print key
+        # context - a node object
         elif isinstance(self._currentObj, Node):
             self._currentCls = "Node"
             print self._currentObj.identifier
+        # context - a cluster object
         elif isinstance(self._currentObj, Cluster):
             self._currentCls = "Cluster"
             if not silent:
                 print "Default Cluster is set to: " + self._currentObj.identifier
             #print self._currentObj.list()
+        # context - a service object
         elif isinstance(self._currentObj, Service):
             self._currentCls = "Service"
             if not silent:
@@ -103,22 +114,25 @@ class FGMoveShell(Cmd):
             print "Wrong parameter provided!"
     
     def supportGroupOps(self, curCls):
+        # what class has implemented the group operations methods, like list()?
         if curCls in ("Cluster", "Service"):
             return True
         else:
             return False   
                  
     def do_listall(self, args):
+        ''' list all based on the context'''
         # list identifier only
         if isinstance(self._currentObj, dict):
-            for key in self._currentObj.keys():
+            for key in sorted(self._currentObj.keys()):
                 print key
         # list nodes
         elif self.supportGroupOps(self._currentCls):
-            for anodeid in self._currentObj.list().keys():
+            for anodeid in sorted(self._currentObj.list().keys()):
                 print anodeid
             
     def do_nodeinfo(self, args):
+        '''print out node info specified by the node identifier'''
         if args in self.fgfabric.getNode().keys():
             print self.fgfabric.getNode()[args]
     
@@ -129,8 +143,11 @@ class FGMoveShell(Cmd):
                     help="service name")
         ])
     def do_add(self, args, opts):
+        '''add new node; existing node to a cluster; existing node to a service, etc.
+        '''
         args = ''.join(args)
-        args = re.split(" ", args)    
+        args = re.split(" ", args)
+        # add a new node
         if self._currentCls == 'Node':
             #construcing a node from args
             #accepting format of: id,name,ip,cluster
@@ -139,28 +156,36 @@ class FGMoveShell(Cmd):
             allnodes.append(newnode)
             self.fgfabric.updateNodes(allnodes)
             self.do_set('Node', True) # fix cache
+        # move a node into a cluster. The node must be added/created first if not exist.
         elif self._currentCls == 'Cluster':
             existingnode = self.fgfabric.getNode(args[0])
+            # current context is class/general
+            # need -c option to specify which cluster to operate on
             if isinstance(self._currentObj, dict):
                 clustername = opts.cluster
                 if clustername:
+                    # retrieve the cluster
                     cluster = self.fgfabric.getCluster(clustername)                    
                     if existingnode:
                         cluster.add(existingnode)
+                        self.fgfabric.store()
                         self.do_set('Cluster', True) # fix cache
                     else:
                         print "node does not exist in the node list.\nPlease add node first!"
                 else:
                     print "cluster name is required"
+            # current context already set to specific cluster
             else:
                 if existingnode:
                     self._currentObj.add(existingnode)
+                    self.fgfabric.store()
                     self.do_set('Cluster ' + self._currentObj.identifier, True) # fix cache
                 else:
                     print "node does not exist in the node list.\nPlease add node first!"            
-            
+        # move a node into a service. This internally invokes the implementations for specific service types.    
         elif self._currentCls == 'Service':
             existingnode = self.fgfabric.getNode(args[0])
+            # context class/general, requires -s option
             if isinstance(self._currentObj, dict):
                 service = opts.service
                 if servicename:
@@ -168,22 +193,29 @@ class FGMoveShell(Cmd):
                     print existingnode
                     if existingnode:
                         service.add(existingnode)
+                        self.fgfabric.store()
                         self.do_set('Service', True) # fix cache
                     else:
                         print "node does not exist in the node list.\nPlease add node first!"
                 else:
                     print "service name is required"
+            # context was already set to a specific service
             else:
                 self._currentObj.add(existingnode)
+                self.fgfabric.store()
                 self.do_set('Service ' + self._currentObj.identifier, True) # fix cache
+        # context not supported
         else:
             print "Type Error!"
     
     def do_remove(self, args):
+        '''remove a node - opposite of the add'''
         # operation on the class in general
+        # only operate on node, but not a cluster/service
         if isinstance(self._currentObj, dict):
-            print "Removing a whole cluster/service is not supported"
+            print "Removing a whole cluster/service is not supported from this tool"
         # operation on an object - a real cluster or service
+        # dispatch the call to the implementation for the class
         elif self.supportGroupOps(self._currentCls):
             self._currentObj.remove(args)
                

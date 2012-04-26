@@ -16,26 +16,40 @@ from NimbusService import NimbusService
 from HPCService import HPCService
 
 class Inventory(object):
+    '''Abstract base class that defines inventory for a fabric.
+    read(), and write() methods have to be implemented'''
     __metaclass__ = abc.ABCMeta
     
     @abc.abstractmethod
     def read(self):
+        '''
+        load the inventory info and returns a dict object in the format of:
+        {'nodes':[[node1id, node1name, node1ip], ...],
+        'clusters':{clusteridentifier:[[node1id, node1name, node1ip], ...], ...},
+        'services':{serviceidentifier:{'nodes':[node1id, node2id, ...], 'type':servicetype}, ...}
+        }
+        '''
         return
     
     @abc.abstractmethod
-    def write(self):
+    def write(self, data):
+        '''
+        write the updated dict object as defined in the read() per data persistence method.
+        '''
         return
 
 class InventoryFile(Inventory):
-    
+    '''file based implementation for the inventory class'''
     def __init__(self, fname):
         self._cfgfile = fname
         self._res = dict()
         return
     
     def read(self):
+        '''reading from file'''
         file = open(self._cfgfile)
         content = file.read()
+        file.close()
         nodes = []
         clusters = dict()
         services = dict()
@@ -95,11 +109,42 @@ class InventoryFile(Inventory):
         #print ret
         return ret
     
-    def write(self):
+    def write(self, data):
+        '''construct strings from he updated data and write it to file'''
+        clusters = data['clusters']
+        services = data['services']
+        file = open(self._cfgfile, 'w')
+        str2print = ''
+        # write cluster data first
+        for acluster in sorted(clusters.keys()):
+            clustername = acluster
+            cluster = clusters[clustername]
+            # section header for each cluster
+            str2print += '[CLUSTER:' + clustername.upper() + ']\n'
+            clusternodes = cluster.list()
+            for anodeid in sorted(clusternodes.keys()):
+                node = clusternodes[anodeid]
+                str2print += node.identifier + ',' + node.name + ',' + node.ip + '\n'
+            str2print += '\n'
+
+        # write servcie data
+        for aservice in sorted(services.keys()):
+            servicename = aservice
+            service = services[servicename]
+            servicetype = service.type
+            # header for each service
+            str2print += '[SERVICE:' + servicetype.upper() + ":" + servicename.upper() + ']\n'
+            servicenodes = service.list()
+            for anodeid in sorted(servicenodes.keys()):
+                node = servicenodes[anodeid]
+                str2print += node.identifier + '\n'
+            str2print += '\n'
+        file.write(str2print)
+        file.close()
         return
 
 class InventoryDB(Inventory):
-    
+    '''database based implementation class for inventory'''
     def __init__(self, config):
         return
     
@@ -110,13 +155,19 @@ class InventoryDB(Inventory):
         return
                     
 class Fabric(object):
+    '''Fabric class that defines a set of nodes, clusters, and services'''
+    # service type and classname mapping
     svctype = {'hpc':'HPC', 'eucalyptus':'Euca', 'nimbus':'Nimbus', 'openstack':'OpenStack'}
     def __init__(self, nodes=(), clusters=(), services=()):
+        self._inventory = None
         self.update(nodes, clusters, services)
             
     def load(self, inventory):
+        '''load data from inventory to bootstrap the fabric'''
         #print inventory.__class__.__name__
-        data = inventory.read()
+        self._inventory = inventory
+        data = self._inventory.read()
+        print data
         _nodes = []
         _clusters = []
         _services = []
@@ -146,8 +197,14 @@ class Fabric(object):
             _services.append(aservice)
         self.update(_nodes,_clusters,_services)
         return
-    
+
+    def store(self):
+        '''data persistence after new update'''
+        data = {"clusters": self.getCluster(), "services":self.getService()}
+        self._inventory.write(data)
+        
     def getNode(self, identifier=None):
+        '''get a node based on the identifier, or return all nodes if id not provided'''
         if identifier is not None:
             if self._nodes.has_key(identifier):
                 ret = self._nodes[identifier]
@@ -159,6 +216,7 @@ class Fabric(object):
         return ret
         
     def getCluster(self, identifier=None):
+        '''get a cluster based on the identifier, or return all clusters if id not provided'''
         if identifier is not None:
             if self._clusters.has_key(identifier):
                 ret = self._clusters[identifier]
@@ -170,6 +228,7 @@ class Fabric(object):
         return ret
         
     def getService(self, identifier=None):
+        '''get a service based on the identifier, or return all services if id not provided'''
         if identifier is not None:
             if self._services.has_key(identifier):
                 ret = self._services[identifier]
@@ -181,29 +240,39 @@ class Fabric(object):
         return ret
         
     def update(self, nodes=(), clusters=(), services=()):
+        '''update the nodes, clusters, and services data'''
         self.updateNodes(nodes)
         self.updateClusters(clusters)
         self.updateServices(services)
+        print "updating inventory...."
+        print self._inventory
+        print "just printed the inventory of the fabric"
+        if self._inventory is not None:
+            self.store()
            
     def updateNodes(self, nodes=()):
+        '''update the nodes list'''
         self._nodes = dict()
         for node in nodes:
             key = node.identifier
             self._nodes[key] = node
             
     def updateClusters(self, clusters=()):
+        '''update the clusters data'''
         self._clusters = dict()
         for cluster in clusters:
             key = cluster.identifier
             self._clusters[key] = cluster
         
-    def updateServices(self, services=()): 
+    def updateServices(self, services=()):
+        '''update the services data'''
         self._services = dict()
         for service in services:
             key = service.identifier
             self._services[key] = service
                         
     def info(self):
+        '''info of the fabric - identifiers of all nodes, clusters, and services'''
         nodes = "Nodes:\n" + ",".join(sorted(self._nodes.keys()))
         clusters = "Clusters:\n" + ",".join(sorted(self._clusters.keys()))
         services = "Services:\n" + ",".join(sorted(self._services.keys()))
