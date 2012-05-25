@@ -18,12 +18,20 @@ from EucaService import EucaService
 from OpenStackService import OpenStackService
 from NimbusService import NimbusService
 from Fabric import Fabric, Inventory, InventoryFile, InventoryDB
+from RainMoveServerConf import RainMoveServerConf
 
 class FGMoveShell(Cmd):
     '''fg-move: Cloud shifting shell command'''
 
     pp = pprint.PrettyPrinter(indent=0)
-    fgfabric = Fabric()
+    
+    
+    # load configuration
+    _moveConf = RainMoveServerConf()
+    _moveConf.load_moveServerConfig()
+    
+    fgfabric = Fabric(_moveConf)
+    
     _currentObj = None
     _currentCls = None
     echo = True

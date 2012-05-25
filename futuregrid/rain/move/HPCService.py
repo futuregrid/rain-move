@@ -2,16 +2,39 @@ from Resource import Resource, Node, Cluster, Service
 
 class HPCService(Service):
     def __init__(self, id, res=dict()):
+        
+        super(HPCService, self).__init__()
+        
         self._id = id
         self._type = "HPC"
         self._res = res
 
+        
+
     def doadd(self, ares):
         print "INSIDE HPCService:doadd: To be implemented: add into HPC service"
+        
+        connection=self.socketConnection()
+        if connection != None:
+            connection.write(self._type + ", add, " + ares.identifier)
+            print connection.read(1024)
+        else:
+            print "ERROR: Connecting with the remote site. UNDO if we added changed the node in the DB or Try again."
+        self.socketCloseConnection(connection)
+        
         return True
 
     def doremove(self, ares):
         print "INSIDE HPCService:cbremove: To be implemented: remove from HPC service"
+        
+        connection=self.socketConnection()
+        if connection != None:
+            connection.write(self._type + ", remove, " + ares.identifier)
+            print connection.read(1024)
+        else:
+            print "ERROR: Connecting with the remote site. UNDO if we added changed the node in the DB or Try again."
+        self.socketCloseConnection(connection)
+        
         return True
 
     def cbadd(self, ares):

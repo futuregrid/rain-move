@@ -9,6 +9,8 @@ __version__ = '0.1'
 
 import abc
 import json
+import socket, ssl
+from RainMoveServerConf import RainMoveServerConf
 
 class Resource(object):
     '''Abstract base class for Resource'''
@@ -213,6 +215,22 @@ class Service(object):
     '''
     __metaclass__ = abc.ABCMeta
 
+    def __init__(self):
+        self._MoveClientca_certs=None
+        self._MoveClientcertfile=None
+        self._MoveClientkeyfile=None
+        self._address=None
+        self._port=None
+        
+    def load_config(self, moveConf):
+        self._MoveClientca_certs = moveConf.getMoveClientCaCerts()
+        self._MoveClientcertfile = moveConf.getMoveClientCertFile()
+        self._MoveClientkeyfile = moveConf.getMoveClientKeyFile()
+        
+        moveConf.loadMoveRemoteSiteConfig(self._type, self._id)
+        self._address=moveConf.getMoveRemoteSiteAddress()
+        self._port= moveConf.getMoveRemoteSitePort()
+
     @abc.abstractmethod
     def doadd(self, ares):
         '''
@@ -283,6 +301,30 @@ class Service(object):
     ######################
     # common methods
     ######################
+    
+    def socketConnection(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            connection = ssl.wrap_socket(s,
+                                        ca_certs=self._MoveClientca_certs,
+                                        certfile=self._MoveClientcertfile,
+                                        keyfile=self._MoveClientkeyfile,
+                                        cert_reqs=ssl.CERT_REQUIRED,
+                                        ssl_version=ssl.PROTOCOL_TLSv1)
+            
+            print "Connecting server: " + self._address + ":" + str(self._port)
+            connection.connect((self._address, self._port))       
+        except ssl.SSLError:
+            print "ERROR: CANNOT establish SSL connection. EXIT"
+            connection = None
+        except socket.error:
+            print "ERROR: CANNOT establish connection with RainMoveServerSites service. EXIT"
+            connection = None
+        return connection
+    
+    def socketCloseConnection(self, connstream):
+        connstream.shutdown(socket.SHUT_RDWR)
+        connstream.close()
     
     def list(self):
         return self._res

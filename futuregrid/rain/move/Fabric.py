@@ -158,7 +158,8 @@ class Fabric(object):
     '''Fabric class that defines a set of nodes, clusters, and services'''
     # service type and classname mapping
     svctype = {'hpc':'HPC', 'eucalyptus':'Euca', 'nimbus':'Nimbus', 'openstack':'OpenStack'}
-    def __init__(self, nodes=(), clusters=(), services=()):
+    def __init__(self, moveConf, nodes=(), clusters=(), services=()):
+        self._moveConf=moveConf
         self._inventory = None
         self.update(nodes, clusters, services)
             
@@ -194,6 +195,7 @@ class Fabric(object):
                 nodes[id] = anode
             classname = Fabric.svctype[atype] + 'Service'
             aservice = eval(classname)(servicename, nodes)
+            aservice.load_config(self._moveConf)  # Load configuration to contact remote sites
             _services.append(aservice)
         self.update(_nodes,_clusters,_services)
         return

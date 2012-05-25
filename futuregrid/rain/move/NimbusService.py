@@ -2,16 +2,39 @@ from Resource import Resource, Node, Cluster, Service
 
 class NimbusService(Service):
     def __init__(self, id, res=dict()):
+        
+        super(NimbusService, self).__init__()
+        
         self._id = id
         self._type = "Nimbus"
         self._res = res
+        
+        
 
     def doadd(self, ares):
         print "INSIDE NimbusService:doadd: To be implemented: add into Nimbus service"
+        
+        connection=self.socketConnection()
+        if connection != None:
+            connection.write(self._type + ", add, " + ares.identifier)
+            print connection.read(1024)
+        else:
+            print "ERROR: Connecting with the remote site. UNDO if we added changed the node in the DB or Try again."
+        self.socketCloseConnection(connection)
+        
         return True
 
     def doremove(self, ares):
         print "INSIDE NimbusService:cbremove: To be implemented: remove from Nimbus service"
+        
+        connection=self.socketConnection()
+        if connection != None:
+            connection.write(self._type + ", remove, " + ares.identifier)
+            print connection.read(1024)
+        else:
+            print "ERROR: Connecting with the remote site. UNDO if we added changed the node in the DB or Try again."
+        self.socketCloseConnection(connection)
+        
         return True
 
     def cbadd(self, ares):

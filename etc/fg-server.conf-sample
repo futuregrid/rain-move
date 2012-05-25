@@ -1,0 +1,101 @@
+#******************************************************************************
+# FutureGrid Servers Configuration
+#
+# This configuration file is organized for services. So you only need to 
+# configure the sections of the services that you need to use
+#
+#******************************************************************************
+
+#******************************************************************************
+# Rain Move Server configuration
+#------------------------------------------------------------------------------
+#  port: is the port where this server will be listening
+#
+#  log: file where logs are stored. You should include
+#  the full path, otherwise it will use the current directory. 
+#
+#  log_level: debug level. It can be debug, error, info, warning
+#
+#  ca_cert: authority that sign the certificate
+#
+#  certfile: x509 certificate used by the service
+#
+#  keyfile: key of the certificate
+#
+#******************************************************************************
+[RainMoveServer]
+port = 56795
+log = moveserver.log
+log_level = debug
+ca_cert=/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
+certfile=/opt/futuregrid/futuregrid/etc/imdserver/imdscert.pem
+keyfile=/opt/futuregrid/futuregrid/etc/imdserver/privkey.pem
+Clientca_cert=/opt/futuregrid/futuregrid/etc/imdclient/cacert.pem
+Clientcertfile=/opt/futuregrid/futuregrid/etc/imdclient/imdccert.pem
+Clientkeyfile=/opt/futuregrid/futuregrid/etc/imdclient/privkey.pem
+
+#******************************************************************************
+# Configuration Sites configuration
+#------------------------------------------------------------------------------
+#  description: General description of services provided by the site
+#
+#  default_<infrastructure>_kernel: Default kernel that will be used when
+#  registering an image in such infrastructure. <infrastructure> can be
+#  eucalyptus, openstack, nimbus and opennebula
+#
+#  <infrastructure>_auth_kernels: Authorized kernels for registering an image in
+#  such infrastructure. <infrastructure> can be eucalyptus, openStack, nimbus 
+#  and opennebula
+#  The syntax is eucalyptus_auth_kernels = <kernel1>:eki:eri;<kernel2>:eki:eri
+#  Nimbus uses the name to identify the kernel, but we keep the syntax just
+#  OpenNebula does not have ids for now. So, we use the path.
+#******************************************************************************
+
+[Move-eucalyptus-indiaeuca]
+address=localhost
+port=56800
+
+[Move-openstack-indiaopenstack]
+address=localhost
+port=56801
+
+[Move-hpc-indiahpc]
+address=localhost
+port=56802
+
+[Move-nibmus-hotelnimbus]
+address=localhost
+port=56803
+
+#******************************************************************************
+# Rain Site Move Server configuration
+#------------------------------------------------------------------------------
+#  port: is the port where this server will be listening
+#
+#  proc_max: number of request that can be processed at the same time
+#
+#  refresh: interval to check the status of the running requests when proc_max
+#  is reached. If some request has the completed status, and a new request can 
+#  be processed.
+#
+#  log: file where logs are stored. You should include
+#  the full path, otherwise it will use the current directory. 
+#
+#  log_level: debug level. It can be debug, error, info, warning
+#
+#  ca_cert: authority that sign the certificate
+#
+#  certfile: x509 certificate used by the service
+#
+#  keyfile: key of the certificate
+#
+#******************************************************************************
+[RainMoveSiteServer]
+port = 56795
+proc_max = 5
+refresh = 20
+log = moveserver.log
+log_level = debug
+ca_cert=/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
+certfile=/opt/futuregrid/futuregrid/etc/imdserver/imdscert.pem
+keyfile=/opt/futuregrid/futuregrid/etc/imdserver/privkey.pem
