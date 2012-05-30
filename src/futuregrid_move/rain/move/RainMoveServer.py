@@ -57,6 +57,7 @@ class RainMoveServer(object):
         self._rainConf.load_moveServerConfig() 
                 
         self.port = self._rainConf.getMovePort()
+        self.authorizedusers= self._rainConf.getMoveAuthorizedUsers()
         self.log_filename = self._rainConf.getMoveLog()
         self.logLevel = self._rainConf.getMoveLogLevel()
         
@@ -164,19 +165,25 @@ class RainMoveServer(object):
         endloop = False
         while (not endloop):
             userCred = FGCredential(passwdtype, passwd)
-            if (self.auth(userCred)):
-                connstream.write("OK")                                        
-                endloop = True       
-            else:
-                retry += 1
-                if retry < maxretry:
-                    connstream.write("TryAuthAgain")
-                    passwd = connstream.read(2048)
-                else:
-                    msg = "ERROR: authentication failed"
+            if self.user in self.authorizedusers:
+                if (self.auth(userCred)):
+                    connstream.write("OK")                                        
                     endloop = True
-                    self.errormsg(connstream, msg)
-                    return
+                else:
+                    retry += 1
+                    if retry < maxretry:
+                        connstream.write("TryAuthAgain")
+                        passwd = connstream.read(2048)
+                    else:
+                        msg = "ERROR: authentication failed"
+                        endloop = True
+                        self.errormsg(connstream, msg)
+                        return
+            else:
+                msg = "ERROR: authentication failed. User is not allowed to use this service."
+                endloop = True
+                self.errormsg(connstream, msg)
+                return
 
         try:
             

@@ -63,6 +63,7 @@ class RainMoveServerConf(object):
         #move server
         
         self._Moveport = 0
+        self._MoveauthorizedUsers = []
         self._Movelog = ""
         self._MovelogLevel = ""   
         self._MoveServerca_certs = ""
@@ -104,6 +105,8 @@ class RainMoveServerConf(object):
 
     def getMovePort(self):
         return self._Moveport
+    def getMoveAuthorizedUsers(self):
+        return self._MoveauthorizedUsers
     def getMoveLog(self):
         return self._Movelog
     def getMoveLogLevel(self):
@@ -164,6 +167,15 @@ class RainMoveServerConf(object):
             sys.exit(1)
         except ConfigParser.NoSectionError:
             print "Error: no section "+section+" found in the "+self._configfile+" config file"
+            sys.exit(1)
+        try:
+            aux = self._config.get(section, 'authorizedusers', 0)
+            aux1 = aux.split(",")
+            for i in aux1:
+                if (i.strip() != ""):
+                    self._MoveauthorizedUsers.append(i.strip())
+        except ConfigParser.NoOptionError:
+            print "No authorizedusers option found in section " + section + " file " + self._configfile
             sys.exit(1)
         try:
             self._Movelog = os.path.expanduser(self._config.get(section, 'log', 0))

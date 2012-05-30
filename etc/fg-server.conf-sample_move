@@ -11,6 +11,8 @@
 #------------------------------------------------------------------------------
 #  port: is the port where this server will be listening
 #
+#  authorizedusers: list of users (separated by commas) that can use the service
+#
 #  log: file where logs are stored. You should include
 #  the full path, otherwise it will use the current directory. 
 #
@@ -33,6 +35,7 @@
 #******************************************************************************
 [RainMoveServer]
 port = 56795
+authorizedusers = jdiaz, fuwang
 log = moveserver.log
 log_level = debug
 ca_cert=/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
