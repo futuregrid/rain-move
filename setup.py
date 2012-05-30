@@ -44,7 +44,7 @@ setup(
     package_dir = {'': 'src'},
     packages = find_packages("src"),
     data_files = [
-        ('/etc/futuregrid', ['etc/fg-server.conf-sample', 'etc/fg-client.conf-sample'])
+        ('/etc/futuregrid', ['etc/fg-server.conf-sample_move', 'etc/fg-client.conf-sample_move'])
         ],
     scripts = [
         'src/futuregrid_move/rain/move/RainMoveServer.py',
