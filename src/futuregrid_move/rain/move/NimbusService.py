@@ -1,18 +1,18 @@
-from Resource import Resource, Node, Cluster, Service
+from futuregrid_move.rain.move.Resource import Resource, Node, Cluster, Service
 
-class HPCService(Service):
-    def __init__(self, id, res=dict()):
+class NimbusService(Service):
+    def __init__(self, resId, res=dict()):
         
-        super(HPCService, self).__init__()
+        super(NimbusService, self).__init__()
         
-        self._id = id
-        self._type = "HPC"
+        self._id = resId
+        self._type = "Nimbus"
         self._res = res
-
+        
         
 
     def doadd(self, ares):
-        print "INSIDE HPCService:doadd: To be implemented: add into HPC service"
+        print "INSIDE NimbusService:doadd: To be implemented: add into Nimbus service"
         
         connection=self.socketConnection()
         if connection != None:
@@ -25,7 +25,7 @@ class HPCService(Service):
         return True
 
     def doremove(self, ares):
-        print "INSIDE HPCService:cbremove: To be implemented: remove from HPC service"
+        print "INSIDE NimbusService:cbremove: To be implemented: remove from Nimbus service"
         
         connection=self.socketConnection()
         if connection != None:
@@ -38,9 +38,9 @@ class HPCService(Service):
         return True
 
     def cbadd(self, ares):
-        print "INSIDE HPCService:cbadd: Added " + ares.identifier + " to service " + self.identifier
+        print "INSIDE NimbusService:cbadd: Added " + ares.identifier + " to service " + self.identifier
         return
 
     def cbremove(self, ares):
-        print "INSIDE HPCService:cbremove: Removed " + ares.identifier + " from service " + self.identifier
+        print "INSIDE NimbusService:cbremove: Removed " + ares.identifier + " from service " + self.identifier
         return

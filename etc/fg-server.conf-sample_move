@@ -16,12 +16,20 @@
 #
 #  log_level: debug level. It can be debug, error, info, warning
 #
-#  ca_cert: authority that sign the certificate
+#  ca_cert: authority that sign the certificate. This is for RainMoveServer.py
 #
-#  certfile: x509 certificate used by the service
+#  certfile: x509 certificate used by the service. This is for RainMoveServer.py
 #
-#  keyfile: key of the certificate
+#  keyfile: key of the certificate. This is for RainMoveServer.py
 #
+#  Clientca_cert: authority that sign the certificate. This is to contact with
+#  RainMoveServerSites.py
+#
+#  Clientcertfile: x509 certificate used by the service. This is to contact with
+#  RainMoveServerSites.py
+#
+#  Clientkeyfile: key of the certificate. This is to contact with
+#  RainMoveServerSites.py
 #******************************************************************************
 [RainMoveServer]
 port = 56795
@@ -91,7 +99,7 @@ port=56803
 #
 #******************************************************************************
 [RainMoveSiteServer]
-port = 56795
+port = 56796
 proc_max = 5
 refresh = 20
 log = moveserver.log

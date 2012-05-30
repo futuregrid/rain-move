@@ -27,6 +27,7 @@ import sys
 import logging
 import re
 
+
 configFileName = "fg-server.conf"
 
 class RainMoveServerConf(object):
@@ -60,17 +61,14 @@ class RainMoveServerConf(object):
                 sys.exit(1)
         
         #move server
-        """
+        
         self._Moveport = 0
-        self._Moveproc_max = 0
-        self._Moverefresh_status = 0
-        self._Movenopasswdusers = {}  #dic {'user':['ip','ip1'],..}
         self._Movelog = ""
         self._MovelogLevel = ""   
         self._MoveServerca_certs = ""
         self._MoveServercertfile = ""
         self._MoveServerkeyfile = ""
-        """
+        
         self._MoveClientca_certs = ""
         self._MoveClientcertfile = ""
         self._MoveClientkeyfile = ""
@@ -103,26 +101,20 @@ class RainMoveServerConf(object):
         return self._configfile
     
     #move server
-    """
+
     def getMovePort(self):
         return self._Moveport
-    def getMoveProcMax(self):
-        return self._Moveproc_max
-    def getMoveRefreshStatus(self):
-        return self._Moverefresh_status
-    def getMoveNoPasswdUsersGen(self):
-        return self._Movenopasswdusers
     def getMoveLog(self):
         return self._Movelog
-    def getMoveServerLogLevel(self):
-        return self._MoveServerlogLevel
+    def getMoveLogLevel(self):
+        return self._MovelogLevel
     def getMoveServerCaCerts(self):
         return self._MoveServerca_certs
     def getMoveServerCertFile(self): 
         return self._MoveServercertfile
     def getMoveServerKeyFile(self): 
         return self._MoveServerkeyfile
-    """
+
     def getMoveClientCaCerts(self):
         return self._MoveClientca_certs
     def getMoveClientCertFile(self): 
@@ -164,7 +156,7 @@ class RainMoveServerConf(object):
     ############################################################
     def load_moveServerConfig(self):        
         section = "RainMoveServer"
-        """
+
         try:
             self._Moveport = int(self._config.get(section, 'port', 0))
         except ConfigParser.NoOptionError:
@@ -173,27 +165,6 @@ class RainMoveServerConf(object):
         except ConfigParser.NoSectionError:
             print "Error: no section "+section+" found in the "+self._configfile+" config file"
             sys.exit(1)
-        try:
-            self._Moveproc_max = int(self._config.get(section, 'proc_max', 0))
-        except ConfigParser.NoOptionError:
-            print "Error: No proc_max option found in section " + section + " file " + self._configfile
-            sys.exit(1)
-        try:
-            self._Moverefresh_status = int(self._config.get(section, 'refresh', 0))
-        except ConfigParser.NoOptionError:
-            print "Error: No refresh option found in section " + section + " file " + self._configfile
-            sys.exit(1)
-        try:
-            aux = self._config.get(section, 'nopasswdusers', 0).strip()
-            aux = "".join(aux.split()) #REMOVE ALL WHITESPACES
-            parts = aux.split(";")
-            for i in parts:         
-                temp = i.split(":")
-                if len(temp) == 2:                    
-                    self._Movenopasswdusers[temp[0]] = temp[1].split(",")            
-        except ConfigParser.NoOptionError:            
-            pass
-        
         try:
             self._Movelog = os.path.expanduser(self._config.get(section, 'log', 0))
         except ConfigParser.NoOptionError:
@@ -207,7 +178,6 @@ class RainMoveServerConf(object):
             print "Log level " + tempLevel + " not supported. Using the default one " + self._logLevel_default
             tempLevel = self._logLevel_default
         self._MovelogLevel = eval("logging." + tempLevel)
-        
         try:
             self._MoveServerca_certs = os.path.expanduser(self._config.get(section, 'ca_cert', 0))
         except ConfigParser.NoOptionError:
@@ -232,7 +202,7 @@ class RainMoveServerConf(object):
         if not os.path.isfile(self._MoveServerkeyfile):
             print "Error: keyfile file not found in "  + self._MoveServerkeyfile
             sys.exit(1)
-        """
+
         try:
             self._MoveClientca_certs = os.path.expanduser(self._config.get(section, 'Clientca_cert', 0))
         except ConfigParser.NoOptionError:

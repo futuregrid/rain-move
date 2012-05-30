@@ -1,18 +1,16 @@
-from Resource import Resource, Node, Cluster, Service
+from futuregrid_move.rain.move.Resource import Resource, Node, Cluster, Service
 
-class NimbusService(Service):
-    def __init__(self, id, res=dict()):
+class OpenStackService(Service):
+    def __init__(self, resId, res=dict()):
         
-        super(NimbusService, self).__init__()
+        super(OpenStackService, self).__init__()
         
-        self._id = id
-        self._type = "Nimbus"
+        self._id = resId
+        self._type = "OpenStack"
         self._res = res
-        
-        
 
     def doadd(self, ares):
-        print "INSIDE NimbusService:doadd: To be implemented: add into Nimbus service"
+        print "INSIDE OpenStackService:doadd: To be implemented: add into OpenStack service"
         
         connection=self.socketConnection()
         if connection != None:
@@ -25,7 +23,7 @@ class NimbusService(Service):
         return True
 
     def doremove(self, ares):
-        print "INSIDE NimbusService:cbremove: To be implemented: remove from Nimbus service"
+        print "INSIDE OpenStackService:cbremove: To be implemented: remove from OpenStack service"
         
         connection=self.socketConnection()
         if connection != None:
@@ -38,9 +36,9 @@ class NimbusService(Service):
         return True
 
     def cbadd(self, ares):
-        print "INSIDE NimbusService:cbadd: Added " + ares.identifier + " to service " + self.identifier
+        print "INSIDE OpenStackService:cbadd: Added " + ares.identifier + " to service " + self.identifier
         return
 
     def cbremove(self, ares):
-        print "INSIDE NimbusService:cbremove: Removed " + ares.identifier + " from service " + self.identifier
+        print "INSIDE OpenStackService:cbremove: Removed " + ares.identifier + " from service " + self.identifier
         return

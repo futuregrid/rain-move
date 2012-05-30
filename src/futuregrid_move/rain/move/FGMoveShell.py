@@ -11,6 +11,8 @@ from cmd2 import make_option
 from cmd2 import options
 import unittest
 import sys
+import logging
+import logging.handlers
 
 from Resource import Resource, Node, Cluster, Service
 from HPCService import HPCService
@@ -25,12 +27,22 @@ class FGMoveShell(Cmd):
 
     pp = pprint.PrettyPrinter(indent=0)
     
+    # logger
+    logger = logging.getLogger("FGMoveShell")
+    logger.setLevel(logging.DEBUG)    
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler = logging.FileHandler("fgmoveshell.log")
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.propagate = False
     
+        
     # load configuration
     _moveConf = RainMoveServerConf()
     _moveConf.load_moveServerConfig()
     
-    fgfabric = Fabric(_moveConf)
+    fgfabric = Fabric(_moveConf, logger, True)
     
     _currentObj = None
     _currentCls = None

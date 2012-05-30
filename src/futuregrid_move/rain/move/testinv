@@ -9,6 +9,7 @@ i07.hotel,,149.165.148.7
 i08.hotel,,149.165.148.8
 i09.hotel,,149.165.148.9
 i10.hotel,,149.165.148.10
+i101.hotel,i101,111.111.111.111
 
 [CLUSTER:INDIA]
 i01.india,i01,149.165.146.1
@@ -22,6 +23,7 @@ i08.india,i08,149.165.146.8
 i09.india,i09,149.165.146.9
 i10.india,i10,149.165.146.10
 i100.india,i200,111.111.111.111
+i101.india,i101,111.111.111.111
 
 [SERVICE:NIMBUS:HOTELNIMBUS]
 i01.hotel
@@ -31,16 +33,16 @@ i04.hotel
 i05.hotel
 
 [SERVICE:EUCALYPTUS:INDIAEUCA]
-i07.india
 i08.india
 i09.india
 i10.india
 i100.india
-i101.india
 
 [SERVICE:HPC:INDIAHPC]
 i01.india
 i02.india
 i03.india
 i04.india
+i07.india
+i101.india
 

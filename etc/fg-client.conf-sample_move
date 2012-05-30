@@ -1,0 +1,31 @@
+#******************************************************************************
+# FutureGrid Client Configuration File
+#******************************************************************************
+
+
+#******************************************************************************
+# Rain Move Client Configuration
+#------------------------------------------------------------------------------
+#  port: Port where our RainMoveServer is listening
+#
+#  serveraddr: Address of the server machine
+#
+#  log: file where rain move client logs are stored
+#  
+#  log_level: debug level. It can be debug, error, info, warning
+#
+#  ca_cert: authority that sign the certificate
+#
+#  certfile: x509 certificate used by the service
+#
+#  keyfile: key of the certificate
+#******************************************************************************
+[RainMove]
+port = 56795
+serveraddr=localhost
+log=~/clientrainmove.log
+log_level=debug
+ca_cert=/opt/futuregrid/futuregrid/etc/imdclient/cacert.pem
+certfile=/opt/futuregrid/futuregrid/etc/imdclient/imdccert.pem
+keyfile=/opt/futuregrid/futuregrid/etc/imdclient/privkey.pem
+

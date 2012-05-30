@@ -1,10 +1,10 @@
-from Resource import Resource, Node, Cluster, Service
+from futuregrid_move.rain.move.Resource import Resource, Node, Cluster, Service
 
 class EucaService(Service):
-    def __init__(self, id, res=dict()):
+    def __init__(self, resId, res=dict()):
         super(EucaService, self).__init__()
         
-        self._id = id
+        self._id = resId
         self._type = "Eucalyptus"
         self._res = res
         

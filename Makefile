@@ -1,3 +1,16 @@
+egg:
+	python setup.py bdist_egg
+
+tar:
+	python setup.py sdist
+
+upload:
+	python setup.py bdist_egg upload
+	python setup.py sdist upload
+
+register:
+	python setup.py register
+
 ######################################################################
 # GIT INTERFACES
 ######################################################################
@@ -39,15 +52,6 @@ test:
 	fg-local
 
 ######################################################################
-# PYPI
-######################################################################
-
-upload:
-	make -f Makefile pip
-#	python setup.py register
-	python setup.py sdist upload
-
-######################################################################
 # QC
 ######################################################################
 
@@ -57,9 +61,9 @@ qc-install:
 	sudo pip install pyflakes
 
 qc:
-	pep8 ./futuregrid/virtual/cluster/
-	pylint ./futuregrid/virtual/cluster/ | less
-	pyflakes ./futuregrid/virtual/cluster/
+	pep8 ./src/futuregrid/rain/move/
+	pylint ./src/futuregrid/rain/move/ | less
+	pyflakes ./src/futuregrid/rain/move/
 
 # #####################################################################
 # CLEAN
@@ -71,6 +75,10 @@ clean:
 	find . -name "*.pyc" -exec rm {} \;  
 	rm -rf build dist *.egg-info *~ #*
 	cd doc; make clean
+	rm -f distribute*.gz distribute*.egg 
+	rm -rf src/futuregrid.egg-info
+	rm -f PKG-INFO
+
 
 ######################################################################
 # pypi
@@ -79,7 +87,7 @@ clean:
 pip-register:
 	python setup.py register
 
-upload:
+pip-upload:
 	make -f Makefile pip
 	python setup.py sdist upload
 
@@ -94,6 +102,10 @@ sphinx:
 # PUBLISH GIT HUB PAGES
 ###############################################################################
 
-gh-pages:
+gh-pages: clean
 	git checkout gh-pages
 	make
+
+gh-pages-devmode:
+	git checkout gh-pages
+	make all-devmode

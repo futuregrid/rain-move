@@ -9,11 +9,15 @@ __version__ = '0.1'
 import abc
 import json
 import re
-from Resource import Resource, Node, Cluster, Service
-from EucaService import EucaService
-from OpenStackService import OpenStackService
-from NimbusService import NimbusService
-from HPCService import HPCService
+import logging
+import logging.handlers
+
+
+from futuregrid_move.rain.move.Resource import Resource, Node, Cluster, Service
+from futuregrid_move.rain.move.EucaService import EucaService
+from futuregrid_move.rain.move.OpenStackService import OpenStackService
+from futuregrid_move.rain.move.NimbusService import NimbusService
+from futuregrid_move.rain.move.HPCService import HPCService
 
 class Inventory(object):
     '''Abstract base class that defines inventory for a fabric.
@@ -47,9 +51,9 @@ class InventoryFile(Inventory):
     
     def read(self):
         '''reading from file'''
-        file = open(self._cfgfile)
-        content = file.read()
-        file.close()
+        file_inv = open(self._cfgfile)
+        content = file_inv.read()
+        file_inv.close()
         nodes = []
         clusters = dict()
         services = dict()
@@ -88,20 +92,20 @@ class InventoryFile(Inventory):
                     m = nodeallregex.match(line)
                     #node list for cluster in form of: identifier,name,ip
                     if m is not None:
-                        id = m.group(1)
+                        resId = m.group(1)
                         name = m.group(2)
                         ip = m.group(3)
-                        #print id, name, ip
-                        nodes.append([id,name,ip,clustername])
-                        current.append([id,name,ip,clustername])
+                        #print resId, name, ip
+                        nodes.append([resId,name,ip,clustername])
+                        current.append([resId,name,ip,clustername])
                         
                     #node list for service in format of: identifier
                     else:
                         nodeidregex = re.compile('(.+)')
                         m = nodeidregex.match(line)
                         if m is not None:
-                            id = m.group(1)
-                            current.append(id)
+                            resId = m.group(1)
+                            current.append(resId)
                         else:
                             print "ERROR"
                     #print line
@@ -113,7 +117,7 @@ class InventoryFile(Inventory):
         '''construct strings from he updated data and write it to file'''
         clusters = data['clusters']
         services = data['services']
-        file = open(self._cfgfile, 'w')
+        file_inv = open(self._cfgfile, 'w')
         str2print = ''
         # write cluster data first
         for acluster in sorted(clusters.keys()):
@@ -139,8 +143,8 @@ class InventoryFile(Inventory):
                 node = servicenodes[anodeid]
                 str2print += node.identifier + '\n'
             str2print += '\n'
-        file.write(str2print)
-        file.close()
+        file_inv.write(str2print)
+        file_inv.close()
         return
 
 class InventoryDB(Inventory):
@@ -158,9 +162,14 @@ class Fabric(object):
     '''Fabric class that defines a set of nodes, clusters, and services'''
     # service type and classname mapping
     svctype = {'hpc':'HPC', 'eucalyptus':'Euca', 'nimbus':'Nimbus', 'openstack':'OpenStack'}
-    def __init__(self, moveConf, nodes=(), clusters=(), services=()):
+    def __init__(self, moveConf, logger, verbose=True, nodes=(), clusters=(), services=()):
         self._moveConf=moveConf
+        self.logger=logger
+        self.verbose=verbose
         self._inventory = None
+        self._nodes={}
+        self._clusters={}
+        self._services={}
         self.update(nodes, clusters, services)
             
     def load(self, inventory):
@@ -168,7 +177,10 @@ class Fabric(object):
         #print inventory.__class__.__name__
         self._inventory = inventory
         data = self._inventory.read()
-        print data
+        if self.verbose:
+            print data
+        else:
+            self.logger.debug(str(data))
         _nodes = []
         _clusters = []
         _services = []
@@ -189,13 +201,17 @@ class Fabric(object):
             nodeids = servicesdata[servicename]['nodes']
             #nodes = [self.getNode(id) for id in nodeids]
             nodes = {}
-            for id in nodeids:
-                anode = self.getNode(id)
+            for resId in nodeids:
+                anode = self.getNode(resId)
                 anode.allocated = servicename
-                nodes[id] = anode
+                nodes[resId] = anode
             classname = Fabric.svctype[atype] + 'Service'
+            
             aservice = eval(classname)(servicename, nodes)
             aservice.load_config(self._moveConf)  # Load configuration to contact remote sites
+            aservice.setLogger(self.logger)  # include log descriptor
+            aservice.setVerbose(self.verbose)  # enable print in the screen
+            
             _services.append(aservice)
         self.update(_nodes,_clusters,_services)
         return
@@ -240,15 +256,31 @@ class Fabric(object):
         else:
             ret = self._services
         return ret
+    
+    def addNode(self, node):
+        '''Add a Node to the node dict'''
+        self._nodes[node.identifier]=node
+        
+    def addCluster(self, cluster):
+        '''Add a Cluster to the cluster dict'''
+        self._clusters[cluster.identifier]=cluster
+        
+    def addService(self, service):
+        '''Add a Service to the service dict'''
+        self._services[service.identifier]=service
+    
         
     def update(self, nodes=(), clusters=(), services=()):
         '''update the nodes, clusters, and services data'''
         self.updateNodes(nodes)
         self.updateClusters(clusters)
         self.updateServices(services)
-        print "updating inventory...."
-        print self._inventory
-        print "just printed the inventory of the fabric"
+        if self.verbose:
+            print "updating inventory...."
+            print self._inventory
+            print "just printed the inventory of the fabric"
+        else:
+            self.logger.debug("updating inventory....")
         if self._inventory is not None:
             self.store()
            

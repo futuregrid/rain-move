@@ -32,9 +32,7 @@ from multiprocessing import Process
 from subprocess import *
 import time
 
-
-
-from RainMoveServerConf import RainMoveServerConf
+from futuregrid_move.rain.move.RainMoveServerConf import RainMoveServerConf
 
 class RainMoveServerSites(object):
 
