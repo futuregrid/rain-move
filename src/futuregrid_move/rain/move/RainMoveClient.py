@@ -235,7 +235,7 @@ def main():
     
     print 'Starting Move Client...'
     
-    print args
+    #print args
 
     used_args = sys.argv[1:]
 

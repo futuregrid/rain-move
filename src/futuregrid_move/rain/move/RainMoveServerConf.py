@@ -83,7 +83,9 @@ class RainMoveServerConf(object):
         self._MoveSiterefresh_status = 0
         #self._MoveSitenopasswdusers = {}  #dic {'user':['ip','ip1'],..}
         self._MoveSitelog = ""
-        self._MoveSitelogLevel = ""   
+        self._MoveSitelogLevel = ""
+        self._MoveSitemax_wait = 0 
+        self._MoveSiteEc2varfile = ""
         self._MoveSiteServerca_certs = ""
         self._MoveSiteServercertfile = ""
         self._MoveSiteServerkeyfile = ""
@@ -146,6 +148,10 @@ class RainMoveServerConf(object):
         return self._MoveSitelog
     def getMoveSiteLogLevel(self):
         return self._MoveSitelogLevel
+    def getMovesiteMaxWait(self):
+        return self._MoveSitemax_wait
+    def getMoveSiteEc2varfile(self):
+        return self._MoveSiteEc2varfile
     def getMoveSiteServerCaCerts(self):
         return self._MoveSiteServerca_certs
     def getMoveSiteServerCertFile(self): 
@@ -315,6 +321,19 @@ class RainMoveServerConf(object):
             tempLevel = self._logLevel_default
         self._MoveSitelogLevel = eval("logging." + tempLevel)
         
+        try:
+            self._MoveSitemax_wait = int(self._config.get(section, 'max_wait', 0))
+        except ConfigParser.NoOptionError:
+            print "Error: No max_wait option found in section " + section + " file " + self._configfile
+            sys.exit(1)
+        try:
+            self._MoveSiteEc2varfile = os.path.expanduser(self._config.get(section, 'ec2varfile', 0))
+        except ConfigParser.NoOptionError:
+            print "Error: No ec2varfile option found in section " + section + " file " + self._configfile
+            sys.exit(1)
+        if not os.path.isfile(self._MoveSiteEc2varfile):
+            print "Error: ec2varfile file not found in "  + self._MoveSiteEc2varfile 
+            sys.exit(1)        
         try:
             self._MoveSiteServerca_certs = os.path.expanduser(self._config.get(section, 'ca_cert', 0))
         except ConfigParser.NoOptionError:

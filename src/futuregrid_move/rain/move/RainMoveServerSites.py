@@ -31,6 +31,8 @@ import socket, ssl
 from multiprocessing import Process
 from subprocess import *
 import time
+import boto
+import boto.ec2
 
 from futuregrid_move.rain.move.RainMoveServerConf import RainMoveServerConf
 
@@ -52,6 +54,8 @@ class RainMoveServerSites(object):
         self.refresh_status = self._rainSitesConf.getMoveSiteRefreshStatus()
         self.log_filename = self._rainSitesConf.getMoveSiteLog()
         self.logLevel = self._rainSitesConf.getMoveSiteLogLevel()
+        self.service_max_wait = self._rainSitesConf.getMovesiteMaxWait()
+        self.ec2varfile = self._rainSitesConf.getMoveSiteEc2varfile()
         
         self._ca_certs = self._rainSitesConf.getMoveSiteServerCaCerts()
         self._certfile = self._rainSitesConf.getMoveSiteServerCertFile()
@@ -128,6 +132,10 @@ class RainMoveServerSites(object):
     
                 
     def process_client(self, connstream, fromaddr):
+        
+        success = False
+        status = "Wrong Operation (default msg)"
+        
         start_all = time.time()
         self.logger = self.setup_logger("." + str(os.getpid()))
         self.logger.info('Accepted new connection')
@@ -142,9 +150,13 @@ class RainMoveServerSites(object):
         #params[2] is the operation argument
         
         
-        service = params[0].strip()
+        service = (params[0].strip()).lower()
         operation = params[1].strip()
         argument = params[2].strip()
+        try:
+            forcemove = eval(params[3].strip())
+        except:
+            forcemove = False
         #MORE PARAMETERS ARE NEEDED
         #operation site, infrastructure origin, infrastructure destination, number machines,
         #reinstall?, image source, partitions,
@@ -159,18 +171,415 @@ class RainMoveServerSites(object):
         
         if operation == 'add':
             self.logger.debug("Add machine " + argument + " to the service " + service)
-            
+            if service == "openstack":
+                success, status = self.add_openstack(argument, forcemove)
+            elif service == "eucalyptus":
+                success, status = self.add_euca(argument, forcemove)
         elif operation == 'remove':
-            self.logger.debug("Remove machine " + argument + " from the service " + service)            
+            self.logger.debug("Remove machine " + argument + " from the service " + service)
+            if service == "openstack":
+                success, status = self.remove_openstack(argument, forcemove)
+            elif service == "eucalyptus":
+                success, status = self.remove_euca(argument, forcemove)
         else:
             self.logger.debug("Operation " + operation + " Service " + service + " Argument " + argument)           
         
-        connstream.write("True")
+        if success:  
+            connstream.write("OK")
+        else:
+            self.logger.error(status)
+            connstream.write(status)
+            
         try:
             connstream.shutdown(socket.SHUT_RDWR)
             connstream.close()
         except:
             self.logger.error("ERROR: " + str(sys.exc_info()))
+
+    def add_openstack(self, hostname):
+        exitloop=False
+        success=False
+        status = ""
+        wait = 0
+        max_wait = self.service_max_wait / 10
+        while not exitloop:
+            cmd="sudo nova-manage service list --host " + hostname
+            self.logger.debug(cmd)
+            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+            std = p.communicate()
+            if p.returncode != 0:
+                status = "ERROR: Listing hosts. " + str(std[1])
+                self.logger.error(status)                        
+                exitloop=True
+                success=False
+            else:
+                output = std[0].split()
+                output = output[6:]
+                if len(output) >= 6:                
+                    if output[4].strip() == ':-)':        
+                        if output[3].strip() == "enabled":
+                            self.logger.debug("Node " +hostname+ " is active and enabled")
+                            exitloop=True
+                            success=True
+                        elif output[3].strip() == "disabled":
+                            self.logger.debug("Node " +hostname+ " is active and disabled")
+                            self.logger.debug("Enabling None")
+                            cmd="sudo nova-manage service enable " + hostname + " nova-compute"
+                            self.logger.debug(cmd)
+                            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+                            std = p.communicate()
+                            if p.returncode != 0:
+                                status = "ERROR: Enabling node " +hostname+ ". " + str(std[1])
+                                self.logger.error(status)                        
+                                exitloop=True
+                                success=False
+                    else:
+                        self.logger.debug("The Node " +hostname+ " is not active. We will keep trying.")                        
+                        if wait < max_wait:
+                            wait+=10
+                            time.sleep(10)
+                        else:
+                            exitloop=True
+                            success=False
+                            status = "ERROR: Timeout. The node " +hostname+ " is not active."
+                else:
+                    self.logger.debug("The Node " +hostname+ " is not in the list. We will keep trying.")                        
+                    if wait < max_wait:
+                        wait+=10
+                        time.sleep(10)
+                    else:
+                        exitloop=True
+                        success=False
+                        status = "ERROR: Timeout. The node " +hostname+ " is not in the list."
+                        
+        return success, status
+
+    def add_euca(self, hostname):
+        
+        exitloop=False
+        success=False
+        status = ""
+        wait = 0
+        max_wait = self.service_max_wait / 10        
+        num_notfounds=0
+        
+        #TODO?: WE MAY NEED TO WAIT UNTIL THE MACHINE HAS SSH ACCESS.
+        
+        cmd="sudo euca_conf --register-nodes " + hostname
+        self.logger.debug(cmd)
+        p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+        std = p.communicate()
+        if p.returncode != 0:
+            status = "ERROR: Registering the node " +hostname+ ". " + str(std[1])
+            self.logger.error(status)
+            exitloop=True
+        else:
+            self.logger.debug("Node " +hostname+ " registered." + std[0])
+            #TODO?:Here, we may need to check if the keys are properly propagated
+            #Eucalyptus does not have a way to check if the compute-node is OK from the management machine
+        
+        while not exitloop:    
+            self.logger.debug("checking if the node is registered")
+            cmd="sudo euca_conf --list-nodes"
+            self.logger.debug(cmd)
+            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+            std = p.communicate()
+            if p.returncode != 0:
+                status = "ERROR: Listing hosts. " + str(std[1])
+                self.logger.error(status)                        
+                exitloop=True
+                success=False
+            else:                
+                output = std[0].split('\n')
+                found=False
+                for entry in output:
+                    if '\t'+hostname+'\t' in entry:
+                        status = "The node " +hostname+ " appears on the list"
+                        self.logger.debug(status)
+                        exitloop=True
+                        found=True
+                        success=True
+                        num_notfounds=0
+                        break
+                if not found:
+                    if num_notfounds == 5: #this is because euca_conf --list-nodes does not return the whole list sometimes
+                        exitloop=True
+                        success=False
+                        status = "ERROR: Node " +hostname+ " is not found in the host list. It has not been registered properly"
+                    else:
+                        num_notfounds +=1 
+                        time.sleep(2)
+                        
+        return success, status
+
+    def remove_euca(self, hostname, forcemove):
+        status = ""
+        exitloop=False
+        success=False
+        wait = 0
+        max_wait = self.service_max_wait / 10
+        found=False
+        num_notfounds=0
+        while not exitloop:
+            self.logger.debug("Checking if the node is free")
+            cmd="sudo euca_conf --list-nodes"
+            self.logger.debug(cmd)
+            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+            std = p.communicate()
+            if p.returncode != 0:
+                status = "ERROR: describing resources node. " + str(std[1])
+                self.logger.error(status)                        
+                exitloop=True
+                success=False
+            else:
+                #print std[0]
+                output = std[0].split('\n')
+                #print output
+                listvms=[]
+                for entry in output:
+                    if '\t'+hostname+'\t' in entry:
+                        num_notfounds=0
+                        found = True
+                        parts=entry.split('\t')
+                        if len(parts) < 4:
+                            self.logger.debug("Machine " +hostname+ " is free. Deregistering...")
+                            cmd="sudo euca_conf --deregister-nodes " + hostname
+                            self.logger.debug(cmd)
+                            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+                            std = p.communicate()
+                            if p.returncode != 0:
+                                self.logger.error("ERROR: Deregistering node. " + str(std[1]))                        
+                                exitloop=True
+                                success=False
+                            else:
+                                exitloop=True
+                                success = True
+                        elif(forcemove):
+                            for i in range(3,len(parts)):
+                                listvms.append(parts[i])
+                            self.logger.debug("Killing instances")
+                            status = self.terminate_instances(hostname, "eucalyptus", listvms)
+                            if status != "OK":
+                                self.logger.error(status)                        
+                                exitloop=True
+                                success=False                
+                            self.logger.debug("After terminate instances call")  
+                            time.sleep(5)
+                        else:
+                            self.logger.debug("Waiting until free")
+                            if wait < max_wait:
+                                wait+=10
+                                time.sleep(10)
+                            else:
+                                exitloop=True
+                                success=False
+                                status = "ERROR: Timeout. The node " +hostname+ " is busy. Try to use force move"
+                        break
+                if not found:
+                    if num_notfounds == 5: #this is because euca_conf --list-nodes does not return the whole list sometimes
+                        exitloop=True
+                        success=False
+                        status = "ERROR: Node " +hostname+ " is not found in the host list."
+                    else:
+                        num_notfounds +=1 
+                        time.sleep(2)
+                        status = "ERROR: Timeout. The node " +hostname+ " is busy. Try to use force move"
+                        
+        return success, status
+                        
+    def remove_openstack(self, hostname, forcemove):
+        status=""
+        exitloop=False
+        wait = 0
+        max_wait = self.service_max_wait / 10
+        while not exitloop:
+            self.logger.debug("Checking if the node is free")
+            cmd="sudo nova-manage service describe_resource " + hostname
+            self.logger.debug(cmd)
+            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+            std = p.communicate()
+            if p.returncode != 0:
+                status = "ERROR: describing resources node. " + str(std[1])
+                self.logger.error(status)                        
+                exitloop=True
+                success=False
+            else:
+                #print std[0]
+                output = std[0].split()
+                output = output[5:]
+                n_instances=int(output[7])
+                if n_instances == 0:
+                    self.logger.debug("Node " +hostname+ " is free. Disabling")
+                    cmd="sudo nova-manage service disable " + hostname + " nova-compute"
+                    self.logger.debug(cmd)
+                    p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+                    std = p.communicate()
+                    if p.returncode != 0:
+                        status = "ERROR: Disabling node. " + str(std[1])
+                        self.logger.error(status)                        
+                        exitloop=True
+                        success=False
+                    else:
+                        exitloop=True
+                        success = True
+                elif forcemove:
+                    self.logger.debug("Killing instances")
+                    status = self.terminate_instances(hostname,"openstack", None)
+                    if status != "OK":                        
+                        self.logger.error(status)                        
+                        exitloop=True
+                        success=False                
+                    self.logger.debug("After terminate instances call")
+                    time.sleep(5) #allow them some time to change the status   
+                else:
+                    self.logger.debug("Waiting until free")
+                    if wait < max_wait:
+                        wait+=10
+                        time.sleep(10)
+                    else:
+                        exitloop=True
+                        success=False
+                        status = "ERROR: Timeout. The node " +hostname+ " is busy. Try to use force move"
+
+        return success, status
+    
+    def terminate_instances(self, hostname, cloudtype, instanceslist):
+        try:
+            if cloudtype == "openstack":
+                path,region,ec2_url = self.openstack(self.ec2varfile)
+            elif cloudtype =="eucalytpus":
+                path,region,ec2_url = self.euca(self.ec2varfile)
+        except:
+            msg = "ERROR: getting environment variables " + str(sys.exc_info())            
+            self.logger.error(msg)                        
+            return msg
+
+        endpoint = ec2_url.lstrip("http://").split(":")[0]
+
+        try:  
+            region = boto.ec2.regioninfo.RegionInfo(name=region, endpoint=endpoint)
+        except:
+            msg = "ERROR: getting region information " + str(sys.exc_info())            
+            self.logger.error(msg)                        
+            return msg
+        try:
+            connection = boto.connect_ec2(str(os.getenv("EC2_ACCESS_KEY")), str(os.getenv("EC2_SECRET_KEY")), is_secure=False, region=region, port=8773, path=path)
+        except:
+            msg = "ERROR:connecting to EC2 interface. " + str(sys.exc_info())
+            self.logger.error(msg)                        
+            return msg
+
+        if cloudtype == "openstack":
+            try:
+                reservations=connection.get_all_instances() 
+                print str(reservations)
+            except:
+                msg = "ERROR:getting all instances. " + str(sys.exc_info())
+                self.logger.error(msg)                        
+                return msg
+    
+            for r in reservations:
+                for i in r.instances:
+                    if hostname in str(i.key_name):
+                        print "euca_terminate " + i.id 
+                        try:
+                            connection.terminate_instances(str(i.id))
+                        except:
+                            msg= "ERROR: terminating VM. " + str(sys.exc_info())
+                            self.logger.error(msg)                        
+                            #return msg  #we should not return
+                            
+        elif cloudtype=="eucalyptus":
+            for i in instanceslist:
+                print "euca_terminate " + i
+                try:
+                    connection.terminate_instances(str(i))
+                except:
+                    msg = "ERROR: terminating VM. " + str(sys.exc_info())
+                    self.logger.error(msg)                        
+                    #return msg #we should not return
+                    
+        return "OK" 
+
+
+    def euca(self, varfile):
+        self.logger.info('Loading Eucalyptus variables')  
+        
+        euca_key_dir = os.path.dirname(varfile)      
+        if euca_key_dir.strip() == "":
+            euca_key_dir = "."
+        os.environ["EUCA_KEY_DIR"] = euca_key_dir
+                    
+        #read variables
+        f = open(varfile, 'r')
+        for line in f:
+            if re.search("^export ", line):
+                line = line.split()[1]                    
+                parts = line.split("=")
+                #parts[0] is the variable name
+                #parts[1] is the value
+                parts[0] = parts[0].strip()
+                value = ""
+                for i in range(1, len(parts)):
+                    parts[i] = parts[i].strip()
+                    parts[i] = os.path.expanduser(os.path.expandvars(parts[i]))                    
+                    value += parts[i] + "="
+                value = value.rstrip("=")
+                value = value.strip('"')
+                value = value.strip("'") 
+                os.environ[parts[0]] = value
+        f.close()
+            
+        
+        ec2_url = os.getenv("EC2_URL")
+        s3_url = os.getenv("S3_URL")
+        
+        path = "/services/Eucalyptus"
+        region = "eucalyptus"
+        
+        return path, region, ec2_url
+        
+        
+    def openstack(self, varfile):
+        """
+        varfile = openstack variable files(novarc typically)
+        """
+        self.logger.info('Starting Rain Client OpenStack')     
+        nova_key_dir = os.path.dirname(varfile)            
+        if nova_key_dir.strip() == "":
+            nova_key_dir = "."
+        os.environ["NOVA_KEY_DIR"] = nova_key_dir
+                    
+        #read variables
+        f = open(varfile, 'r')
+        for line in f:
+            if re.search("^export ", line):
+                line = line.split()[1]                    
+                parts = line.split("=")
+                #parts[0] is the variable name
+                #parts[1] is the value
+                parts[0] = parts[0].strip()
+                value = ""
+                for i in range(1, len(parts)):
+                    parts[i] = parts[i].strip()
+                    parts[i] = os.path.expanduser(os.path.expandvars(parts[i]))                    
+                    value += parts[i] + "="
+                value = value.rstrip("=")
+                value = value.strip('"')
+                value = value.strip("'") 
+                os.environ[parts[0]] = value
+        f.close()
+        
+        
+        ec2_url = os.getenv("EC2_URL")
+        s3_url = os.getenv("S3_URL")
+        
+        path = "/services/Cloud"
+        region = "nova"
+        
+        return path, region, ec2_url
+
+
 
     def errormsg(self, connstream, msg):
         self.logger.error(msg)

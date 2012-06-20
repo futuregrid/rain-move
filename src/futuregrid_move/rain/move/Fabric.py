@@ -210,7 +210,7 @@ class Fabric(object):
             aservice = eval(classname)(servicename, nodes)
             aservice.load_config(self._moveConf)  # Load configuration to contact remote sites
             aservice.setLogger(self.logger)  # include log descriptor
-            aservice.setVerbose(self.verbose)  # enable print in the screen
+            aservice.setVerbose(self.verbose)  # enable print on the screen
             
             _services.append(aservice)
         self.update(_nodes,_clusters,_services)

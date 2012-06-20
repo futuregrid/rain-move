@@ -12,9 +12,11 @@ import json
 import socket, ssl
 import logging
 import logging.handlers
-
+import sys
 
 from futuregrid_move.rain.move.RainMoveServerConf import RainMoveServerConf
+
+from teefaa.teefaa import Teefaa
 
 class Resource(object):
     '''Abstract base class for Resource'''
@@ -181,6 +183,8 @@ class Cluster(object):
         else:
             ahost.cluster = self.identifier
             self._hosts[ahost.identifier] = ahost
+            ret = True
+        return ret
     
     def remove(self, ahost):
         '''
@@ -227,7 +231,8 @@ class Service(object):
         self._port=None
         self.logger = None
         self.verbose = True
-        
+        self.teefaaobj = Teefaa() #default config file (fg-server.conf) and no verbose
+    
     def setLogger(self, log):
         self.logger=log
         
@@ -242,7 +247,7 @@ class Service(object):
         moveConf.loadMoveRemoteSiteConfig(self._type, self._id)
         self._address=moveConf.getMoveRemoteSiteAddress()
         self._port= moveConf.getMoveRemoteSitePort()
-
+    """
     @abc.abstractmethod
     def doadd(self, ares):
         '''
@@ -257,7 +262,7 @@ class Service(object):
         ###################################
         print "abstract method. Will be implemented in concrete classes"
         return True
-        
+    """    
     @abc.abstractmethod
     def cbadd(self, ares):
         '''
@@ -269,7 +274,7 @@ class Service(object):
         ###################################
         print "abstract method. Will be implemented in concrete classes"
         return True
-        
+    """
     @abc.abstractmethod
     def doremove(self, ares):
         '''
@@ -284,7 +289,7 @@ class Service(object):
         ###################################
         print "abstract method. Will be implemented in concrete classes"
         return True
-        
+    """   
     @abc.abstractmethod
     def cbremove(self, ares):
         '''
@@ -346,8 +351,11 @@ class Service(object):
         return connection
     
     def socketCloseConnection(self, connstream):
-        connstream.shutdown(socket.SHUT_RDWR)
-        connstream.close()
+        try:
+            connstream.shutdown(socket.SHUT_RDWR)
+            connstream.close()
+        except:
+            self.logger.error("ERROR: closing connection. " + str(sys.exc_info()))
     
     def list(self):
         return self._res
@@ -430,3 +438,83 @@ class Service(object):
             self.logger.error(msg)
             
         return ret
+
+    def doadd(self, ares): #This is the same in all the sub classes
+        success = False
+        
+        msg = "INSIDE " + self._type + "Service:doadd: add into " + self._type + " service"
+        self.logger.debug(msg)
+        if self.verbose:
+            print msg
+        
+        msg = "Calling Teefaa provisioning"
+        self.logger.debug(msg)
+        if self.verbose:
+            print msg
+            
+        status = self.teefaaobj.provision(ares.name, self._type, ares.cluster)        
+        
+        if status != 'OK':
+            self.logger.error(status)
+            if self.verbose:
+                print status
+            success = False
+        else:
+            msg = "Teefaa provisioned the host " + ares.name + " of the site " + ares.cluster + " with the os " + self._type + " successfully"
+            self.logger.debug(msg)
+            if self.verbose:
+                print msg
+                    
+            msg = "Calling RainMoveSite to ensure the node is active in the service"
+            self.logger.debug(msg)
+            if self.verbose:
+                print msg
+            
+            connection=self.socketConnection()
+            if connection != None:
+                connection.write(self._type + ", add, " + ares.name)
+                status = connection.read(1024)
+                self.socketCloseConnection(connection)
+                if status == "OK":
+                    success = True
+                else:
+                    success = False
+                    self.logger.error(status)
+                    if self.verbose:
+                        print status                
+            else:
+                msg = "ERROR: Connecting with the remote site. The node was not allocated to the service."
+                self.logger.error(msg)
+                if self.verbose:
+                    print msg        
+        
+        return success
+
+    def doremove(self, ares): #This is the same in all the classes. We should move it to the father
+        success = False
+        
+        msg = "INSIDE " + self._type + "Service:doremove: remove from " + self._type + " service"
+        self.logger.debug(msg)
+        if self.verbose:
+            print msg
+        
+        connection=self.socketConnection()
+        if connection != None:
+            connection.write(self._type + ", remove, " + ares.name)
+            status = connection.read(1024)
+            self.socketCloseConnection(connection)
+            
+            if status == "OK":
+                success = True
+            else:
+                success = False
+                self.logger.error(status)
+                if self.verbose:
+                    print status       
+        else:
+            msg = "ERROR: Connecting with the remote site. The node was not removed."
+            self.logger.error(msg)
+            if self.verbose:
+                print msg
+        
+        return success

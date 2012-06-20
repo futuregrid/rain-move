@@ -116,8 +116,8 @@ class RainMoveServer(object):
                 self.logger.error("Unsuccessful connection attempt from: " + repr(fromaddr))
             except socket.error:
                 self.logger.error("Error with the socket connection")
-            except:
-                self.logger.error("Uncontrolled Error: " + str(sys.exc_info()))
+            #except:
+            #    self.logger.error("Uncontrolled Error: " + str(sys.exc_info()))
             finally:
                 if type(connstream) is ssl.SSLSocket:
                     try: 
@@ -185,14 +185,14 @@ class RainMoveServer(object):
                 self.errormsg(connstream, msg)
                 return
 
-        try:
+        #try:
             
-            status = eval("self." + self.operation + "()")
+        status = eval("self." + self.operation + "()")
             
-        except:
-            msg = "ERROR: incorrect operation " + str(sys.exc_info())
-            self.errormsg(connstream, msg)
-            return
+        #except:
+        #    msg = "ERROR: incorrect operation " + str(sys.exc_info())
+        #    self.errormsg(connstream, msg)
+        #    return
    
 
         if status != 'OK':

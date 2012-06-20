@@ -94,6 +94,11 @@ port=56803
 #
 #  log_level: debug level. It can be debug, error, info, warning
 #
+#  max_wait: Maximum time the service wait until a machine becames free or for
+#  a new machine to appear
+#
+#  ec2varfile: EC2 variables' file (eucarc or novarc). Used to terminate instances
+#
 #  ca_cert: authority that sign the certificate
 #
 #  certfile: x509 certificate used by the service
@@ -105,8 +110,10 @@ port=56803
 port = 56796
 proc_max = 5
 refresh = 20
-log = moveserver.log
+log = movesiteserver.log
 log_level = debug
+max_wait = 1000
+ec2varfile = ~/eucarc
 ca_cert=/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
 certfile=/opt/futuregrid/futuregrid/etc/imdserver/imdscert.pem
 keyfile=/opt/futuregrid/futuregrid/etc/imdserver/privkey.pem
