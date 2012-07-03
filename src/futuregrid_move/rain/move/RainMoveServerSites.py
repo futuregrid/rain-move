@@ -263,52 +263,73 @@ class RainMoveServerSites(object):
         max_wait = self.service_max_wait / 10        
         num_notfounds=0
         
-        #TODO?: WE MAY NEED TO WAIT UNTIL THE MACHINE HAS SSH ACCESS.
         
-        cmd="sudo euca_conf --register-nodes " + hostname
-        self.logger.debug(cmd)
-        p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
-        std = p.communicate()
-        if p.returncode != 0:
-            status = "ERROR: Registering the node " +hostname+ ". " + str(std[1])
-            self.logger.error(status)
-            exitloop=True
-        else:
-            self.logger.debug("Node " +hostname+ " registered." + std[0])
-            #TODO?:Here, we may need to check if the keys are properly propagated
-            #Eucalyptus does not have a way to check if the compute-node is OK from the management machine
+        #TODO WHILE with timeout.
+        #'nc -zw3 '+ hostname + ' 22'
         
-        while not exitloop:    
-            self.logger.debug("checking if the node is registered")
-            cmd="sudo euca_conf --list-nodes"
+        access = False
+        while not access and wait < max_wait:                
+            cmd = "nv -zw3 " + hostname + " 22"                    
+            p = Popen(cmd, shell=True, stdout=PIPE)
+            status = os.waitpid(p.pid, 0)[1]
+            #print status                  
+            if status == 0:
+                access = True
+                self.logger.debug("The machine " + hostname + " seems to be online")    
+            else:
+                wait += 1
+                if wait >= max_wait:
+                    status = "Could not get access to the machine " + hostname
+                    self._log.error(status)
+                    break
+                else:
+                    time.sleep(5)
+                
+        if access:
+            cmd="sudo euca_conf --register-nodes " + hostname
             self.logger.debug(cmd)
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             std = p.communicate()
             if p.returncode != 0:
-                status = "ERROR: Listing hosts. " + str(std[1])
-                self.logger.error(status)                        
+                status = "ERROR: Registering the node " +hostname+ ". " + str(std[1])
+                self.logger.error(status)
                 exitloop=True
-                success=False
-            else:                
-                output = std[0].split('\n')
-                found=False
-                for entry in output:
-                    if '\t'+hostname+'\t' in entry:
-                        status = "The node " +hostname+ " appears on the list"
-                        self.logger.debug(status)
-                        exitloop=True
-                        found=True
-                        success=True
-                        num_notfounds=0
-                        break
-                if not found:
-                    if num_notfounds == 5: #this is because euca_conf --list-nodes does not return the whole list sometimes
-                        exitloop=True
-                        success=False
-                        status = "ERROR: Node " +hostname+ " is not found in the host list. It has not been registered properly"
-                    else:
-                        num_notfounds +=1 
-                        time.sleep(2)
+            else:
+                self.logger.debug("Node " +hostname+ " registered." + std[0])
+                #TODO?:Here, we may need to check if the keys are properly propagated
+                #Eucalyptus does not have a way to check if the compute-node is OK from the management machine
+            
+            while not exitloop:    
+                self.logger.debug("checking if the node is registered")
+                cmd="sudo euca_conf --list-nodes"
+                self.logger.debug(cmd)
+                p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+                std = p.communicate()
+                if p.returncode != 0:
+                    status = "ERROR: Listing hosts. " + str(std[1])
+                    self.logger.error(status)                        
+                    exitloop=True
+                    success=False
+                else:                
+                    output = std[0].split('\n')
+                    found=False
+                    for entry in output:
+                        if '\t'+hostname+'\t' in entry:
+                            status = "The node " +hostname+ " appears on the list"
+                            self.logger.debug(status)
+                            exitloop=True
+                            found=True
+                            success=True
+                            num_notfounds=0
+                            break
+                    if not found:
+                        if num_notfounds == 5: #this is because euca_conf --list-nodes does not return the whole list sometimes
+                            exitloop=True
+                            success=False
+                            status = "ERROR: Node " +hostname+ " is not found in the host list. It has not been registered properly"
+                        else:
+                            num_notfounds +=1 
+                            time.sleep(2)
                         
         return success, status
 
@@ -368,7 +389,7 @@ class RainMoveServerSites(object):
                         else:
                             self.logger.debug("Waiting until free")
                             if wait < max_wait:
-                                wait+=10
+                                wait+=1
                                 time.sleep(10)
                             else:
                                 exitloop=True
@@ -434,7 +455,7 @@ class RainMoveServerSites(object):
                 else:
                     self.logger.debug("Waiting until free")
                     if wait < max_wait:
-                        wait+=10
+                        wait+=1
                         time.sleep(10)
                     else:
                         exitloop=True
