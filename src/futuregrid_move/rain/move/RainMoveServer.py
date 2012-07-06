@@ -140,6 +140,11 @@ class RainMoveServer(object):
         #params[4] is operation (add, remove, create, list...)
         #params[5] is arguments. This can be a list or a string. We can use eval() if it is a list.
         
+        if len(params) != self.numparams:
+            msg = "ERROR: incorrect message"
+            self.errormsg(connstream, msg)
+            return
+        
         self.user = params[0]
         passwd = params[1]
         passwdtype = params[2]
@@ -155,10 +160,7 @@ class RainMoveServer(object):
             self.arguments = [params[5]]  #here means the argument was an string
         
 
-        if len(params) != self.numparams:
-            msg = "ERROR: incorrect message"
-            self.errormsg(connstream, msg)
-            return
+        
         
         retry = 0
         maxretry = 3
