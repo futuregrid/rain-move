@@ -166,7 +166,7 @@ class RainMoveServer(object):
         while (not endloop):            
             userCred = FGCredential(passwdtype, passwd)          
             if self.user in self.authorizedusers:
-                if (self.auth(self.user, userCred)):
+                if (self.auth(userCred)):
                     connstream.write("OK")                                        
                     endloop = True
                 else:
