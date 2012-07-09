@@ -28,7 +28,7 @@ import binascii
 import ldap
 from getpass import getpass
 
-from futuregrid.utils.fgLog import fgLog
+from futuregrid_move.utils.fgLog import fgLog
 from futuregrid.utils.FGTypes import FGCredential
 
 configFileName = "fg-server.conf"
