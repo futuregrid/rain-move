@@ -166,21 +166,21 @@ class RainMoveServer(object):
         maxretry = 3
         endloop = False
         while (not endloop):
-            userCred = FGCredential(passwdtype, passwd)
-            if self.user in self.authorizedusers:
-                if (self.auth(userCred)):
-                    connstream.write("OK")                                        
-                    endloop = True
+            status = self._service.auth(self.user, passwd, passwdtype)
+            if status == True:
+                connstream.write("OK")
+                endloop = True
+            elif status == False:
+                msg = "ERROR: authentication failed. Try again"
+                self._log.error(msg)
+                retry += 1
+                if retry < maxretry:
+                    connstream.write("TryAuthAgain")
+                    passwd = connstream.read(2048)
                 else:
-                    retry += 1
-                    if retry < maxretry:
-                        connstream.write("TryAuthAgain")
-                        passwd = connstream.read(2048)
-                    else:
-                        msg = "ERROR: authentication failed"
-                        endloop = True
-                        self.errormsg(connstream, msg)
-                        return
+                    msg = "ERROR: authentication failed"                        
+                    self.errormsg(connstream, msg)
+                    sys.exit(1)                
             else:
                 msg = "ERROR: authentication failed. User is not allowed to use this service."
                 endloop = True

@@ -25,7 +25,7 @@ port = 56795
 serveraddr=localhost
 log=~/clientrainmove.log
 log_level=debug
-ca_cert=/opt/futuregrid/futuregrid/etc/imdclient/cacert.pem
-certfile=/opt/futuregrid/futuregrid/etc/imdclient/imdccert.pem
-keyfile=/opt/futuregrid/futuregrid/etc/imdclient/privkey.pem
+ca_cert=/etc/futuregrid/imdclient/cacert.pem
+certfile=/etc/futuregrid/imdclient/imdccert.pem
+keyfile=/etc/futuregrid/imdclient/privkey.pem
 

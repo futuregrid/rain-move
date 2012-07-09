@@ -38,12 +38,12 @@ port = 56795
 authorizedusers = jdiaz, fuwang
 log = moveserver.log
 log_level = debug
-ca_cert=/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
-certfile=/opt/futuregrid/futuregrid/etc/imdserver/imdscert.pem
-keyfile=/opt/futuregrid/futuregrid/etc/imdserver/privkey.pem
-Clientca_cert=/opt/futuregrid/futuregrid/etc/imdclient/cacert.pem
-Clientcertfile=/opt/futuregrid/futuregrid/etc/imdclient/imdccert.pem
-Clientkeyfile=/opt/futuregrid/futuregrid/etc/imdclient/privkey.pem
+ca_cert=/etc/futuregrid/imdserver/cacert.pem
+certfile=/etc/futuregrid/imdserver/imdscert.pem
+keyfile=/etc/futuregrid/imdserver/privkey.pem
+Clientca_cert=/etc/futuregrid/imdclient/cacert.pem
+Clientcertfile=/etc/futuregrid/imdclient/imdccert.pem
+Clientkeyfile=/etc/futuregrid/imdclient/privkey.pem
 
 #******************************************************************************
 # Configuration Sites configuration
@@ -114,6 +114,6 @@ log = movesiteserver.log
 log_level = debug
 max_wait = 1000
 ec2varfile = ~/eucarc
-ca_cert=/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
-certfile=/opt/futuregrid/futuregrid/etc/imdserver/imdscert.pem
-keyfile=/opt/futuregrid/futuregrid/etc/imdserver/privkey.pem
+ca_cert=/etc/futuregrid/imdserver/cacert.pem
+certfile=/etc/futuregrid/imdserver/imdscert.pem
+keyfile=/etc/futuregrid/imdserver/privkey.pem
