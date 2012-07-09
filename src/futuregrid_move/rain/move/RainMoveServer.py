@@ -160,27 +160,25 @@ class RainMoveServer(object):
             self.arguments = [params[5]]  #here means the argument was an string
         
 
-        
-        
         retry = 0
         maxretry = 3
         endloop = False
-        while (not endloop):
-            status = self._service.auth(self.user, passwd, passwdtype)
-            if status == True:
-                connstream.write("OK")
-                endloop = True
-            elif status == False:
-                msg = "ERROR: authentication failed. Try again"
-                self._log.error(msg)
-                retry += 1
-                if retry < maxretry:
-                    connstream.write("TryAuthAgain")
-                    passwd = connstream.read(2048)
+        while (not endloop):            
+            userCred = FGCredential(passwdtype, passwd)          
+            if self.user in self.authorizedusers:
+                if (self.auth(self.user, userCred)):
+                    connstream.write("OK")                                        
+                    endloop = True
                 else:
-                    msg = "ERROR: authentication failed"                        
-                    self.errormsg(connstream, msg)
-                    sys.exit(1)                
+                    retry += 1
+                    if retry < maxretry:
+                        connstream.write("TryAuthAgain")
+                        passwd = connstream.read(2048)
+                    else:
+                        msg = "ERROR: authentication failed"
+                        endloop = True
+                        self.errormsg(connstream, msg)
+                        return
             else:
                 msg = "ERROR: authentication failed. User is not allowed to use this service."
                 endloop = True
