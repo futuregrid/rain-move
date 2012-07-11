@@ -263,8 +263,9 @@ class RainMoveServer(object):
             if existingnode != None:
                 service = self.fgfabric.getService(self.arguments[1])
                 if service != None:
-                    if not service.add(existingnode):
-                        status = "ERROR: adding the node " + self.arguments[0] +  " to the service " + self.arguments[1] + ". Please verify that the node is free by consulting the node information."           
+                    success, restatus = service.add(existingnode)
+                    if not success:
+                        status = "ERROR: adding the node " + self.arguments[0] +  " to the service " + self.arguments[1] + ". " + str(restatus)           
                     self.fgfabric.store()
                 else:
                     status = "ERROR: the Node cannot be added because the Service does not exists"
@@ -282,8 +283,9 @@ class RainMoveServer(object):
         elif self.resource == 'service':  #Remove a node from a service
             service = self.fgfabric.getService(self.arguments[1])
             if service != None:
-                if not service.remove(self.arguments[0]):
-                    status = "ERROR: removing the node " + self.arguments[0] +  " from the service " + self.arguments[1] + ". Please verify that the node is allocated to that service by listing the service nodes."
+                success, restatus = service.remove(self.arguments[0])
+                if not success:
+                    status = "ERROR: removing the node " + self.arguments[0] +  " from the service " + self.arguments[1] + ". " + str(restatus)
                 self.fgfabric.store()
             else:
                 status = "ERROR: the Node cannot be deleted because the Service does not exists"
@@ -293,9 +295,10 @@ class RainMoveServer(object):
     def move(self):
         status = 'ERROR: Wrong resource.'
         if self.resource == 'service':
-            self.remove()
-            self.arguments[1]=self.arguments[2]
-            status = self.add()           
+            status = self.remove()
+            if status == 'OK':
+                self.arguments[1]=self.arguments[2]
+                status = self.add()           
                         
         return status
     

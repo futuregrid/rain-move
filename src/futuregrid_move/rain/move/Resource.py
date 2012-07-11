@@ -384,16 +384,18 @@ class Service(object):
         type ares: Resource type, e.g., Node
         '''
         ret = False
+        msg = ""
         if isinstance(ares, Resource):
             # has to be a free node
             if(ares.allocated == 'FREE'):
-                if self.doadd(ares):
+                success, retstatus = self.doadd(ares)
+                if success:
                     self._res[ares.identifier] = ares
                     ares.allocated = self.identifier
                     self.cbadd(ares)
                     ret = True
                 else:
-                    msg = "ERROR: add operation failed"
+                    msg = "ERROR: add operation failed. " + str(retstatus)
                     if self.verbose:
                         print msg
                     self.logger.error(msg)
@@ -404,7 +406,7 @@ class Service(object):
                     print msg
                 self.logger.error(msg)
                 
-        return ret
+        return ret, msg
 
     def remove(self, aresid):
         '''
@@ -417,16 +419,18 @@ class Service(object):
         type aresid: identifier string of the resource to be removed
         '''
         ret = False
+        msg = ""
         ares = self.get(aresid)
         # has to be being allocated in THE service
         if ares is not None:
-            if self.doremove(ares):
+            success, retstatus = self.doremove(ares)
+            if success:
                 del self._res[ares.identifier]
                 ares.allocated = 'FREE'
                 self.cbremove(ares)
                 ret = True
             else:
-                msg = "ERROR: remove operation failed"
+                msg = "ERROR: remove operation failed. " + str(retstatus)
                 if self.verbose:
                     print msg
                 self.logger.error(msg)
@@ -437,7 +441,7 @@ class Service(object):
                 print msg
             self.logger.error(msg)
             
-        return ret
+        return ret, msg
 
     def doadd(self, ares): #This is the same in all the sub classes
         success = False
@@ -488,7 +492,7 @@ class Service(object):
                 if self.verbose:
                     print msg        
         
-        return success
+        return success, msg
 
     def doremove(self, ares): #This is the same in all the classes. We should move it to the father
         success = False
@@ -517,4 +521,4 @@ class Service(object):
             if self.verbose:
                 print msg
         
-        return success
+        return success, msg
