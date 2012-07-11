@@ -269,7 +269,7 @@ class RainMoveServerSites(object):
         
         access = False
         while not access and wait < max_wait:                
-            cmd = "nv -zw3 " + hostname + " 22"                    
+            cmd = "nc -zw3 " + hostname + " 22"                    
             p = Popen(cmd, shell=True, stdout=PIPE)
             status = os.waitpid(p.pid, 0)[1]
             #print status                  
