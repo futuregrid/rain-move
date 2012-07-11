@@ -231,8 +231,11 @@ class Service(object):
         self._port=None
         self.logger = None
         self.verbose = True
-        self.teefaaobj = Teefaa() #default config file (fg-server.conf) and no verbose
+        self.teefaaobj = None
     
+    def setTeefaa(self, teefaaobj):
+        self.teefaaobj=teefaaobj
+        
     def setLogger(self, log):
         self.logger=log
         

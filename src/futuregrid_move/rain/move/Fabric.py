@@ -19,6 +19,8 @@ from futuregrid_move.rain.move.OpenStackService import OpenStackService
 from futuregrid_move.rain.move.NimbusService import NimbusService
 from futuregrid_move.rain.move.HPCService import HPCService
 
+from teefaa.teefaa import Teefaa
+
 class Inventory(object):
     '''Abstract base class that defines inventory for a fabric.
     read(), and write() methods have to be implemented'''
@@ -170,6 +172,9 @@ class Fabric(object):
         self._nodes={}
         self._clusters={}
         self._services={}
+        
+        self.teefaaobj=Teefaa() #default config file (fg-server.conf) and no verbose
+        
         self.update(nodes, clusters, services)
             
     def load(self, inventory):
@@ -211,6 +216,7 @@ class Fabric(object):
             aservice.load_config(self._moveConf)  # Load configuration to contact remote sites
             aservice.setLogger(self.logger)  # include log descriptor
             aservice.setVerbose(self.verbose)  # enable print on the screen
+            aservice.setTeefaa(self.teefaaobj)
             
             _services.append(aservice)
         self.update(_nodes,_clusters,_services)
