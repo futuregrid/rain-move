@@ -172,9 +172,9 @@ class RainMoveServerSites(object):
         if operation == 'add':
             self.logger.debug("Add machine " + argument + " to the service " + service)
             if service == "openstack":
-                success, status = self.add_openstack(argument, forcemove)
+                success, status = self.add_openstack(argument)
             elif service == "eucalyptus":
-                success, status = self.add_euca(argument, forcemove)
+                success, status = self.add_euca(argument)
         elif operation == 'remove':
             self.logger.debug("Remove machine " + argument + " from the service " + service)
             if service == "openstack":
@@ -202,6 +202,7 @@ class RainMoveServerSites(object):
         status = ""
         wait = 0
         max_wait = self.service_max_wait / 10
+        self.logger.debug("Waiting until the machine is accessible")
         while not exitloop:
             cmd="sudo nova-manage service list --host " + hostname
             self.logger.debug(cmd)
