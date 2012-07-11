@@ -207,7 +207,7 @@ class FGMoveShell(Cmd):
             existingnode = self.fgfabric.getNode(args[0])
             # context class/general, requires -s option
             if isinstance(self._currentObj, dict):
-                service = opts.service
+                servicename = opts.service
                 if servicename:
                     service = self.fgfabric.getService(servicename)                    
                     print existingnode
