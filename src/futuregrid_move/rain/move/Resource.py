@@ -463,6 +463,7 @@ class Service(object):
             if self.verbose:
                 print status
             success = False
+            msg = status
         else:
             msg = "Teefaa provisioned the host " + ares.name + " of the site " + ares.cluster + " with the os " + self._type + " successfully"
             self.logger.debug(msg)
