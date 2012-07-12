@@ -201,6 +201,7 @@ class RainMoveServerSites(object):
         success=False
         status = ""
         wait = 0
+        wait2 = 0
         max_wait = self.service_max_wait / 10
         self.logger.debug("Waiting until the machine is accessible")
         while not exitloop:
@@ -237,7 +238,7 @@ class RainMoveServerSites(object):
                     else:
                         self.logger.debug("The Node " +hostname+ " is not active. We will keep trying.")                        
                         if wait < max_wait:
-                            wait+=10
+                            wait+=1
                             time.sleep(10)
                         else:
                             exitloop=True
@@ -245,8 +246,8 @@ class RainMoveServerSites(object):
                             status = "ERROR: Timeout. The node " +hostname+ " is not active."
                 else:
                     self.logger.debug("The Node " +hostname+ " is not in the list. We will keep trying.")                        
-                    if wait < max_wait:
-                        wait+=1
+                    if wait2 < max_wait:
+                        wait2+=1
                         time.sleep(10)
                     else:
                         exitloop=True
@@ -279,9 +280,9 @@ class RainMoveServerSites(object):
                 self.logger.debug("The machine " + hostname + " seems to be online")    
             else:                
                 if wait < max_wait:
-                    time.sleep(10)
-                else:
                     wait += 1
+                    time.sleep(10)
+                else:                    
                     status = "Could not get access to the machine " + hostname
                     self._log.error(status)
                     break                    
