@@ -246,7 +246,7 @@ class RainMoveServerSites(object):
                 else:
                     self.logger.debug("The Node " +hostname+ " is not in the list. We will keep trying.")                        
                     if wait < max_wait:
-                        wait+=10
+                        wait+=1
                         time.sleep(10)
                     else:
                         exitloop=True
