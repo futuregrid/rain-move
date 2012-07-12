@@ -218,18 +218,21 @@ class RainMoveServer(object):
             else:
                 status = "ERROR: the Cluster already exists"
         elif self.resource == 'service':
-            if self.fgfabric.getService == None:
+            if self.fgfabric.getService == None:                
                 if self.arguments[1].lower() == 'hpc':
-                    self.fgfabric.addService(HPCService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(HPCService(self.arguments[0], self.arguments[1]))
                 elif self.arguments[1].lower() == 'eucalyptus':
-                    self.fgfabric.addService(EucaService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(EucaService(self.arguments[0], self.arguments[1]))
                 elif self.arguments[1].lower() == 'openstack':
-                    self.fgfabric.addService(OpenStackService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(OpenStackService(self.arguments[0], self.arguments[1]))
                 elif self.arguments[1].lower() == 'nimbus':
-                    self.fgfabric.addService(NimbusService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(NimbusService(self.arguments[0], self.arguments[1]))
                 elif self.arguments[1].lower() == 'opennebula':
-                    self.fgfabric.addService(OpenNebulaService(self.arguments[0], self.arguments[1]))
-                self.fgfabric.store()
+                    success, msg = self.fgfabric.addService(OpenNebulaService(self.arguments[0], self.arguments[1]))
+                if success:
+                    self.fgfabric.store()
+                else:
+                    status = "ERROR: " + msg
             else:
                 status = "ERROR: the Service already exists"
         

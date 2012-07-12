@@ -172,7 +172,7 @@ class RainMoveClient(object):
         
         return status
         
-    def service(self, user, passwd, subparser_name, operation, arguments):
+    def service(self, user, passwd, subparser_name, operation, arguments, force):
         status = None
         start_all = time.time()
         checkauthstat = []
@@ -228,6 +228,8 @@ def main():
     subparser_service.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'serviceId'), help='Remove node from a service.')
     subparser_service.add_argument('-m', '--move', nargs=3, metavar=('nodeId', 'serviceIdorigin', 'serviceIddestination'), help='Move a node from one service to another.')
     subparser_service.add_argument('-l', '--list', nargs='?', metavar='serviceId', help='List available services or the information about a particular one.')
+    subparser_service.add_argument('-f', '--force', default=False, action="store_true", help='The node will be removed/moved from the service and the instances/jobs running will be terminated.')
+    
     
         
     
@@ -279,17 +281,17 @@ def main():
 
         if args.create != None:
             if args.create[1].lower() in validTypes:
-                print rainmoveclient.service(args.user, passwd, args.subparser_name, "create", args.create)
+                print rainmoveclient.service(args.user, passwd, args.subparser_name, "create", args.create, args.force)
             else:
                 print "ERROR: Type of service not recognized. Valid types are: " + str(validTypes)
         elif args.add != None:
-            print rainmoveclient.service(args.user, passwd, args.subparser_name, "add", args.add)            
+            print rainmoveclient.service(args.user, passwd, args.subparser_name, "add", args.add, args.force)            
         elif args.remove != None:
-            print rainmoveclient.service(args.user, passwd, args.subparser_name, "remove", args.remove)
+            print rainmoveclient.service(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
         elif args.move != None:
-            print rainmoveclient.service(args.user, passwd, args.subparser_name, "move", args.move)
+            print rainmoveclient.service(args.user, passwd, args.subparser_name, "move", args.move, args.force)
         elif ('-l' in used_args or '--list' in used_args):
-            print rainmoveclient.service(args.user, passwd, args.subparser_name, "list", args.list)
+            print rainmoveclient.service(args.user, passwd, args.subparser_name, "list", args.list, args.force)
         else:
             print "ERROR: you must to specify one of the service's options. \n"
             subparser_service.print_help()

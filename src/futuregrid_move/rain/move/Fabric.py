@@ -213,10 +213,15 @@ class Fabric(object):
             classname = Fabric.svctype[atype] + 'Service'
             
             aservice = eval(classname)(servicename, nodes)
-            aservice.load_config(self._moveConf)  # Load configuration to contact remote sites
-            aservice.setLogger(self.logger)  # include log descriptor
-            aservice.setVerbose(self.verbose)  # enable print on the screen
-            aservice.setTeefaa(self.teefaaobj)
+            if aservice.load_config(self._moveConf):  # Load configuration to contact remote sites
+                aservice.setLogger(self.logger)  # include log descriptor
+                aservice.setVerbose(self.verbose)  # enable print on the screen
+                aservice.setTeefaa(self.teefaaobj)
+            else:
+                msg = "Loading configuration of the Service " + str(aservice.identifier) + ". The service will not be included. " + \
+                                  " Please add service configuration in the fg-server.conf file under a section called Move-<service>-<site> (i.e. Move-eucalyptus-sierra)"
+                self.logger.error(msg)
+                print "ERROR: " + msg
             
             _services.append(aservice)
         self.update(_nodes,_clusters,_services)
@@ -273,8 +278,19 @@ class Fabric(object):
         
     def addService(self, service):
         '''Add a Service to the service dict'''
-        self._services[service.identifier]=service
-    
+        success=True
+        msg='OK'
+        if service.load_config(self._moveConf):  # Load configuration to contact remote sites
+            service.setLogger(self.logger)  # include log descriptor
+            service.setVerbose(self.verbose)  # enable print on the screen
+            service.setTeefaa(self.teefaaobj)
+            self._services[service.identifier]=service
+        else:            
+            msg = "Loading configuration of the Service " + str(service.identifier) + ". The service will not be included. " + \
+                              " Please add service configuration in the fg-server.conf file under a section called Move-<service>-<site> (i.e. Move-eucalyptus-sierra)"
+            self.logger.error(msg)
+            success=False
+        return success, msg
         
     def update(self, nodes=(), clusters=(), services=()):
         '''update the nodes, clusters, and services data'''

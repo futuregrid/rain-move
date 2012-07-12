@@ -247,9 +247,13 @@ class Service(object):
         self._MoveClientcertfile = moveConf.getMoveClientCertFile()
         self._MoveClientkeyfile = moveConf.getMoveClientKeyFile()
         
-        moveConf.loadMoveRemoteSiteConfig(self._type, self._id)
-        self._address=moveConf.getMoveRemoteSiteAddress()
-        self._port= moveConf.getMoveRemoteSitePort()
+        if moveConf.loadMoveRemoteSiteConfig(self._type, self._id):
+            self._address=moveConf.getMoveRemoteSiteAddress()
+            self._port= moveConf.getMoveRemoteSitePort()
+            success = True
+        else:
+            success = False
+        return success
     """
     @abc.abstractmethod
     def doadd(self, ares):
