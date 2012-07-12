@@ -482,6 +482,7 @@ class Service(object):
             if connection != None:
                 connection.write(self._type + ", add, " + ares.name)
                 status = connection.read(1024)
+                msg = status
                 self.socketCloseConnection(connection)
                 if status == "OK":
                     success = True
@@ -511,7 +512,7 @@ class Service(object):
             connection.write(self._type + ", remove, " + ares.name)
             status = connection.read(1024)
             self.socketCloseConnection(connection)
-            
+            msg=status
             if status == "OK":
                 success = True
             else:

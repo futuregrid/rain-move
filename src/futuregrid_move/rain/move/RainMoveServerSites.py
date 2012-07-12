@@ -279,12 +279,12 @@ class RainMoveServerSites(object):
                 self.logger.debug("The machine " + hostname + " seems to be online")    
             else:                
                 if wait < max_wait:
+                    time.sleep(10)
+                else:
                     wait += 1
                     status = "Could not get access to the machine " + hostname
                     self._log.error(status)
-                    break
-                else:
-                    time.sleep(10)
+                    break                    
                 
         if access:
             cmd="sudo euca_conf --register-nodes " + hostname
