@@ -277,14 +277,14 @@ class RainMoveServerSites(object):
             if status == 0:
                 access = True
                 self.logger.debug("The machine " + hostname + " seems to be online")    
-            else:
-                wait += 1
-                if wait >= max_wait:
+            else:                
+                if wait < max_wait:
+                    wait += 1
                     status = "Could not get access to the machine " + hostname
                     self._log.error(status)
                     break
                 else:
-                    time.sleep(5)
+                    time.sleep(10)
                 
         if access:
             cmd="sudo euca_conf --register-nodes " + hostname
@@ -503,7 +503,7 @@ class RainMoveServerSites(object):
             for r in reservations:
                 for i in r.instances:
                     if hostname in str(i.key_name):
-                        print "euca_terminate " + i.id 
+                        self.logger.debug("euca_terminate " + i.id) 
                         try:
                             connection.terminate_instances(str(i.id))
                         except:
@@ -513,7 +513,7 @@ class RainMoveServerSites(object):
                             
         elif cloudtype=="eucalyptus":
             for i in instanceslist:
-                print "euca_terminate " + i
+                self.logger.debug("euca_terminate " + i)
                 try:
                     connection.terminate_instances(str(i))
                 except:
