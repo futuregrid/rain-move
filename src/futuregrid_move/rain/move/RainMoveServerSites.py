@@ -162,7 +162,7 @@ class RainMoveServerSites(object):
         #operation site, infrastructure origin, infrastructure destination, number machines,
         #reinstall?, image source, partitions,
                 
-        if len(params) != self.numparams:
+        if len(params) != self.numparams and len(params) != self.numparams-1:
             msg = "ERROR: incorrect message"
             self.errormsg(connstream, msg)
             return
