@@ -192,14 +192,14 @@ class RainMoveServer(object):
                 self.errormsg(connstream, msg)
                 return
 
-        try:
+        #try:
             
-            status = eval("self." + self.operation + "()")
+        status = eval("self." + self.operation + "()")
             
-        except:
-            msg = "ERROR: incorrect operation " + str(sys.exc_info())
-            self.errormsg(connstream, msg)
-            return
+        #except:
+        #    msg = "ERROR: incorrect operation " + str(sys.exc_info())
+        #    self.errormsg(connstream, msg)
+        #    return
    
 
         if re.search("^ERROR", status):
