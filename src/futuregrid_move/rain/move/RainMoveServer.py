@@ -58,7 +58,7 @@ class RainMoveServer(object):
         self._rainConf.load_moveServerConfig() 
                 
         self.port = self._rainConf.getMovePort()
-        self.authorizedusers= self._rainConf.getMoveAuthorizedUsers()
+        self.authorizedusers = self._rainConf.getMoveAuthorizedUsers()
         self.log_filename = self._rainConf.getMoveLog()
         self.logLevel = self._rainConf.getMoveLogLevel()
         
@@ -154,9 +154,9 @@ class RainMoveServer(object):
         try:
             value = eval(params[5]) #try to convert in list or None.
             if value:
-                self.arguments= value
+                self.arguments = value
             else:
-                self.arguments=[None]
+                self.arguments = [None]
         except:
             self.arguments = [params[5]]  #here means the argument was an string
         
@@ -202,13 +202,13 @@ class RainMoveServer(object):
             return
    
 
-        if re.search("^ERROR",status):
+        if re.search("^ERROR", status):
             #sends ERROR: ... 
             self.errormsg(connstream, status)
             #return
         else:
             #sends OK
-            status = "The machines have been successfully integrated into the Cloud ("+str(status)+")" 
+            status = "The machines have been successfully integrated into the Cloud (" + str(status) + ")" 
             self.okmsg(connstream, status)
 
     
@@ -222,6 +222,7 @@ class RainMoveServer(object):
             if self.fgfabric.getCluster == None:
                 self.fgfabric.addCluster(Cluster(self.arguments[0]))
                 self.fgfabric.store()
+                status = "The cluster has been successfully created."
             else:
                 status = "ERROR: the Cluster already exists"
         elif self.resource == 'service':
@@ -238,6 +239,7 @@ class RainMoveServer(object):
                     success, msg = self.fgfabric.addService(OpenNebulaService(self.arguments[0], self.arguments[1]))
                 if success:
                     self.fgfabric.store()
+                    status = "The service has been successfully created."
                 else:
                     status = "ERROR: " + msg
             else:
@@ -276,7 +278,9 @@ class RainMoveServer(object):
                 if service != None:
                     success, restatus = service.add(existingnode)
                     if not success:
-                        status = "ERROR: adding the node " + self.arguments[0] +  " to the service " + self.arguments[1] + ". " + str(restatus)           
+                        status = "ERROR: adding the node " + self.arguments[0] + " to the service " + self.arguments[1] + ". " + str(restatus)
+                    else:
+                        status = "The machines have been successfully integrated into the Cloud (" + str(restatus) + ")"      
                     self.fgfabric.store()
                 else:
                     status = "ERROR: the Node cannot be added because the Service does not exists"
@@ -296,7 +300,9 @@ class RainMoveServer(object):
             if service != None:
                 success, restatus = service.remove(self.arguments[0], self.forcemove)
                 if not success:
-                    status = "ERROR: removing the node " + self.arguments[0] +  " from the service " + self.arguments[1] + ". " + str(restatus)
+                    status = "ERROR: removing the node " + self.arguments[0] + " from the service " + self.arguments[1] + ". " + str(restatus)
+                else:
+                    status = "The machines have been successfully deleted from the Cloud (" + str(restatus) + ")"
                 self.fgfabric.store()
             else:
                 status = "ERROR: the Node cannot be deleted because the Service does not exists"
@@ -308,7 +314,7 @@ class RainMoveServer(object):
         if self.resource == 'service':
             status = self.remove()
             if status == 'OK':
-                self.arguments[1]=self.arguments[2]
+                self.arguments[1] = self.arguments[2]
                 status = self.add()           
                         
         return status
@@ -325,18 +331,18 @@ class RainMoveServer(object):
         if self.resource == 'cluster':
             if not self.arguments[0]: #print
                 cluster = self.fgfabric.getCluster()
-                status = str(cluster.keys())
+                status = "The list of clusters is: " + str(cluster.keys())                
             else:
                 cluster = self.fgfabric.getCluster(self.arguments[0])
-                status = str(cluster.list().keys())
+                status = "Details of cluster " + str(self.arguments[0]) + ": " + str(cluster.list().keys())
 
         elif self.resource == 'service':
             if not self.arguments[0]: #print
                 service = self.fgfabric.getService()
-                status = str(service.keys())
+                status = "The list of services is: " + str(service.keys())
             else:
                 service = self.fgfabric.getService(self.arguments[0])
-                status = str(service.list().keys())
+                status = "Details of service " + str(self.arguments[0]) + ": " + str(service.list().keys())
             
         return status
 
