@@ -213,7 +213,7 @@ def main():
     subparser_cluster = subparsers.add_parser('cluster', help='Functionality to operate with clusters.')
     subparser_cluster.add_argument('-c', '--create', metavar='clusterId', help='Create a new cluster.')
     subparser_cluster.add_argument('-r', '--remove', metavar='clusterId', help='Remove a cluster.')
-    subparser_cluster.add_argument('-l', '--list', nargs='?', metavar='clusterId', help='List available clusters or the information about a particular one.')
+    subparser_cluster.add_argument('-l', '--list', nargs='?', default="", metavar='clusterId', help='List available clusters or the information about a particular one.')
     
     
     subparser_node = subparsers.add_parser('node', help='Functionality to operate with nodes (machines)')
@@ -223,17 +223,18 @@ def main():
     
     
     subparser_service = subparsers.add_parser('service', help='Functionality to operate with services (infrastructures)')
-    subparser_service.add_argument('-c', '--create', nargs=2, metavar=('serviceId', 'type'), help='Create a new service.')
-    subparser_service.add_argument('-a', '--add', nargs=2, metavar=('nodeId', 'serviceId'), help='Add node to a service.')
-    subparser_service.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'serviceId'), help='Remove node from a service.')
-    subparser_service.add_argument('-m', '--move', nargs=3, metavar=('nodeId', 'serviceIdorigin', 'serviceIddestination'), help='Move a node from one service to another.')
-    subparser_service.add_argument('-l', '--list', nargs='?', metavar='serviceId', help='List available services or the information about a particular one.')
+    group = subparser_service.add_mutually_exclusive_group(required=True)
+    group.add_argument('-c', '--create', nargs=2, metavar=('serviceId', 'type'), help='Create a new service.')
+    group.add_argument('-a', '--add', nargs=2, metavar=('nodeId', 'serviceId'), help='Add node to a service.')
+    group.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'serviceId'), help='Remove node from a service.')
+    group.add_argument('-m', '--move', nargs=3, metavar=('nodeId', 'serviceIdorigin', 'serviceIddestination'), help='Move a node from one service to another.')
+    group.add_argument('-l', '--list', nargs='?', default="", metavar='serviceId', help='List available services or the information about a particular one.')
     subparser_service.add_argument('-f', '--force', default=False, action="store_true", help='The node will be removed/moved from the service and the instances/jobs running will be terminated.')
     
-    
-        
-    
+
     args = parser.parse_args()
+
+    print args
     
     print 'Starting Move Client...'
     
@@ -254,8 +255,9 @@ def main():
     passwd = m.hexdigest()
     
     if (args.subparser_name == 'cluster'):
-
+        print "as"
         if args.create != None:
+            print "here"
             print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "create", args.create, args.force)
         elif args.remove != None:
             print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
