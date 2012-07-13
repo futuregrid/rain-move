@@ -211,24 +211,27 @@ def main():
                                        ' displayed by specifying <positional_argument> -h')
     
     subparser_cluster = subparsers.add_parser('cluster', help='Functionality to operate with clusters.')
-    subparser_cluster.add_argument('-c', '--create', metavar='clusterId', help='Create a new cluster.')
-    subparser_cluster.add_argument('-r', '--remove', metavar='clusterId', help='Remove a cluster.')
-    subparser_cluster.add_argument('-l', '--list', nargs='?', default="", metavar='clusterId', help='List available clusters or the information about a particular one.')
-    
+    group_cluster = subparser_cluster.add_mutually_exclusive_group(required=True)
+    group_cluster.add_argument('-c', '--create', metavar='clusterId', help='Create a new cluster.')
+    group_cluster.add_argument('-r', '--remove', metavar='clusterId', help='Remove a cluster.')
+    group_cluster.add_argument('-l', '--list', nargs='?', default="", metavar='clusterId', help='List available clusters or the information about a particular one.')
+    group_cluster.add_argument('-f', '--force', default=False, action="store_true", help='Force operation.')
     
     subparser_node = subparsers.add_parser('node', help='Functionality to operate with nodes (machines)')
-    subparser_node.add_argument('-a', '--add', nargs=4, metavar=('nodeId', 'hostname', 'ip', 'cluster'), help='Add new node to a cluster.')
-    subparser_node.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'cluster'), help='Remove node. It is also removed from cluster and service.')
-    subparser_node.add_argument('-i', '--info', metavar='nodeId', help='Information of a node.')
+    group_node = subparser_node.add_mutually_exclusive_group(required=True)
+    group_node.add_argument('-a', '--add', nargs=4, metavar=('nodeId', 'hostname', 'ip', 'cluster'), help='Add new node to a cluster.')
+    group_node.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'cluster'), help='Remove node. It is also removed from cluster and service.')
+    group_node.add_argument('-i', '--info', metavar='nodeId', help='Information of a node.')
+    group_node.add_argument('-f', '--force', default=False, action="store_true", help='Force operation.')
     
     
     subparser_service = subparsers.add_parser('service', help='Functionality to operate with services (infrastructures)')
-    group = subparser_service.add_mutually_exclusive_group(required=True)
-    group.add_argument('-c', '--create', nargs=2, metavar=('serviceId', 'type'), help='Create a new service.')
-    group.add_argument('-a', '--add', nargs=2, metavar=('nodeId', 'serviceId'), help='Add node to a service.')
-    group.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'serviceId'), help='Remove node from a service.')
-    group.add_argument('-m', '--move', nargs=3, metavar=('nodeId', 'serviceIdorigin', 'serviceIddestination'), help='Move a node from one service to another.')
-    group.add_argument('-l', '--list', nargs='?', default="", metavar='serviceId', help='List available services or the information about a particular one.')
+    group_service = subparser_service.add_mutually_exclusive_group(required=True)
+    group_service.add_argument('-c', '--create', nargs=2, metavar=('serviceId', 'type'), help='Create a new service.')
+    group_service.add_argument('-a', '--add', nargs=2, metavar=('nodeId', 'serviceId'), help='Add node to a service.')
+    group_service.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'serviceId'), help='Remove node from a service.')
+    group_service.add_argument('-m', '--move', nargs=3, metavar=('nodeId', 'serviceIdorigin', 'serviceIddestination'), help='Move a node from one service to another.')
+    group_service.add_argument('-l', '--list', nargs='?', default="", metavar='serviceId', help='List available services or the information about a particular one.')
     subparser_service.add_argument('-f', '--force', default=False, action="store_true", help='The node will be removed/moved from the service and the instances/jobs running will be terminated.')
     
 

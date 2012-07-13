@@ -218,7 +218,7 @@ class RainMoveServer(object):
         status = 'OK'
         
         if self.resource == 'cluster':
-            if self.fgfabric.getCluster == None:
+            if self.fgfabric.getCluster(self.arguments[0]) == None:
                 self.fgfabric.addCluster(Cluster(self.arguments[0]))
                 self.fgfabric.store()
                 status = "The cluster has been successfully created."
