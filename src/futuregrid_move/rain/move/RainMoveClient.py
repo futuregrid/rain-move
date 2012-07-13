@@ -234,7 +234,7 @@ def main():
 
     args = parser.parse_args()
 
-    print args
+    
     
     print 'Starting Move Client...'
     
@@ -255,9 +255,9 @@ def main():
     passwd = m.hexdigest()
     
     if (args.subparser_name == 'cluster'):
-        print "as"
+        
         if args.create != None:
-            print "here"
+            
             print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "create", args.create, args.force)
         elif args.remove != None:
             print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
