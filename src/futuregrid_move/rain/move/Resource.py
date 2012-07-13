@@ -415,7 +415,7 @@ class Service(object):
                 
         return ret, msg
 
-    def remove(self, aresid):
+    def remove(self, aresid, force):
         '''
         remove a resource from the service.
         This should be the one to call from outside. It deals with precondition check,
@@ -430,7 +430,7 @@ class Service(object):
         ares = self.get(aresid)
         # has to be being allocated in THE service
         if ares is not None:
-            success, retstatus = self.doremove(ares)
+            success, retstatus = self.doremove(ares, force)
             if success:
                 del self._res[ares.identifier]
                 ares.allocated = 'FREE'
@@ -503,7 +503,7 @@ class Service(object):
         
         return success, msg
 
-    def doremove(self, ares): #This is the same in all the classes. We should move it to the father
+    def doremove(self, ares, force): #This is the same in all the classes. We should move it to the father
         success = False
         
         msg = "INSIDE " + self._type + "Service:doremove: remove from " + self._type + " service"
@@ -513,7 +513,7 @@ class Service(object):
         
         connection=self.socketConnection()
         if connection != None:
-            connection.write(self._type + ", remove, " + ares.name)
+            connection.write(self._type + ",remove," + ares.name + ","+force)
             status = connection.read(1024)
             self.socketCloseConnection(connection)
             msg=status

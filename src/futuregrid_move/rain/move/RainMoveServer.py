@@ -45,12 +45,13 @@ class RainMoveServer(object):
     def __init__(self, inventoryfile):
         super(RainMoveServer, self).__init__()
         
-        self.numparams = 6   
+        self.numparams = 7   
         
         self.user = ''
         self.element = ''
         self.operation = ''
         self.arguments = None
+        self.forcemove = False
         
         #load from config file
         self._rainConf = RainMoveServerConf()
@@ -139,7 +140,7 @@ class RainMoveServer(object):
         #params[3] is resource (cluster, node, service)
         #params[4] is operation (add, remove, create, list...)
         #params[5] is arguments. This can be a list or a string. We can use eval() if it is a list.
-        
+        #params[6] is foce. THis is to force remove/move node from service
         if len(params) != self.numparams:
             msg = "ERROR: incorrect message"
             self.errormsg(connstream, msg)
@@ -159,6 +160,12 @@ class RainMoveServer(object):
         except:
             self.arguments = [params[5]]  #here means the argument was an string
         
+        try:
+            self.forcemove = eval(params[6].strip())
+        except:
+            self.forcemove = False
+
+        #FORCE MOVE, identify where to put that and decide if eveyone is sending this parameter or not (i think I should send it)
 
         retry = 0
         maxretry = 3
@@ -287,7 +294,7 @@ class RainMoveServer(object):
         elif self.resource == 'service':  #Remove a node from a service
             service = self.fgfabric.getService(self.arguments[1])
             if service != None:
-                success, restatus = service.remove(self.arguments[0])
+                success, restatus = service.remove(self.arguments[0], self.forcemove)
                 if not success:
                     status = "ERROR: removing the node " + self.arguments[0] +  " from the service " + self.arguments[1] + ". " + str(restatus)
                 self.fgfabric.store()

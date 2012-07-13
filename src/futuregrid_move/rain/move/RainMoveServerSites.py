@@ -42,7 +42,7 @@ class RainMoveServerSites(object):
         super(RainMoveServerSites, self).__init__()
         
                
-        self.numparams = 3
+        self.numparams = 4
         
 
         #load from config file
@@ -148,6 +148,7 @@ class RainMoveServerSites(object):
         #params[0] is service (infrastructure) name.
         #params[1] is the operation
         #params[2] is the operation argument
+        #params[3] is to force remove/move
         
         
         service = (params[0].strip()).lower()

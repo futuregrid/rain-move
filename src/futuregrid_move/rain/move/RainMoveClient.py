@@ -127,11 +127,11 @@ class RainMoveClient(object):
                 passed = False
         return passed
 
-    def cluster(self, user, passwd, subparser_name, operation, arguments):
+    def cluster(self, user, passwd, subparser_name, operation, arguments, force):
         status=None
         start_all = time.time()
         checkauthstat = []
-        msg = str(user) + "|" + str(passwd) + "|" + self.passwdtype + "|" + str(subparser_name) + "|" + str(operation) + "|" + str(arguments)
+        msg = str(user) + "|" + str(passwd) + "|" + self.passwdtype + "|" + str(subparser_name) + "|" + str(operation) + "|" + str(arguments) + "|" + str(force)
         self._log.debug("Cluster: " + str(msg))
         self._connMoveServer.write(msg)
         
@@ -149,12 +149,12 @@ class RainMoveClient(object):
         
         return status
         
-    def node(self, user, passwd, subparser_name, operation, arguments):
+    def node(self, user, passwd, subparser_name, operation, arguments, force):
         status=None
         start_all = time.time()
         checkauthstat = []
 
-        msg = str(user) + "|" + str(passwd) + "|" + self.passwdtype + "|" + str(subparser_name) + "|" + str(operation) + "|" + str(arguments)
+        msg = str(user) + "|" + str(passwd) + "|" + self.passwdtype + "|" + str(subparser_name) + "|" + str(operation) + "|" + str(arguments) + "|" + str(force)
         self._log.debug("Node: " + str(msg))
         self._connMoveServer.write(msg)
         
@@ -177,7 +177,7 @@ class RainMoveClient(object):
         start_all = time.time()
         checkauthstat = []
         
-        msg = str(user) + "|" + str(passwd) + "|" + self.passwdtype + "|" + str(subparser_name) + "|" + str(operation) + "|" + str(arguments)
+        msg = str(user) + "|" + str(passwd) + "|" + self.passwdtype + "|" + str(subparser_name) + "|" + str(operation) + "|" + str(arguments) + "|" + str(force)
         self._log.debug("Service: " + str(msg))
         self._connMoveServer.write(msg)
         
@@ -256,11 +256,11 @@ def main():
     if (args.subparser_name == 'cluster'):
 
         if args.create != None:
-            print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "create", args.create)
+            print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "create", args.create, args.force)
         elif args.remove != None:
-            print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "remove", args.remove)
+            print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
         elif ('-l' in used_args or '--list' in used_args):
-            print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "list", args.list)
+            print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "list", args.list, args.force)
         else:
             print "ERROR: you must to specify one of the cluster's options. \n"
             subparser_cluster.print_help()
@@ -268,11 +268,11 @@ def main():
     elif (args.subparser_name == 'node'):
         
         if args.add != None:
-            print rainmoveclient.node(args.user, passwd, args.subparser_name, "add", args.add)
+            print rainmoveclient.node(args.user, passwd, args.subparser_name, "add", args.add, args.force)
         elif args.remove != None:
-            print rainmoveclient.node(args.user, passwd, args.subparser_name, "remove", args.remove)
+            print rainmoveclient.node(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
         elif args.info != None:
-            print rainmoveclient.node(args.user, passwd, args.subparser_name, "info", args.info)
+            print rainmoveclient.node(args.user, passwd, args.subparser_name, "info", args.info, args.force)
         else:
             print "ERROR: you must to specify one of the node's options. \n"
             subparser_node.print_help()
