@@ -399,7 +399,7 @@ class Service(object):
                 if success:
                     self._res[ares.identifier] = ares
                     ares.allocated = self.identifier
-                    self.cbadd(ares)
+                    #self.cbadd(ares)
                     ret = True
                 else:
                     msg = "ERROR: add operation failed. " + str(retstatus)
@@ -434,7 +434,7 @@ class Service(object):
             if success:
                 del self._res[ares.identifier]
                 ares.allocated = 'FREE'
-                self.cbremove(ares)
+                #self.cbremove(ares)
                 ret = True
             else:
                 msg = "ERROR: remove operation failed. " + str(retstatus)
