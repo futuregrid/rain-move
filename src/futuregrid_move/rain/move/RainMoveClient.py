@@ -199,7 +199,7 @@ def main():
 
     verbose = True
     
-    validTypes = ['hpc', 'eucalyptus', 'openStack', 'nimbus', 'opennebula']
+    validTypes = ['hpc', 'eucalyptus', 'openstack', 'nimbus', 'opennebula']
     
     rainmoveclient = RainMoveClient(verbose)
 
