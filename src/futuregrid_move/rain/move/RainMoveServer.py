@@ -227,15 +227,15 @@ class RainMoveServer(object):
         elif self.resource == 'service':
             if self.fgfabric.getService(self.arguments[0]) == None:                
                 if self.arguments[1].lower() == 'hpc':
-                    success, msg = self.fgfabric.addService(HPCService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(HPCService(self.arguments[0]))
                 elif self.arguments[1].lower() == 'eucalyptus':
-                    success, msg = self.fgfabric.addService(EucaService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(EucaService(self.arguments[0]))
                 elif self.arguments[1].lower() == 'openstack':
-                    success, msg = self.fgfabric.addService(OpenStackService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(OpenStackService(self.arguments[0]))
                 elif self.arguments[1].lower() == 'nimbus':
-                    success, msg = self.fgfabric.addService(NimbusService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(NimbusService(self.arguments[0]))
                 elif self.arguments[1].lower() == 'opennebula':
-                    success, msg = self.fgfabric.addService(OpenNebulaService(self.arguments[0], self.arguments[1]))
+                    success, msg = self.fgfabric.addService(OpenNebulaService(self.arguments[0]))
                 if success:
                     self.fgfabric.store()
                     status = "The service has been successfully created."

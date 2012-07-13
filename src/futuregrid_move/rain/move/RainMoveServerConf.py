@@ -269,6 +269,8 @@ class RainMoveServerConf(object):
         except ConfigParser.NoOptionError:
             self._MoveRemoteSitePort = 0
             status = False
+        except ConfigParser.NoSectionError:
+            status = False
         
         return status
 
