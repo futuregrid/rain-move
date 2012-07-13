@@ -431,7 +431,7 @@ class RainMoveServerSites(object):
                 #print std[0]
                 output = std[0].split()
                 output = output[5:]
-                n_instances=int(output[7])
+                n_instances=int(output[12]) #get value from use_max because use_now takes longer to be updated
                 if n_instances == 0:
                     self.logger.debug("Node " +hostname+ " is free. Disabling")
                     cmd="sudo nova-manage service disable " + hostname + " nova-compute"
@@ -496,7 +496,7 @@ class RainMoveServerSites(object):
         if cloudtype == "openstack":
             try:
                 reservations=connection.get_all_instances() 
-                print str(reservations)
+                #print str(reservations)
             except:
                 msg = "ERROR:getting all instances. " + str(sys.exc_info())
                 self.logger.error(msg)                        
