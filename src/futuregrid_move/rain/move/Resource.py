@@ -513,7 +513,7 @@ class Service(object):
         
         connection=self.socketConnection()
         if connection != None:
-            connection.write(self._type + ",remove," + ares.name + ","+force)
+            connection.write(self._type + ",remove," + ares.name + ","+ str(force))
             status = connection.read(1024)
             self.socketCloseConnection(connection)
             msg=status
