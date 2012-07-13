@@ -208,7 +208,6 @@ class RainMoveServer(object):
             #return
         else:
             #sends OK
-            status = "The machines have been successfully integrated into the Cloud (" + str(status) + ")" 
             self.okmsg(connstream, status)
 
     
