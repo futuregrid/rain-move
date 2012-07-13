@@ -225,7 +225,7 @@ class RainMoveServer(object):
             else:
                 status = "ERROR: the Cluster already exists"
         elif self.resource == 'service':
-            if self.fgfabric.getService() == None:                
+            if self.fgfabric.getService(self.arguments[0]) == None:                
                 if self.arguments[1].lower() == 'hpc':
                     success, msg = self.fgfabric.addService(HPCService(self.arguments[0], self.arguments[1]))
                 elif self.arguments[1].lower() == 'eucalyptus':

@@ -258,9 +258,6 @@ class Fabric(object):
         
     def getService(self, identifier=None):
         '''get a service based on the identifier, or return all services if id not provided'''
-        print identifier
-        print self._services
-        
         if identifier is not None:
             if self._services.has_key(identifier):
                 ret = self._services[identifier]
