@@ -262,6 +262,7 @@ class RainMoveServerConf(object):
             status = False
         except ConfigParser.NoSectionError:
             status = False
+            return status
             #return "ERROR: No section Move-" + service.lower() + "-" +site.lower() + " in file " + self._configfile
         try:
             self._MoveRemoteSitePort = int(self._config.get(section, 'port', 0))
