@@ -395,7 +395,10 @@ class Service(object):
         if isinstance(ares, Resource):
             # has to be a free node
             if(ares.allocated == 'FREE'):
+##AKIIIIIIIIIIIII
                 success, retstatus = self.doadd(ares)
+                #success = True
+                #retstatus =""
                 if success:
                     self._res[ares.identifier] = ares
                     ares.allocated = self.identifier
@@ -430,7 +433,10 @@ class Service(object):
         ares = self.get(aresid)
         # has to be being allocated in THE service
         if ares is not None:
+#AKIIIII
             success, retstatus = self.doremove(ares, force)
+            #success = True
+            #retstatus =""
             if success:
                 del self._res[ares.identifier]
                 ares.allocated = 'FREE'

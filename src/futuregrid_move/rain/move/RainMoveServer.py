@@ -279,7 +279,7 @@ class RainMoveServer(object):
                     if not success:
                         status = "ERROR: adding the node " + self.arguments[0] + " to the service " + self.arguments[1] + ". " + str(restatus)
                     else:
-                        status = "The machines have been successfully integrated into the Cloud (" + str(restatus) + ")"      
+                        status = "The machines have been successfully integrated into the Cloud. " + str(restatus)      
                     self.fgfabric.store()
                 else:
                     status = "ERROR: the Node cannot be added because the Service does not exists"
@@ -301,7 +301,7 @@ class RainMoveServer(object):
                 if not success:
                     status = "ERROR: removing the node " + self.arguments[0] + " from the service " + self.arguments[1] + ". " + str(restatus)
                 else:
-                    status = "The machines have been successfully deleted from the Cloud (" + str(restatus) + ")"
+                    status = "The machines have been successfully deleted from the Cloud. " + str(restatus)
                 self.fgfabric.store()
             else:
                 status = "ERROR: the Node cannot be deleted because the Service does not exists"
@@ -343,6 +343,33 @@ class RainMoveServer(object):
                 service = self.fgfabric.getService(self.arguments[0])
                 status = "Details of service " + str(self.arguments[0]) + " service: " + str(service.list().keys())
             
+        return status
+
+    def listfreenodes(self):
+        status = "ERROR: getting the list of free nodes"
+        
+        dictfree={}
+        
+        if not self.arguments[0]: #print
+            listcluster = self.fgfabric.getCluster()
+            for i in listcluster:                
+                dictfree[i]=[]
+                cluster = self.fgfabric.getCluster(i)
+                listnodes=cluster.list()
+                for j in listnodes:
+                    if listnodes[j].allocated == 'FREE':
+                        dictfree[i].append(listnodes[j].identifier)
+            status = str(dictfree)
+        else:
+            cluster = self.fgfabric.getCluster(self.arguments[0])
+            dictfree[self.arguments[0]]=[]
+            listnodes=cluster.list()
+            for j in listnodes:
+                if listnodes[j].allocated == 'FREE':
+                    dictfree[i].append(listnodes[j].identifier)
+                    
+            status = str(dictfree)
+        
         return status
 
     def okmsg(self, connstream, msg):

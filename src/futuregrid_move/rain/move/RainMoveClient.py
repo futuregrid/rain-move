@@ -232,6 +232,7 @@ def main():
     group_service.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'serviceId'), help='Remove node from a service.')
     group_service.add_argument('-m', '--move', nargs=3, metavar=('nodeId', 'serviceIdorigin', 'serviceIddestination'), help='Move a node from one service to another.')
     group_service.add_argument('-l', '--list', nargs='?', default="", metavar='serviceId', help='List available services or the information about a particular one.')
+    group_service.add_argument('-s', '--listfreenodes', nargs='?', default="", metavar='clusterId', help='List of nodes that are not assigned to any service.')
     subparser_service.add_argument('-f', '--force', default=False, action="store_true", help='The node will be removed/moved from the service and the instances/jobs running will be terminated.')
     
 
@@ -297,6 +298,8 @@ def main():
             print rainmoveclient.service(args.user, passwd, args.subparser_name, "move", args.move, args.force)
         elif ('-l' in used_args or '--list' in used_args):
             print rainmoveclient.service(args.user, passwd, args.subparser_name, "list", args.list, args.force)
+        elif ('-s' in used_args or '--listfreenodes' in used_args):
+            print rainmoveclient.service(args.user, passwd, args.subparser_name, "listfreenodes", args.list, args.force)
         else:
             print "ERROR: you must to specify one of the service's options. \n"
             subparser_service.print_help()
