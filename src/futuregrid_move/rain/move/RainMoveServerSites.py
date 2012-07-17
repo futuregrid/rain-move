@@ -197,6 +197,78 @@ class RainMoveServerSites(object):
         except:
             self.logger.error("ERROR: " + str(sys.exc_info()))
 
+    def add_hpc(self, hostname):
+        exitloop=False
+        success=False
+        status = ""
+        wait = 0
+        max_wait = self.service_max_wait / 10
+        
+        
+        #check if exists
+        self.logger.debug("checking if the host exists")
+        cmd="pbsnodes " + hostname
+        self.logger.debug(cmd)
+        p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+        std = p.communicate()
+        if p.returncode != 0:
+            self.logger.debug("The host " + hostname + " is not in the list, we need to add it.")
+            
+            self.logger.debug("creating host in torque")
+            cmd1="sudo qmgr -c 'create node " + hostname + "'"
+            self.logger.debug(cmd1)
+            p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
+            std1 = p1.communicate()
+            if p1.returncode != 0:
+                status = "ERROR: creating host. " + str(std1[1])
+                self.logger.error(status)                        
+                success=False
+        else:
+            self.logger.debug("enabling host in torque")
+            cmd1="sudo pbsnodes -c " + hostname + "'"
+            self.logger.debug(cmd1)
+            p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
+            std1 = p1.communicate()
+            if p1.returncode != 0:
+                status = "ERROR: enabling host. " + str(std1[1])
+                self.logger.error(status)                        
+                success=False
+              
+        if success:
+            self.logger.debug("changing properties of the host")
+            cmd1="sudo qmgr -c 'set node " + hostname + " properties = compute' "
+            self.logger.debug(cmd1)
+            p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
+            std1 = p1.communicate()
+            if p1.returncode != 0:
+                status = "ERROR: changing properties host. " + str(std1[1])
+                self.logger.error(status)                        
+                success=False
+        
+        if success:
+            self.logger.debug("Waiting until the machine is online")
+            while not exitloop:
+                cmd="pbsnodes " + hostname
+                self.logger.debug(cmd)
+                p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+                std = p.communicate()
+                if p.returncode == 0:
+                    status_torque=std[0].split('\n')[1].strip().split('=')[1].strip()
+                    if status_torque == 'free' or status_torque == 'job-exclusive':
+                        success = True
+                        exitloop = True
+                        status = 'OK'
+                        
+                if wait < max_wait:
+                    wait+=1
+                    time.sleep(10)
+                else:
+                    exitloop=True
+                    success=False
+                    status = "ERROR: Timeout. The node " +hostname+ " is not active."
+                
+        return success, status   
+
     def add_openstack(self, hostname):
         exitloop=False
         success=False
