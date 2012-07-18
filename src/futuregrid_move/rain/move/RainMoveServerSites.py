@@ -206,42 +206,42 @@ class RainMoveServerSites(object):
         
         
         #check if exists
-        self.logger.debug("checking if the host exists")
+        self.logger.debug("checking if the node exists")
         cmd="pbsnodes " + hostname
         self.logger.debug(cmd)
         p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
         std = p.communicate()
         if p.returncode != 0:
-            self.logger.debug("The host " + hostname + " is not in the list, we need to add it.")
+            self.logger.debug("The node " + hostname + " is not in the list, we need to add it.")
             
-            self.logger.debug("creating host in torque")
+            self.logger.debug("creating node in torque")
             cmd1="sudo qmgr -c 'create node " + hostname + "'"
             self.logger.debug(cmd1)
             p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
             std1 = p1.communicate()
             if p1.returncode != 0:
-                status = "ERROR: creating host. " + str(std1[1])
+                status = "ERROR: creating node. " + str(std1[1])
                 self.logger.error(status)                        
                 success=False
         else:
-            self.logger.debug("enabling host in torque")
+            self.logger.debug("enabling node in torque")
             cmd1="sudo pbsnodes -c " + hostname + "'"
             self.logger.debug(cmd1)
             p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
             std1 = p1.communicate()
             if p1.returncode != 0:
-                status = "ERROR: enabling host. " + str(std1[1])
+                status = "ERROR: enabling node. " + str(std1[1])
                 self.logger.error(status)                        
                 success=False
               
         if success:
-            self.logger.debug("changing properties of the host")
+            self.logger.debug("changing properties of the node")
             cmd1="sudo qmgr -c 'set node " + hostname + " properties = compute' "
             self.logger.debug(cmd1)
             p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
             std1 = p1.communicate()
             if p1.returncode != 0:
-                status = "ERROR: changing properties host. " + str(std1[1])
+                status = "ERROR: changing properties node. " + str(std1[1])
                 self.logger.error(status)                        
                 success=False
         
@@ -406,6 +406,83 @@ class RainMoveServerSites(object):
                             num_notfounds +=1 
                             time.sleep(2)
                         
+        return success, status
+
+    def remove_hpc(self, hostname, forcemove):
+        status=""
+        exitloop=False
+        wait = 0
+        max_wait = self.service_max_wait / 10
+        
+        
+        self.logger.debug("Making node offline")
+        cmd="sudo pbsnodes -o " + hostname
+        self.logger.debug(cmd)
+        p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+        std = p.communicate()
+        if p.returncode != 0:
+            status = "ERROR: making node offline. " + str(std[1])
+            self.logger.error(status)                        
+            exitloop=True
+            success=False
+        
+        while not exitloop:
+            self.logger.debug("Checking if the node is free")
+            cmd="pbsnodes " + hostname
+            self.logger.debug(cmd)
+            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+            std = p.communicate()
+            if p.returncode != 0:
+                status = "ERROR: describing resources node. " + str(std[1])
+                self.logger.error(status)                        
+                exitloop=True
+                success=False
+            else:
+
+#HOW DO I KNOW IF THE NODE IS RESERVED???
+
+                if not re.search('jobs',std[0]):                    
+                    self.logger.debug("Node " +hostname+ " is free. Deleting")
+                    cmd="sudo qmgr -c 'delete node " + hostname + "'"
+                    self.logger.debug(cmd)
+                    p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+                    std = p.communicate()
+                    if p.returncode != 0:
+                        status = "ERROR: Deleting node. " + str(std[1])
+                        self.logger.error(status)                        
+                        exitloop=True
+                        success=False
+                    else:
+                        exitloop=True
+                        success = True
+                elif forcemove:
+                    self.logger.debug("Killing jobs")
+                    joblist=std[0].split('\n')[5].split('=')[1].split(',')    
+                    for i in joblist:
+                        stat=os.system('sudo qdel ' + i.split('/')[1].strip())
+                        if stat !=0:
+                            os.system('sudo qdel -p ' + i.split('/')[1].strip())
+                    self.logger.debug("After jobs terminated")
+                    time.sleep(5) #allow them some time to change the status   
+                else:
+                    self.logger.debug("Waiting until free")
+                    if wait < max_wait:
+                        wait+=1
+                        time.sleep(10)
+                    else:
+                        exitloop=True
+                        success=False
+                        status = "ERROR: Timeout. The node " +hostname+ " is busy. Try to use force move"
+
+        if not success:
+            self.logger.debug("Making node online")
+            cmd="sudo pbsnodes -c " + hostname
+            self.logger.debug(cmd)
+            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+            std = p.communicate()
+            if p.returncode != 0:
+                status += "\nERROR: making node back online. " + str(std[1])
+
         return success, status
 
     def remove_euca(self, hostname, forcemove):
