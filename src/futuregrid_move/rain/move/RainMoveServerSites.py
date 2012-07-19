@@ -255,6 +255,8 @@ class RainMoveServerSites(object):
             else:
                 success = True
         
+        time.sleep(120) # wait because the machine has to reboot 
+        
         if success:
             self.logger.debug("Waiting until the machine is online")
             while not exitloop:
