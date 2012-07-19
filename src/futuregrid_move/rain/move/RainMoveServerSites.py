@@ -485,7 +485,7 @@ class RainMoveServerSites(object):
                             if stat !=0:
                                 os.system('sudo qdel -p ' + jobid)
                     self.logger.debug("After jobs terminated")
-                    time.sleep(10) #allow them some time to change the status   
+                    time.sleep(5) #allow them some time to change the status   
                 else:
                     self.logger.debug("Waiting until free")
                     if wait < max_wait:
