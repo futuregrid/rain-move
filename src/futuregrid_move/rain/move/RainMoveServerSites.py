@@ -176,12 +176,16 @@ class RainMoveServerSites(object):
                 success, status = self.add_openstack(argument)
             elif service == "eucalyptus":
                 success, status = self.add_euca(argument)
+            elif service == "hpc":
+                success, status = self.add_hpc(argument)
         elif operation == 'remove':
             self.logger.debug("Remove machine " + argument + " from the service " + service)
             if service == "openstack":
                 success, status = self.remove_openstack(argument, forcemove)
             elif service == "eucalyptus":
                 success, status = self.remove_euca(argument, forcemove)
+            elif service == "hpc":
+                success, status = self.remove_hpc(argument, forcemove)
         else:
             self.logger.debug("Operation " + operation + " Service " + service + " Argument " + argument)           
         
