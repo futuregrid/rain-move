@@ -332,11 +332,9 @@ class RainMoveServerConf(object):
         try:
             self._MoveSiteEc2varfile = os.path.expanduser(self._config.get(section, 'ec2varfile', 0))
         except ConfigParser.NoOptionError:
-            print "Error: No ec2varfile option found in section " + section + " file " + self._configfile
-            sys.exit(1)
+            print "Warning: No ec2varfile option found in section " + section + " file " + self._configfile
         if not os.path.isfile(self._MoveSiteEc2varfile):
-            print "Error: ec2varfile file not found in "  + self._MoveSiteEc2varfile 
-            sys.exit(1)        
+            print "Warning: ec2varfile file not found in "  + self._MoveSiteEc2varfile      
         try:
             self._MoveSiteServerca_certs = os.path.expanduser(self._config.get(section, 'ca_cert', 0))
         except ConfigParser.NoOptionError:
