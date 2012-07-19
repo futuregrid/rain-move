@@ -219,9 +219,9 @@ class RainMoveServerSites(object):
             self.logger.debug("The node " + hostname + " is not in the list, we need to add it.")
             
             self.logger.debug("creating node in torque")
-            cmd1="sudo qmgr -c 'create node " + hostname + "'"
+            cmd1=["sudo","qmgr","-c","create node " + hostname]
             self.logger.debug(cmd1)
-            p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
+            p1 = Popen(cmd1, stdout=PIPE, stderr=PIPE)
             std1 = p1.communicate()
             if p1.returncode != 0:
                 status = "ERROR: creating node. " + str(std1[1])
@@ -243,9 +243,10 @@ class RainMoveServerSites(object):
                 success = True
         if success:
             self.logger.debug("changing properties of the node")
-            cmd1="sudo qmgr -c 'set node " + hostname + " properties = compute' "
+            cmd1=["sudo","qmgr","-c","set node " + hostname + " properties = compute"]
+            #cmd1="sudo qmgr -c 'set node " + hostname + " properties = compute' "
             self.logger.debug(cmd1)
-            p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
+            p1 = Popen(cmd1, stdout=PIPE, stderr=PIPE)
             std1 = p1.communicate()
             if p1.returncode != 0:
                 status = "ERROR: changing properties node. " + str(std1[1])
@@ -458,9 +459,10 @@ class RainMoveServerSites(object):
             else:
                 if not re.search('jobs',std[0]):                    
                     self.logger.debug("Node " +hostname+ " is free. Deleting")
-                    cmd="sudo qmgr -c 'delete node " + hostname + "'"
+                    cmd=["sudo","qmgr","-c","delete node " + hostname]
+                    #cmd="sudo qmgr -c 'delete node " + hostname + "'"
                     self.logger.debug(cmd)
-                    p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+                    p = Popen(cmd, stdout=PIPE, stderr=PIPE)
                     std = p.communicate()
                     if p.returncode != 0:
                         status = "ERROR: Deleting node. " + str(std[1])
