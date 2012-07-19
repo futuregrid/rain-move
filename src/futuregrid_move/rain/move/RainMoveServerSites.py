@@ -229,7 +229,7 @@ class RainMoveServerSites(object):
                 success=False
         else:
             self.logger.debug("enabling node in torque")
-            cmd1="sudo pbsnodes -c " + hostname + "'"
+            cmd1="sudo pbsnodes -c " + hostname
             self.logger.debug(cmd1)
             p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
             std1 = p1.communicate()
