@@ -459,7 +459,7 @@ class RainMoveServerSites(object):
                 exitloop=True
                 success=False
             else:
-                if not re.search('jobs',std[0]):                    
+                if not re.search('^jobs',std[0].split('\n')[5].strip()):                    
                     self.logger.debug("Node " +hostname+ " is free. Deleting")
                     cmd=["sudo","qmgr","-c","delete node " + hostname]
                     #cmd="sudo qmgr -c 'delete node " + hostname + "'"
