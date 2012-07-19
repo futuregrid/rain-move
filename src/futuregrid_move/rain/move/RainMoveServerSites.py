@@ -476,13 +476,16 @@ class RainMoveServerSites(object):
                         success = True
                 elif forcemove:
                     self.logger.debug("Killing jobs")
-                    joblist=std[0].split('\n')[5].split('=')[1].split(',')    
+                    joblist=std[0].split('\n')[5].split('=')[1].split(',')   
                     for i in joblist:
-                        stat=os.system('sudo qdel ' + i.split('/')[1].strip())
-                        if stat !=0:
-                            os.system('sudo qdel -p ' + i.split('/')[1].strip())
+                        job=i.split('/')
+                        if len(job) == 2:
+                            jobid=job[1].strip()
+                            stat=os.system('sudo qdel ' + jobid)
+                            if stat !=0:
+                                os.system('sudo qdel -p ' + jobid)
                     self.logger.debug("After jobs terminated")
-                    time.sleep(5) #allow them some time to change the status   
+                    time.sleep(10) #allow them some time to change the status   
                 else:
                     self.logger.debug("Waiting until free")
                     if wait < max_wait:
