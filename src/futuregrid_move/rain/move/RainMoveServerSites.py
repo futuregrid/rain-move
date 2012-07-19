@@ -266,7 +266,17 @@ class RainMoveServerSites(object):
                     exitloop=True
                     success=False
                     status = "ERROR: Timeout. The node " +hostname+ " is not active."
-                
+        
+        if success:
+            cmd="sudo mschedctl -R"
+            self.logger.debug(cmd)
+            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+            std = p.communicate()
+            if p.returncode == 0:
+                status = 'OK'
+            else:
+                status = 'Problems recycling Moab scheduler'
+               
         return success, status   
 
     def add_openstack(self, hostname):
