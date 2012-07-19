@@ -204,7 +204,7 @@ class RainMoveServerSites(object):
     def add_hpc(self, hostname):
         exitloop=False
         success=False
-        status = ""
+        status = "default msg"
         wait = 0
         max_wait = self.service_max_wait / 10
         
@@ -237,7 +237,8 @@ class RainMoveServerSites(object):
                 status = "ERROR: enabling node. " + str(std1[1])
                 self.logger.error(status)                        
                 success=False
-              
+            else:
+                success = True
         if success:
             self.logger.debug("changing properties of the node")
             cmd1="sudo qmgr -c 'set node " + hostname + " properties = compute' "
@@ -248,6 +249,8 @@ class RainMoveServerSites(object):
                 status = "ERROR: changing properties node. " + str(std1[1])
                 self.logger.error(status)                        
                 success=False
+            else:
+                success = True
         
         if success:
             self.logger.debug("Waiting until the machine is online")
@@ -262,7 +265,6 @@ class RainMoveServerSites(object):
                         success = True
                         exitloop = True
                         status = 'OK'
-                        
                 if wait < max_wait:
                     wait+=1
                     time.sleep(10)
@@ -286,7 +288,7 @@ class RainMoveServerSites(object):
     def add_openstack(self, hostname):
         exitloop=False
         success=False
-        status = ""
+        status = "default msg"
         wait = 0
         wait2 = 0
         max_wait = self.service_max_wait / 10
@@ -347,7 +349,7 @@ class RainMoveServerSites(object):
         
         exitloop=False
         success=False
-        status = ""
+        status = "default msg"
         wait = 0
         max_wait = self.service_max_wait / 10        
         num_notfounds=0
@@ -423,7 +425,7 @@ class RainMoveServerSites(object):
         return success, status
 
     def remove_hpc(self, hostname, forcemove):
-        status=""
+        status="default msg"
         exitloop=False
         wait = 0
         max_wait = self.service_max_wait / 10
@@ -452,9 +454,6 @@ class RainMoveServerSites(object):
                 exitloop=True
                 success=False
             else:
-
-#HOW DO I KNOW IF THE NODE IS RESERVED???
-
                 if not re.search('jobs',std[0]):                    
                     self.logger.debug("Node " +hostname+ " is free. Deleting")
                     cmd="sudo qmgr -c 'delete node " + hostname + "'"
@@ -500,7 +499,7 @@ class RainMoveServerSites(object):
         return success, status
 
     def remove_euca(self, hostname, forcemove):
-        status = ""
+        status = "default msg"
         exitloop=False
         success=False
         wait = 0
@@ -575,7 +574,7 @@ class RainMoveServerSites(object):
         return success, status
                         
     def remove_openstack(self, hostname, forcemove):
-        status=""
+        status="default msg"
         exitloop=False
         wait = 0
         max_wait = self.service_max_wait / 10
