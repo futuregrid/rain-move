@@ -227,6 +227,8 @@ class RainMoveServerSites(object):
                 status = "ERROR: creating node. " + str(std1[1])
                 self.logger.error(status)                        
                 success=False
+            else:
+                success = True
         else:
             self.logger.debug("enabling node in torque")
             cmd1="sudo pbsnodes -c " + hostname
