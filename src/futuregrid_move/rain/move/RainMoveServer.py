@@ -217,8 +217,14 @@ class RainMoveServer(object):
                                 full = False
                         if full:
                             time.sleep(self.refresh_status)
-                #try:                    
-                proc_list.append(Process(target=eval("self.wrap_" + self.operation), args=(queue,[node,self.arguments[len(self.arguments)-1]])))            
+                #try:
+                if self.operation == "move":
+                    new_arguments=[node,self.arguments[len(self.arguments)-2],self.arguments[len(self.arguments)-1]]
+                else:                    
+                    new_arguments=[node,self.arguments[len(self.arguments)-1]]
+                
+                    
+                proc_list.append(Process(target=eval("self.wrap_" + self.operation), args=(queue,new_arguments)))            
                 proc_list[len(proc_list) - 1].start()
                 #except:
                 #    msg = "ERROR: creating process " + str(sys.exc_info())
