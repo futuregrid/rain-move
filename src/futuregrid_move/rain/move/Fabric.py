@@ -176,7 +176,7 @@ class Fabric(object):
         self.teefaaobj=Teefaa() #default config file (fg-server.conf) and no verbose
         
         self.update(nodes, clusters, services)
-            
+       
     def load(self, inventory):
         '''load data from inventory to bootstrap the fabric'''
         #print inventory.__class__.__name__

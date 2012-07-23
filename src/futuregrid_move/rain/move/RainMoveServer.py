@@ -27,7 +27,8 @@ import socket
 import ssl
 import sys
 import time
-from multiprocessing import Process, Queue
+#from multiprocessing import Process, Queue
+from threading import Thread, Lock
 
 from futuregrid_move.rain.move.Resource import Resource, Node, Cluster, Service
 from futuregrid_move.rain.move.HPCService import HPCService
@@ -53,6 +54,8 @@ class RainMoveServer(object):
         self.operation = ''
         self.arguments = None
         self.forcemove = False
+        
+        self.lock = Lock() # to ensure that only one thread access to the fabric DB at a time
         
         #load from config file
         self._rainConf = RainMoveServerConf()
@@ -201,7 +204,7 @@ class RainMoveServer(object):
             nodelist = self.arguments[:len(self.arguments)-1]
             if self.operation == "move":
                 nodelist = self.arguments[:len(self.arguments)-2]
-            
+            """
             full=False
             proc_list = []
             queue=Queue()
@@ -238,9 +241,50 @@ class RainMoveServer(object):
                 status += tempstat + "\n"
                 if re.search("^ERROR", tempstat):
                     self.logger.error(tempstat)
+            """
             
+            full=False
+            proc_list = []
+            joinstatus = []            
+            for node in nodelist:         
+                if len(proc_list) == self.proc_max:
+                    full = True
+                    while full:
+                        for i in range(len(proc_list) - 1, -1, -1):
+                            #self.logger.debug(str(proc_list[i]))
+                            if not proc_list[i].is_alive():
+                                #print "dead"                      
+                                proc_list.pop(i)
+                                full = False
+                        if full:
+                            time.sleep(self.refresh_status)
+                #try:
+                if self.operation == "move":
+                    new_arguments=[node,self.arguments[len(self.arguments)-2],self.arguments[len(self.arguments)-1]]
+                else:                    
+                    new_arguments=[node,self.arguments[len(self.arguments)-1]]
+                
+                    
+                proc_list.append(Thread(target=eval("self.wrap_" + self.operation), args=(joinstatus,new_arguments)))            
+                proc_list[len(proc_list) - 1].start()
+                #except:
+                #    msg = "ERROR: creating process " + str(sys.exc_info())
+                #    self.errormsg(connstream, msg)
+            for i in proc_list:
+                i.join()
+            
+            #status = ""
+            #while not queue.empty():
+            #    tempstat=str(queue.get())
+            #    status += tempstat + "\n"
+            #    if re.search("^ERROR", tempstat):
+            #        self.logger.error(tempstat)
+            status = ""
+            for i in joinstatus:
+                status += i + "\n"
+                if re.search("^ERROR", i):
+                    self.logger.error(i)
             self.okmsg(connstream, status)
-            
             
             #Put in the logs the current status of the services
             self.printCurrentStatus()
@@ -255,15 +299,17 @@ class RainMoveServer(object):
             #    msg = "ERROR: incorrect operation " + str(sys.exc_info())
             #    self.errormsg(connstream, msg)
             #    return
-   
-
+            
+            
             if re.search("^ERROR", status):
                 #sends ERROR: ... 
                 self.errormsg(connstream, status)
                 #return
             else:
+                
                 #sends OK
                 self.okmsg(connstream, status)
+                
         
         self.logger.info("Rain Move Server DONE")
     
@@ -300,11 +346,9 @@ class RainMoveServer(object):
         
         return status
     
-    def wrap_add(self,queue, arguments):
+    def wrap_add(self, joinstatus, arguments):
         
-        self.logger = logging.getLogger("RainMove." + str(os.getpid()))
-        
-        queue.put(self.add(arguments))
+        joinstatus.append(self.add(arguments))
     
     
     def add(self, arguments):
@@ -340,8 +384,14 @@ class RainMoveServer(object):
                     if not success:
                         status = "ERROR: adding the node " + arguments[0] + " to the service " + arguments[1] + ". " + str(restatus)
                     else:
-                        status = "The machines have been successfully integrated into the Cloud. " + str(restatus)      
-                    self.fgfabric.store()
+                        status = "The machines have been successfully integrated into the Cloud. " + str(restatus)
+                    self.lock.acquire()
+                    try:      
+                        self.fgfabric.store()
+                    except:
+                        status = "ERROR: storing information in the persistent data in the Fabric. " + str(sys.exc_info())
+                    finally:
+                        self.lock.release()                        
                 else:
                     status = "ERROR: the Node cannot be added because the Service does not exists"
             else:
@@ -349,9 +399,9 @@ class RainMoveServer(object):
 
         return status
     
-    def wrap_remove(self,queue, arguments):
-        self.logger = logging.getLogger("RainMove." + str(os.getpid()))
-        queue.put(self.remove(arguments))
+    def wrap_remove(self,joinstatus, arguments):
+        
+        joinstatus.append(self.remove(arguments))
     
     def remove(self, arguments):
         status = 'OK'
@@ -367,15 +417,21 @@ class RainMoveServer(object):
                     status = "ERROR: removing the node " + arguments[0] + " from the service " + arguments[1] + ". " + str(restatus)
                 else:
                     status = "The machines have been successfully deleted from the Cloud. " + str(restatus)
-                self.fgfabric.store()
+                self.lock.acquire()
+                try:      
+                    self.fgfabric.store()
+                except:
+                    status = "ERROR: storing information in the persistent data in the Fabric. " + str(sys.exc_info())
+                finally:
+                    self.lock.release()
             else:
                 status = "ERROR: the Node cannot be deleted because the Service does not exists"
                         
         return status
     
-    def wrap_move(self,queue, arguments):
-        self.logger = logging.getLogger("RainMove." + str(os.getpid()))
-        queue.put(self.move(arguments))
+    def wrap_move(self,joinstatus, arguments):
+        
+        joinstatus.append(self.move(arguments))
     
     def move(self, arguments):
         status = 'ERROR: Wrong resource.'
