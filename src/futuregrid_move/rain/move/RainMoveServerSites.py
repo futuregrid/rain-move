@@ -367,12 +367,13 @@ class RainMoveServerSites(object):
         access = False
         while not access and wait < max_wait:
             
-            time.sleep(30)
+            time.sleep(60)
              
             cmd = "nc -zw3 " + hostname + " 22"                    
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             #status = os.waitpid(p.pid, 0)[1]
             std = p.communicate()
+            print std
             if p.returncode != 0:
             #print status                  
             #if status == 0:
