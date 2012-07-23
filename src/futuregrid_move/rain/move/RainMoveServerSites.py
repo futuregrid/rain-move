@@ -366,10 +366,13 @@ class RainMoveServerSites(object):
         access = False
         while not access and wait < max_wait:                
             cmd = "nc -zw3 " + hostname + " 22"                    
-            p = Popen(cmd.split(), stdout=PIPE)
-            status = os.waitpid(p.pid, 0)[1]
+            p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+            #status = os.waitpid(p.pid, 0)[1]
+            std = p.communicate()
+            print std
+            if p.returncode != 0:
             #print status                  
-            if status == 0:
+            #if status == 0:
                 access = True
                 self.logger.debug("The machine " + hostname + " seems to be online")    
             else:                
