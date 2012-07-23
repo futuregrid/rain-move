@@ -301,6 +301,9 @@ class RainMoveServer(object):
         return status
     
     def wrap_add(self,queue, arguments):
+        
+        self.logger = logging.getLogger("RainMove." + str(os.getpid()))
+        
         queue.put(self.add(arguments))
     
     
@@ -347,6 +350,7 @@ class RainMoveServer(object):
         return status
     
     def wrap_remove(self,queue, arguments):
+        self.logger = logging.getLogger("RainMove." + str(os.getpid()))
         queue.put(self.remove(arguments))
     
     def remove(self, arguments):
@@ -370,6 +374,7 @@ class RainMoveServer(object):
         return status
     
     def wrap_move(self,queue, arguments):
+        self.logger = logging.getLogger("RainMove." + str(os.getpid()))
         queue.put(self.move(arguments))
     
     def move(self, arguments):
