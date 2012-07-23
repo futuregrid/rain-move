@@ -69,6 +69,8 @@ class RainMoveServerConf(object):
         self._MoveServerca_certs = ""
         self._MoveServercertfile = ""
         self._MoveServerkeyfile = ""
+        self._Moveproc_max = 0
+        self._Moverefresh_status = 0
         
         self._MoveClientca_certs = ""
         self._MoveClientcertfile = ""
@@ -107,6 +109,12 @@ class RainMoveServerConf(object):
 
     def getMovePort(self):
         return self._Moveport
+
+    def getMoveProcMax(self):
+        return self._Moveproc_max
+    def getMoveRefreshStatus(self):
+        return self._Moverefresh_status
+
     def getMoveAuthorizedUsers(self):
         return self._MoveauthorizedUsers
     def getMoveLog(self):
@@ -173,6 +181,16 @@ class RainMoveServerConf(object):
             sys.exit(1)
         except ConfigParser.NoSectionError:
             print "Error: no section "+section+" found in the "+self._configfile+" config file"
+            sys.exit(1)
+        try:
+            self._Moveproc_max = int(self._config.get(section, 'proc_max', 0))
+        except ConfigParser.NoOptionError:
+            print "Error: No proc_max option found in section " + section + " file " + self._configfile
+            sys.exit(1)
+        try:
+            self._Moverefresh_status = int(self._config.get(section, 'refresh', 0))
+        except ConfigParser.NoOptionError:
+            print "Error: No refresh option found in section " + section + " file " + self._configfile
             sys.exit(1)
         try:
             aux = self._config.get(section, 'authorizedusers', 0)

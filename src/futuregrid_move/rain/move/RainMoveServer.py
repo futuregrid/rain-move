@@ -27,6 +27,7 @@ import socket
 import ssl
 import sys
 import time
+from multiprocessing import Process, Queue
 
 from futuregrid_move.rain.move.Resource import Resource, Node, Cluster, Service
 from futuregrid_move.rain.move.HPCService import HPCService
@@ -61,6 +62,9 @@ class RainMoveServer(object):
         self.authorizedusers = self._rainConf.getMoveAuthorizedUsers()
         self.log_filename = self._rainConf.getMoveLog()
         self.logLevel = self._rainConf.getMoveLogLevel()
+        
+        self.proc_max = self._rainConf.getMoveProcMax()
+        self.refresh_status = self._rainConf.getMoveRefreshStatus()
         
         self._ca_certs = self._rainConf.getMoveServerCaCerts()
         self._certfile = self._rainConf.getMoveServerCertFile()
@@ -192,28 +196,72 @@ class RainMoveServer(object):
                 self.errormsg(connstream, msg)
                 return
 
-        #try:
+        if self.resource == 'service' and (self.operation == "add" or self.operation == "remove" or self.operation == "move"):
             
-        status = eval("self." + self.operation + "()")
+            nodelist = self.arguments[:len(self.arguments)-1]
+            if self.operation == "move":
+                nodelist = self.arguments[:len(self.arguments)-2]
             
-        #except:
-        #    msg = "ERROR: incorrect operation " + str(sys.exc_info())
-        #    self.errormsg(connstream, msg)
-        #    return
+            full=False
+            proc_list = []
+            queue=Queue()
+            for node in nodelist:         
+                if len(proc_list) == self.proc_max:
+                    full = True
+                    while full:
+                        for i in range(len(proc_list) - 1, -1, -1):
+                            #self.logger.debug(str(proc_list[i]))
+                            if not proc_list[i].is_alive():
+                                #print "dead"                      
+                                proc_list.pop(i)
+                                full = False
+                        if full:
+                            time.sleep(self.refresh_status)
+                #try:                    
+                proc_list.append(Process(target=eval("self.wrap_" + self.operation), args=(queue,[node,self.arguments[len(self.arguments)-1]])))            
+                proc_list[len(proc_list) - 1].start()
+                #except:
+                #    msg = "ERROR: creating process " + str(sys.exc_info())
+                #    self.errormsg(connstream, msg)
+            for i in proc_list:
+                i.join()
+            
+            status = ""
+            while not queue.empty():
+                tempstat=str(queue.get())
+                status += tempstat + "\n"
+                if re.search("^ERROR", tempstat):
+                    self.logger.error(tempstat)
+            
+            self.okmsg(connstream, status)
+            
+            
+            #Put in the logs the current status of the services
+            self.printCurrentStatus()
+            
+        else:
+            
+            #try:
+                
+            status = eval("self." + self.operation + "("+str(self.arguments)+")")
+                
+            #except:
+            #    msg = "ERROR: incorrect operation " + str(sys.exc_info())
+            #    self.errormsg(connstream, msg)
+            #    return
    
 
-        if re.search("^ERROR", status):
-            #sends ERROR: ... 
-            self.errormsg(connstream, status)
-            #return
-        else:
-            #sends OK
-            self.okmsg(connstream, status)
-
-    
+            if re.search("^ERROR", status):
+                #sends ERROR: ... 
+                self.errormsg(connstream, status)
+                #return
+            else:
+                #sends OK
+                self.okmsg(connstream, status)
+        
         self.logger.info("Rain Move Server DONE")
     
-    def create(self):
+    def create(self, arguments):
         '''create empty clusters or services'''
         status = 'OK'
         
@@ -246,7 +294,11 @@ class RainMoveServer(object):
         
         return status
     
-    def add(self):
+    def wrap_add(self,queue, arguments):
+        queue.put(self.add(arguments))
+    
+    
+    def add(self, arguments):
         '''add new node; existing node to a cluster; existing node to a service, etc.
         '''
         status = 'OK'
@@ -254,11 +306,11 @@ class RainMoveServer(object):
         if self.resource == 'node':
             #construcing a node from args
             #accepting format of: id,name,ip,cluster
-            newnode = Node(self.arguments[0], self.arguments[1], self.arguments[2], self.arguments[3])
+            newnode = Node(arguments[0], arguments[1], arguments[2], arguments[3])
 
             #ADD node to the node list
-            if self.fgfabric.getNode(self.arguments[0]) == None:
-                cluster = self.fgfabric.getCluster(self.arguments[3])
+            if self.fgfabric.getNode(arguments[0]) == None:
+                cluster = self.fgfabric.getCluster(arguments[3])
                 if cluster != None:
                     self.fgfabric.addNode(newnode)
                     if not cluster.add(newnode):
@@ -271,13 +323,13 @@ class RainMoveServer(object):
              
         # add a node to a service. This internally invokes the implementations for specific service types.    
         elif self.resource == 'service':
-            existingnode = self.fgfabric.getNode(self.arguments[0])
+            existingnode = self.fgfabric.getNode(arguments[0])
             if existingnode != None:
-                service = self.fgfabric.getService(self.arguments[1])
+                service = self.fgfabric.getService(arguments[1])
                 if service != None:
                     success, restatus = service.add(existingnode)
                     if not success:
-                        status = "ERROR: adding the node " + self.arguments[0] + " to the service " + self.arguments[1] + ". " + str(restatus)
+                        status = "ERROR: adding the node " + arguments[0] + " to the service " + arguments[1] + ". " + str(restatus)
                     else:
                         status = "The machines have been successfully integrated into the Cloud. " + str(restatus)      
                     self.fgfabric.store()
@@ -288,18 +340,21 @@ class RainMoveServer(object):
 
         return status
     
-    def remove(self):
+    def wrap_remove(self,queue, arguments):
+        queue.put(self.remove(arguments))
+    
+    def remove(self, arguments):
         status = 'OK'
         if self.resource == 'node':
             status = "ERROR: Not supported yet"
         elif self.resource == 'cluster':
             status = "ERROR: Not supported yet"
         elif self.resource == 'service':  #Remove a node from a service
-            service = self.fgfabric.getService(self.arguments[1])
+            service = self.fgfabric.getService(arguments[1])
             if service != None:
-                success, restatus = service.remove(self.arguments[0], self.forcemove)
+                success, restatus = service.remove(arguments[0], self.forcemove)
                 if not success:
-                    status = "ERROR: removing the node " + self.arguments[0] + " from the service " + self.arguments[1] + ". " + str(restatus)
+                    status = "ERROR: removing the node " + arguments[0] + " from the service " + arguments[1] + ". " + str(restatus)
                 else:
                     status = "The machines have been successfully deleted from the Cloud. " + str(restatus)
                 self.fgfabric.store()
@@ -308,49 +363,52 @@ class RainMoveServer(object):
                         
         return status
     
-    def move(self):
+    def wrap_move(self,queue, arguments):
+        queue.put(self.move(arguments))
+    
+    def move(self, arguments):
         status = 'ERROR: Wrong resource.'
         if self.resource == 'service':
-            status = self.remove()
+            status = self.remove(arguments)
             if status == 'OK':
-                self.arguments[1] = self.arguments[2]
-                status = self.add()           
+                arguments[1] = arguments[2]
+                status = self.add(arguments)           
                         
         return status
     
-    def info(self):
-        if self.arguments[0] in self.fgfabric.getNode().keys():
-            return str(self.fgfabric.getNode()[self.arguments[0]])
+    def info(self, arguments):
+        if arguments[0] in self.fgfabric.getNode().keys():
+            return str(self.fgfabric.getNode()[arguments[0]])
         else:
             return "ERROR: The node does not exists."
             
     
-    def list(self):
+    def lists(self, arguments):
         status = 'ERROR: Wrong resource.'
         if self.resource == 'cluster':
-            if not self.arguments[0]: #print
+            if not arguments[0]: #print
                 cluster = self.fgfabric.getCluster()
                 status = "The list of clusters is: " + str(cluster.keys())                
             else:
-                cluster = self.fgfabric.getCluster(self.arguments[0])
-                status = "Details of cluster " + str(self.arguments[0]) + " cluster: " + str(cluster.list().keys())
+                cluster = self.fgfabric.getCluster(arguments[0])
+                status = "Details of cluster " + str(arguments[0]) + " cluster: " + str(cluster.list().keys())
 
         elif self.resource == 'service':
-            if not self.arguments[0]: #print
+            if not arguments[0]: #print
                 service = self.fgfabric.getService()
                 status = "The list of services is: " + str(service.keys())
             else:
-                service = self.fgfabric.getService(self.arguments[0])
-                status = "Details of service " + str(self.arguments[0]) + " service: " + str(service.list().keys())
+                service = self.fgfabric.getService(arguments[0])
+                status = "Details of service " + str(arguments[0]) + " service: " + str(service.list().keys())
             
         return status
 
-    def listfreenodes(self):
+    def listfreenodes(self, arguments):
         status = "ERROR: getting the list of free nodes"
         
         dictfree={}
         
-        if not self.arguments[0]: #print
+        if not arguments[0]: #print
             listcluster = self.fgfabric.getCluster()
             for i in listcluster:                
                 dictfree[i]=[]
@@ -361,8 +419,8 @@ class RainMoveServer(object):
                         dictfree[i].append(listnodes[j].identifier)
             status = str(dictfree)
         else:
-            cluster = self.fgfabric.getCluster(self.arguments[0])
-            dictfree[self.arguments[0]]=[]
+            cluster = self.fgfabric.getCluster(arguments[0])
+            dictfree[arguments[0]]=[]
             listnodes=cluster.list()
             for j in listnodes:
                 if listnodes[j].allocated == 'FREE':
@@ -372,6 +430,19 @@ class RainMoveServer(object):
         
         return status
 
+    def printCurrentStatus(self):
+        services_details={}
+        services = self.fgfabric.getService()
+        #print services
+        
+        for i in services.keys(): 
+            serv = self.fgfabric.getService(i)
+            services_details[i]=serv.list().keys()
+            #"Details of service " + str(arguments[0]) + " service: " + str(service.list().keys())
+            
+        services_details['freenodes']=self.listfreenodes([None])
+        self.logger.debug( "CURRENT_STATUS=" + str(services_details))
+        
     def okmsg(self, connstream, msg):
         connstream.write(msg)
         connstream.shutdown(socket.SHUT_RDWR)

@@ -11,6 +11,13 @@
 #------------------------------------------------------------------------------
 #  port: is the port where this server will be listening
 #
+#  proc_max: number of concurrent nodes that can be reallocated. Make sure that
+#  this value is <= than the one specified in RainMoveSiteServer.
+#
+#  refresh: interval to check the status of the running requests when proc_max
+#  is reached. If some request has the completed status, and a new request can 
+#  be processed.
+#
 #  authorizedusers: list of users (separated by commas) that can use the service
 #
 #  log: file where logs are stored. You should include
@@ -35,6 +42,8 @@
 #******************************************************************************
 [RainMoveServer]
 port = 56795
+proc_max = 5
+refresh = 20
 authorizedusers = jdiaz, fuwang
 log = moveserver.log
 log_level = debug

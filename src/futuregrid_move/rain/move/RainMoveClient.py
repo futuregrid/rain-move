@@ -228,9 +228,9 @@ def main():
     subparser_service = subparsers.add_parser('service', help='Functionality to operate with services (infrastructures)')
     group_service = subparser_service.add_mutually_exclusive_group(required=True)
     group_service.add_argument('-c', '--create', nargs=2, metavar=('serviceId', 'type'), help='Create a new service.')
-    group_service.add_argument('-a', '--add', nargs=2, metavar=('nodeId', 'serviceId'), help='Add node to a service.')
-    group_service.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'serviceId'), help='Remove node from a service.')
-    group_service.add_argument('-m', '--move', nargs=3, metavar=('nodeId', 'serviceIdorigin', 'serviceIddestination'), help='Move a node from one service to another.')
+    group_service.add_argument('-a', '--add', nargs='+', metavar=('nodeId/s...','nodeId/s... serviceId'), help='Add node or list of nodes to a service. The last argument will be the service. I.e. -a node1 node2 service1 or -a node1 service1')
+    group_service.add_argument('-r', '--remove', nargs='+', metavar=('nodeId/s...','nodeId/s... serviceId'), help='Remove node from a service.')
+    group_service.add_argument('-m', '--move', nargs='+', metavar=('nodeId/s...','nodeId/s... serviceIdorigin serviceIddestination'), help='Move a node from one service to another.')
     group_service.add_argument('-l', '--list', nargs='?', default="", metavar='serviceId', help='List available services or the information about a particular one.')
     group_service.add_argument('-s', '--listfreenodes', nargs='?', default="", metavar='clusterId', help='List of nodes that are not assigned to any service.')
     subparser_service.add_argument('-f', '--force', default=False, action="store_true", help='The node will be removed/moved from the service and the instances/jobs running will be terminated.')
@@ -242,7 +242,7 @@ def main():
     
     print 'Starting Move Client...'
     
-    #print args
+    print args
 
     used_args = sys.argv[1:]
 
@@ -266,7 +266,7 @@ def main():
         elif args.remove != None:
             print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
         elif ('-l' in used_args or '--list' in used_args):
-            print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "list", args.list, args.force)
+            print rainmoveclient.cluster(args.user, passwd, args.subparser_name, "lists", args.list, args.force)
         else:
             print "ERROR: you must to specify one of the cluster's options. \n"
             subparser_cluster.print_help()
@@ -291,13 +291,22 @@ def main():
             else:
                 print "ERROR: Type of service not recognized. Valid types are: " + str(validTypes)
         elif args.add != None:
-            print rainmoveclient.service(args.user, passwd, args.subparser_name, "add", args.add, args.force)            
+            if len(args.add) < 2:
+                print "ERROR: you need to specify at least two arguments: nodeId and serviceId"
+            else:
+                print rainmoveclient.service(args.user, passwd, args.subparser_name, "add", args.add, args.force)            
         elif args.remove != None:
-            print rainmoveclient.service(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
+            if len(args.remove) < 2:
+                print "ERROR: you need to specify at least two arguments: nodeId and serviceId"
+            else:
+                print rainmoveclient.service(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
         elif args.move != None:
-            print rainmoveclient.service(args.user, passwd, args.subparser_name, "move", args.move, args.force)
+            if len(args.move) < 3:
+                print "ERROR: you need to specify at least three arguments: nodeId serviceIdorigin serviceIddestination"
+            else:
+                print rainmoveclient.service(args.user, passwd, args.subparser_name, "move", args.move, args.force)
         elif ('-l' in used_args or '--list' in used_args):
-            print rainmoveclient.service(args.user, passwd, args.subparser_name, "list", args.list, args.force)
+            print rainmoveclient.service(args.user, passwd, args.subparser_name, "lists", args.list, args.force)
         elif ('-s' in used_args or '--listfreenodes' in used_args):
             print rainmoveclient.service(args.user, passwd, args.subparser_name, "listfreenodes", args.list, args.force)
         else:
