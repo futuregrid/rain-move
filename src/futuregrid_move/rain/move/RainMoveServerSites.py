@@ -162,7 +162,7 @@ class RainMoveServerSites(object):
         #operation site, infrastructure origin, infrastructure destination, number machines,
         #reinstall?, image source, partitions,
                 
-        if len(params) != self.numparams and len(params) != self.numparams-1:
+        if len(params) != self.numparams and len(params) != self.numparams - 1:
             msg = "ERROR: incorrect message"
             self.errormsg(connstream, msg)
             return
@@ -202,8 +202,8 @@ class RainMoveServerSites(object):
             self.logger.error("ERROR: " + str(sys.exc_info()))
 
     def add_hpc(self, hostname):
-        exitloop=False
-        success=False
+        exitloop = False
+        success = False
         status = "default msg"
         wait = 0
         max_wait = self.service_max_wait / 10
@@ -211,7 +211,7 @@ class RainMoveServerSites(object):
         
         #check if exists
         self.logger.debug("checking if the node exists")
-        cmd="pbsnodes " + hostname
+        cmd = "pbsnodes " + hostname
         self.logger.debug(cmd)
         p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
         std = p.communicate()
@@ -219,31 +219,31 @@ class RainMoveServerSites(object):
             self.logger.debug("The node " + hostname + " is not in the list, we need to add it.")
             
             self.logger.debug("creating node in torque")
-            cmd1=["sudo","qmgr","-c","create node " + hostname]
+            cmd1 = ["sudo", "qmgr", "-c", "create node " + hostname]
             self.logger.debug(cmd1)
             p1 = Popen(cmd1, stdout=PIPE, stderr=PIPE)
             std1 = p1.communicate()
             if p1.returncode != 0:
                 status = "ERROR: creating node. " + str(std1[1])
                 self.logger.error(status)                        
-                success=False
+                success = False
             else:
                 success = True
         else:
             self.logger.debug("enabling node in torque")
-            cmd1="sudo pbsnodes -c " + hostname
+            cmd1 = "sudo pbsnodes -c " + hostname
             self.logger.debug(cmd1)
             p1 = Popen(cmd1.split(), stdout=PIPE, stderr=PIPE)
             std1 = p1.communicate()
             if p1.returncode != 0:
                 status = "ERROR: enabling node. " + str(std1[1])
                 self.logger.error(status)                        
-                success=False
+                success = False
             else:
                 success = True
         if success:
             self.logger.debug("changing properties of the node")
-            cmd1=["sudo","qmgr","-c","set node " + hostname + " properties = compute"]
+            cmd1 = ["sudo", "qmgr", "-c", "set node " + hostname + " properties = compute"]
             #cmd1="sudo qmgr -c 'set node " + hostname + " properties = compute' "
             self.logger.debug(cmd1)
             p1 = Popen(cmd1, stdout=PIPE, stderr=PIPE)
@@ -251,7 +251,7 @@ class RainMoveServerSites(object):
             if p1.returncode != 0:
                 status = "ERROR: changing properties node. " + str(std1[1])
                 self.logger.error(status)                        
-                success=False
+                success = False
             else:
                 success = True
         
@@ -260,26 +260,26 @@ class RainMoveServerSites(object):
         if success:
             self.logger.debug("Waiting until the machine is online")
             while not exitloop:
-                cmd="pbsnodes " + hostname
+                cmd = "pbsnodes " + hostname
                 self.logger.debug(cmd)
                 p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
                 std = p.communicate()
                 if p.returncode == 0:
-                    status_torque=std[0].split('\n')[1].strip().split('=')[1].strip()
+                    status_torque = std[0].split('\n')[1].strip().split('=')[1].strip()
                     if status_torque == 'free' or status_torque == 'job-exclusive':
                         success = True
                         exitloop = True
                         status = 'OK'
                 if wait < max_wait:
-                    wait+=1
+                    wait += 1
                     time.sleep(10)
                 else:
-                    exitloop=True
-                    success=False
-                    status = "ERROR: Timeout. The node " +hostname+ " is not active."
+                    exitloop = True
+                    success = False
+                    status = "ERROR: Timeout. The node " + hostname + " is not active."
         
         if success:
-            cmd="sudo mschedctl -R"
+            cmd = "sudo mschedctl -R"
             self.logger.debug(cmd)
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             std = p.communicate()
@@ -291,78 +291,79 @@ class RainMoveServerSites(object):
         return success, status   
 
     def add_openstack(self, hostname):
-        exitloop=False
-        success=False
+        exitloop = False
+        success = False
         status = "default msg"
         wait = 0
         wait2 = 0
         max_wait = self.service_max_wait / 10
         self.logger.debug("Waiting until the machine is accessible")
         while not exitloop:
-            cmd="sudo nova-manage service list --host " + hostname
+            cmd = "sudo nova-manage service list --host " + hostname
             self.logger.debug(cmd)
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             std = p.communicate()
             if p.returncode != 0:
                 status = "ERROR: Listing hosts. " + str(std[1])
                 self.logger.error(status)                        
-                exitloop=True
-                success=False
+                exitloop = True
+                success = False
             else:
                 output = std[0].split()
                 output = output[6:]
                 if len(output) >= 6:                
                     if output[4].strip() == ':-)':        
                         if output[3].strip() == "enabled":
-                            self.logger.debug("Node " +hostname+ " is active and enabled")
-                            exitloop=True
-                            success=True
+                            self.logger.debug("Node " + hostname + " is active and enabled")
+                            exitloop = True
+                            success = True
                         elif output[3].strip() == "disabled":
-                            self.logger.debug("Node " +hostname+ " is active and disabled")
+                            self.logger.debug("Node " + hostname + " is active and disabled")
                             self.logger.debug("Enabling None")
-                            cmd="sudo nova-manage service enable " + hostname + " nova-compute"
+                            cmd = "sudo nova-manage service enable " + hostname + " nova-compute"
                             self.logger.debug(cmd)
                             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
                             std = p.communicate()
                             if p.returncode != 0:
-                                status = "ERROR: Enabling node " +hostname+ ". " + str(std[1])
+                                status = "ERROR: Enabling node " + hostname + ". " + str(std[1])
                                 self.logger.error(status)                        
-                                exitloop=True
-                                success=False
+                                exitloop = True
+                                success = False
                     else:
-                        self.logger.debug("The Node " +hostname+ " is not active. We will keep trying.")                        
+                        self.logger.debug("The Node " + hostname + " is not active. We will keep trying.")                        
                         if wait < max_wait:
-                            wait+=1
+                            wait += 1
                             time.sleep(10)
                         else:
-                            exitloop=True
-                            success=False
-                            status = "ERROR: Timeout. The node " +hostname+ " is not active."
+                            exitloop = True
+                            success = False
+                            status = "ERROR: Timeout. The node " + hostname + " is not active."
                 else:
-                    self.logger.debug("The Node " +hostname+ " is not in the list. We will keep trying.")                        
+                    self.logger.debug("The Node " + hostname + " is not in the list. We will keep trying.")                        
                     if wait2 < max_wait:
-                        wait2+=1
+                        wait2 += 1
                         time.sleep(10)
                     else:
-                        exitloop=True
-                        success=False
-                        status = "ERROR: Timeout. The node " +hostname+ " is not in the list."
+                        exitloop = True
+                        success = False
+                        status = "ERROR: Timeout. The node " + hostname + " is not in the list."
                         
         return success, status
 
     def add_euca(self, hostname):
         
-        exitloop=False
-        success=False
+        exitloop = False
+        success = False
         status = "default msg"
         wait = 0
         max_wait = self.service_max_wait / 10        
-        num_notfounds=0
+        num_notfounds = 0
         
         
         #TODO WHILE with timeout.
         #'nc -zw3 '+ hostname + ' 22'
         
+        self.logger.debug("Waiting until the machine is online")
         access = False
         while not access and wait < max_wait:                
             cmd = "nc -zw3 " + hostname + " 22"                    
@@ -385,86 +386,86 @@ class RainMoveServerSites(object):
                     break                    
                 
         if access:
-            cmd="sudo euca_conf --register-nodes " + hostname
+            cmd = "sudo euca_conf --register-nodes " + hostname
             self.logger.debug(cmd)
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             std = p.communicate()
             if p.returncode != 0:
-                status = "ERROR: Registering the node " +hostname+ ". " + str(std[1])
+                status = "ERROR: Registering the node " + hostname + ". " + str(std[1])
                 self.logger.error(status)
-                exitloop=True
+                exitloop = True
             else:
-                self.logger.debug("Node " +hostname+ " registered." + std[0])
+                self.logger.debug("Node " + hostname + " registered." + std[0])
                 #TODO?:Here, we may need to check if the keys are properly propagated
                 #Eucalyptus does not have a way to check if the compute-node is OK from the management machine
             
             while not exitloop:    
                 self.logger.debug("checking if the node is registered")
-                cmd="sudo euca_conf --list-nodes"
+                cmd = "sudo euca_conf --list-nodes"
                 self.logger.debug(cmd)
                 p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
                 std = p.communicate()
                 if p.returncode != 0:
                     status = "ERROR: Listing hosts. " + str(std[1])
                     self.logger.error(status)                        
-                    exitloop=True
-                    success=False
+                    exitloop = True
+                    success = False
                 else:                
                     output = std[0].split('\n')
-                    found=False
+                    found = False
                     for entry in output:
-                        if '\t'+hostname+'\t' in entry:
-                            status = "The node " +hostname+ " appears on the list"
+                        if '\t' + hostname + '\t' in entry:
+                            status = "The node " + hostname + " appears on the list"
                             self.logger.debug(status)
-                            exitloop=True
-                            found=True
-                            success=True
-                            num_notfounds=0
+                            exitloop = True
+                            found = True
+                            success = True
+                            num_notfounds = 0
                             break
                     if not found:
                         if num_notfounds == 5: #this is because euca_conf --list-nodes does not return the whole list sometimes
-                            exitloop=True
-                            success=False
-                            status = "ERROR: Node " +hostname+ " is not found in the host list. It has not been registered properly"
+                            exitloop = True
+                            success = False
+                            status = "ERROR: Node " + hostname + " is not found in the host list. It has not been registered properly"
                         else:
-                            num_notfounds +=1 
+                            num_notfounds += 1 
                             time.sleep(2)
                         
         return success, status
 
     def remove_hpc(self, hostname, forcemove):
-        status="default msg"
-        exitloop=False
+        status = "default msg"
+        exitloop = False
         wait = 0
         max_wait = self.service_max_wait / 10
         
         
         self.logger.debug("Making node offline")
-        cmd="sudo pbsnodes -o " + hostname
+        cmd = "sudo pbsnodes -o " + hostname
         self.logger.debug(cmd)
         p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
         std = p.communicate()
         if p.returncode != 0:
             status = "ERROR: making node offline. " + str(std[1])
             self.logger.error(status)                        
-            exitloop=True
-            success=False
+            exitloop = True
+            success = False
         
         while not exitloop:
             self.logger.debug("Checking if the node is free")
-            cmd="pbsnodes " + hostname
+            cmd = "pbsnodes " + hostname
             self.logger.debug(cmd)
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             std = p.communicate()
             if p.returncode != 0:
                 status = "ERROR: describing resources node. " + str(std[1])
                 self.logger.error(status)                        
-                exitloop=True
-                success=False
+                exitloop = True
+                success = False
             else:
-                if not re.search('^jobs',std[0].split('\n')[5].strip()):                    
-                    self.logger.debug("Node " +hostname+ " is free. Deleting")
-                    cmd=["sudo","qmgr","-c","delete node " + hostname]
+                if not re.search('^jobs', std[0].split('\n')[5].strip()):                    
+                    self.logger.debug("Node " + hostname + " is free. Deleting")
+                    cmd = ["sudo", "qmgr", "-c", "delete node " + hostname]
                     #cmd="sudo qmgr -c 'delete node " + hostname + "'"
                     self.logger.debug(cmd)
                     p = Popen(cmd, stdout=PIPE, stderr=PIPE)
@@ -472,36 +473,36 @@ class RainMoveServerSites(object):
                     if p.returncode != 0:
                         status = "ERROR: Deleting node. " + str(std[1])
                         self.logger.error(status)                        
-                        exitloop=True
-                        success=False
+                        exitloop = True
+                        success = False
                     else:
-                        exitloop=True
+                        exitloop = True
                         success = True
                 elif forcemove:
                     self.logger.debug("Killing jobs")
-                    joblist=std[0].split('\n')[5].split('=')[1].split(',')   
+                    joblist = std[0].split('\n')[5].split('=')[1].split(',')   
                     for i in joblist:
-                        job=i.split('/')
+                        job = i.split('/')
                         if len(job) == 2:
-                            jobid=job[1].strip()
-                            stat=os.system('sudo qdel ' + jobid)
-                            if stat !=0:
+                            jobid = job[1].strip()
+                            stat = os.system('sudo qdel ' + jobid)
+                            if stat != 0:
                                 os.system('sudo qdel -p ' + jobid)
                     self.logger.debug("After jobs terminated")
                     time.sleep(5) #allow them some time to change the status   
                 else:
                     self.logger.debug("Waiting until free")
                     if wait < max_wait:
-                        wait+=1
+                        wait += 1
                         time.sleep(10)
                     else:
-                        exitloop=True
-                        success=False
-                        status = "ERROR: Timeout. The node " +hostname+ " is busy. Try to use force move"
+                        exitloop = True
+                        success = False
+                        status = "ERROR: Timeout. The node " + hostname + " is busy. Try to use force move"
 
         if not success:
             self.logger.debug("Making node online")
-            cmd="sudo pbsnodes -c " + hostname
+            cmd = "sudo pbsnodes -c " + hostname
             self.logger.debug(cmd)
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             std = p.communicate()
@@ -512,141 +513,142 @@ class RainMoveServerSites(object):
 
     def remove_euca(self, hostname, forcemove):
         status = "default msg"
-        exitloop=False
-        success=False
+        exitloop = False
+        success = False
         wait = 0
         max_wait = self.service_max_wait / 10
-        found=False
-        num_notfounds=0
+        found = False
+        num_notfounds = 0
         while not exitloop:
             self.logger.debug("Checking if the node is free")
-            cmd="sudo euca_conf --list-nodes"
+            cmd = "sudo euca_conf --list-nodes"
             self.logger.debug(cmd)
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             std = p.communicate()
             if p.returncode != 0:
                 status = "ERROR: describing resources node. " + str(std[1])
                 self.logger.error(status)                        
-                exitloop=True
-                success=False
+                exitloop = True
+                success = False
             else:
                 #print std[0]
                 output = std[0].split('\n')
                 #print output
-                listvms=[]
+                listvms = []
                 for entry in output:
-                    if '\t'+hostname+'\t' in entry:
-                        num_notfounds=0
+                    if '\t' + hostname + '\t' in entry:
+                        num_notfounds = 0
                         found = True
-                        parts=entry.split('\t')
+                        parts = entry.split('\t')
                         if len(parts) < 4:
-                            self.logger.debug("Machine " +hostname+ " is free. Deregistering...")
-                            cmd="sudo euca_conf --deregister-nodes " + hostname
+                            self.logger.debug("Machine " + hostname + " is free. Deregistering...")
+                            cmd = "sudo euca_conf --deregister-nodes " + hostname
                             self.logger.debug(cmd)
                             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
                             std = p.communicate()
                             if p.returncode != 0:
                                 self.logger.error("ERROR: Deregistering node. " + str(std[1]))                        
-                                exitloop=True
-                                success=False
+                                exitloop = True
+                                success = False
                             else:
-                                exitloop=True
+                                exitloop = True
                                 success = True
                         elif(forcemove):
-                            for i in range(3,len(parts)):
+                            for i in range(3, len(parts)):
                                 listvms.append(parts[i])
                             self.logger.debug("Killing instances")
                             status = self.terminate_instances(hostname, "eucalyptus", listvms)
                             if status != "OK":
                                 self.logger.error(status)                        
-                                exitloop=True
-                                success=False                
+                                exitloop = True
+                                success = False                
                             self.logger.debug("After terminate instances call")  
                             time.sleep(5)
                         else:
                             self.logger.debug("Waiting until free")
                             if wait < max_wait:
-                                wait+=1
+                                wait += 1
                                 time.sleep(10)
                             else:
-                                exitloop=True
-                                success=False
-                                status = "ERROR: Timeout. The node " +hostname+ " is busy. Try to use force move"
+                                exitloop = True
+                                success = False
+                                status = "ERROR: Timeout. The node " + hostname + " is busy. Try to use force move"
                         break
                 if not found:
                     if num_notfounds == 5: #this is because euca_conf --list-nodes does not return the whole list sometimes
-                        exitloop=True
-                        success=False
-                        status = "ERROR: Node " +hostname+ " is not found in the host list."
+                        exitloop = True
+                        success = False
+                        status = "ERROR: Node " + hostname + " is not found in the host list."
                     else:
-                        num_notfounds +=1 
+                        num_notfounds += 1 
                         time.sleep(2)
-                        status = "ERROR: Timeout. The node " +hostname+ " is busy. Try to use force move"
+                        status = "ERROR: Timeout. The node " + hostname + " is busy. Try to use force move"
                         
         return success, status
                         
     def remove_openstack(self, hostname, forcemove):
-        status="default msg"
-        exitloop=False
+        status = "default msg"
+        exitloop = False
         wait = 0
         max_wait = self.service_max_wait / 10
         while not exitloop:
             self.logger.debug("Checking if the node is free")
-            cmd="sudo nova-manage service describe_resource " + hostname
+            cmd = "sudo nova-manage service describe_resource " + hostname
             self.logger.debug(cmd)
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             std = p.communicate()
             if p.returncode != 0:
                 status = "ERROR: describing resources node. " + str(std[1])
                 self.logger.error(status)                        
-                exitloop=True
-                success=False
+                exitloop = True
+                success = False
             else:
                 #print std[0]
                 output = std[0].split()
                 output = output[5:]
-                n_instances=int(output[12]) #get value from use_max because use_now takes longer to be updated
+                n_instances = int(output[12]) #get value from use_max because use_now takes longer to be updated
                 if n_instances == 0:
-                    self.logger.debug("Node " +hostname+ " is free. Disabling")
-                    cmd="sudo nova-manage service disable " + hostname + " nova-compute"
+                    self.logger.debug("Node " + hostname + " is free. Disabling")
+                    cmd = "sudo nova-manage service disable " + hostname + " nova-compute"
                     self.logger.debug(cmd)
                     p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
                     std = p.communicate()
                     if p.returncode != 0:
                         status = "ERROR: Disabling node. " + str(std[1])
                         self.logger.error(status)                        
-                        exitloop=True
-                        success=False
+                        exitloop = True
+                        success = False
                     else:
-                        exitloop=True
+                        exitloop = True
                         success = True
                 elif forcemove:
                     self.logger.debug("Killing instances")
-                    status = self.terminate_instances(hostname,"openstack", None)
+                    status = self.terminate_instances(hostname, "openstack", None)
                     if status != "OK":                        
                         self.logger.error(status)                        
-                        exitloop=True
-                        success=False                
+                        exitloop = True
+                        success = False                
                     self.logger.debug("After terminate instances call")
                     time.sleep(5) #allow them some time to change the status   
                 else:
                     self.logger.debug("Waiting until free")
                     if wait < max_wait:
-                        wait+=1
+                        wait += 1
                         time.sleep(10)
                     else:
-                        exitloop=True
-                        success=False
-                        status = "ERROR: Timeout. The node " +hostname+ " is busy. Try to use force move"
+                        exitloop = True
+                        success = False
+                        status = "ERROR: Timeout. The node " + hostname + " is busy. Try to use force move"
 
         return success, status
     
     def terminate_instances(self, hostname, cloudtype, instanceslist):
         try:
             if cloudtype == "openstack":
-                path,region,ec2_url = self.openstack(self.ec2varfile)
-            elif cloudtype =="eucalytpus":
-                path,region,ec2_url = self.euca(self.ec2varfile)
+                path, region, ec2_url = self.openstack(self.ec2varfile)
+            elif cloudtype == "eucalyptus":
+                path, region, ec2_url = self.euca(self.ec2varfile)
+            
         except:
             msg = "ERROR: getting environment variables " + str(sys.exc_info())            
             self.logger.error(msg)                        
@@ -669,7 +671,7 @@ class RainMoveServerSites(object):
 
         if cloudtype == "openstack":
             try:
-                reservations=connection.get_all_instances() 
+                reservations = connection.get_all_instances() 
                 #print str(reservations)
             except:
                 msg = "ERROR:getting all instances. " + str(sys.exc_info())
@@ -683,11 +685,11 @@ class RainMoveServerSites(object):
                         try:
                             connection.terminate_instances(str(i.id))
                         except:
-                            msg= "ERROR: terminating VM. " + str(sys.exc_info())
+                            msg = "ERROR: terminating VM. " + str(sys.exc_info())
                             self.logger.error(msg)                        
                             #return msg  #we should not return
                             
-        elif cloudtype=="eucalyptus":
+        elif cloudtype == "eucalyptus":
             for i in instanceslist:
                 self.logger.debug("euca_terminate " + i)
                 try:
