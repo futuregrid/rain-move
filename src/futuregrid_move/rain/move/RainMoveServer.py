@@ -370,7 +370,7 @@ class RainMoveServer(object):
         status = 'ERROR: Wrong resource.'
         if self.resource == 'service':
             status = self.remove(arguments)
-            if status == 'OK':
+            if re.search("^ERROR",status):
                 arguments[1] = arguments[2]
                 status = self.add(arguments)           
                         
