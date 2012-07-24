@@ -430,7 +430,7 @@ class RainMoveServerSites(object):
                     if not found:
                         if num_notfounds == 20: #this is because euca_conf --list-nodes does not return the whole list sometimes
                             exitloop = True
-                            success = True
+                            success = True    #change to False when euca_conf works properly
                             status = "WARNING: Node " + hostname + " is not found in the host list. It has not been registered properly"
                         else:
                             num_notfounds += 1 
