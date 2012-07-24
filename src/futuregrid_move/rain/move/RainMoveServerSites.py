@@ -190,6 +190,7 @@ class RainMoveServerSites(object):
             self.logger.debug("Operation " + operation + " Service " + service + " Argument " + argument)           
         
         if success:  
+            self.logger.debug(status)
             connstream.write("OK")
         else:
             self.logger.error(status)
@@ -427,10 +428,10 @@ class RainMoveServerSites(object):
                             num_notfounds = 0
                             break
                     if not found:
-                        if num_notfounds == 5: #this is because euca_conf --list-nodes does not return the whole list sometimes
+                        if num_notfounds == 20: #this is because euca_conf --list-nodes does not return the whole list sometimes
                             exitloop = True
-                            success = False
-                            status = "ERROR: Node " + hostname + " is not found in the host list. It has not been registered properly"
+                            success = True
+                            status = "WARNING: Node " + hostname + " is not found in the host list. It has not been registered properly"
                         else:
                             num_notfounds += 1 
                             time.sleep(2)
