@@ -373,8 +373,8 @@ class RainMoveServerSites(object):
             p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
             #status = os.waitpid(p.pid, 0)[1]
             std = p.communicate()
-            print std
-            print p.returncode
+            #print std
+            #print p.returncode
             if p.returncode == 0:
             #print status                  
             #if status == 0:
