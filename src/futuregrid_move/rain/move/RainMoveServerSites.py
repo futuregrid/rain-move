@@ -375,7 +375,7 @@ class RainMoveServerSites(object):
             std = p.communicate()
             print std
             print p.returncode
-            if p.returncode != 0:
+            if p.returncode == 0:
             #print status                  
             #if status == 0:
                 access = True
