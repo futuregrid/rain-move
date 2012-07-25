@@ -579,10 +579,10 @@ class RainMoveServerSites(object):
                                 success = False
                                 status = "ERROR: Timeout. The node " + hostname + " is busy. Try to use force move"
                         break
-                if not found:
-                    if num_notfounds == 5: #this is because euca_conf --list-nodes does not return the whole list sometimes
+                if not found and not success:
+                    if num_notfounds == 20: #this is because euca_conf --list-nodes does not return the whole list sometimes
                         exitloop = True
-                        success = False
+                        success = True
                         status = "ERROR: Node " + hostname + " is not found in the host list."
                     else:
                         num_notfounds += 1 
