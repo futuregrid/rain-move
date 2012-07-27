@@ -384,18 +384,18 @@ class RainMoveServer(object):
                     if not success:
                         status = "ERROR: adding the node " + arguments[0] + " to the service " + arguments[1] + ". " + str(restatus)
                     else:
-                        status = "The machines have been successfully integrated into the Cloud. " + str(restatus)
+                        status = "The node " + arguments[0] + " have been successfully integrated into the Cloud. " + str(restatus)
                     self.lock.acquire()
                     try:      
                         self.fgfabric.store()
                     except:
-                        status = "ERROR: storing information in the persistent data in the Fabric. " + str(sys.exc_info())
+                        status = "ERROR: adding the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
                     finally:
                         self.lock.release()                        
                 else:
-                    status = "ERROR: the Node cannot be added because the Service does not exists"
+                    status = "ERROR: the Node " + arguments[0] + " cannot be added because the Service does not exists"
             else:
-                status = "ERROR: the Node does not exists"
+                status = "ERROR: the Node " + arguments[0] + " does not exists"
 
         return status
     
@@ -416,16 +416,16 @@ class RainMoveServer(object):
                 if not success:
                     status = "ERROR: removing the node " + arguments[0] + " from the service " + arguments[1] + ". " + str(restatus)
                 else:
-                    status = "The machines have been successfully deleted from the Cloud. " + str(restatus)
+                    status = "The node " + arguments[0] + " have been successfully deleted from the Cloud. " + str(restatus)
                 self.lock.acquire()
                 try:      
                     self.fgfabric.store()
                 except:
-                    status = "ERROR: storing information in the persistent data in the Fabric. " + str(sys.exc_info())
+                    status = "ERROR: removing the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
                 finally:
                     self.lock.release()
             else:
-                status = "ERROR: the Node cannot be deleted because the Service does not exists"
+                status = "ERROR: the Node " + arguments[0] + " cannot be deleted because the Service does not exists"
                         
         return status
     
