@@ -458,7 +458,8 @@ class RainMoveServer(object):
                 status = "The list of clusters is: " + str(cluster.keys())                
             else:
                 cluster = self.fgfabric.getCluster(arguments[0])
-                status = "Details of cluster " + str(arguments[0]) + " cluster: " + str(cluster.list().keys())
+                if cluster != None:
+                    status = "Details of cluster " + str(arguments[0]) + " cluster: " + str(cluster.list().keys())
 
         elif self.resource == 'service':
             if not arguments[0]: #print
@@ -466,7 +467,8 @@ class RainMoveServer(object):
                 status = "The list of services is: " + str(service.keys())
             else:
                 service = self.fgfabric.getService(arguments[0])
-                status = "Details of service " + str(arguments[0]) + " service: " + str(service.list().keys())
+                if service != None:
+                    status = "Details of service " + str(arguments[0]) + " service: " + str(service.list().keys())
             
         return status
 
