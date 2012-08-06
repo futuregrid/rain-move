@@ -204,7 +204,7 @@ def main():
     rainmoveclient = RainMoveClient(verbose)
 
     parser = argparse.ArgumentParser(prog="fg-move", formatter_class=argparse.RawDescriptionHelpFormatter,
-                                     description="FutureGrid Image Registration Help ")    
+                                     description="FutureGrid Move Help ")    
     parser.add_argument('-u', '--user', dest='user', required=True, metavar='user', help='FutureGrid User name.')
     
     subparsers = parser.add_subparsers(dest='subparser_name', help='Positional arguments group different options that can be' 
@@ -215,14 +215,14 @@ def main():
     group_cluster.add_argument('-c', '--create', metavar='clusterId', help='Create a new cluster.')
     group_cluster.add_argument('-r', '--remove', metavar='clusterId', help='Remove a cluster.')
     group_cluster.add_argument('-l', '--list', nargs='?', default="", metavar='clusterId', help='List available clusters or the information about a particular one.')
-    group_cluster.add_argument('-f', '--force', default=False, action="store_true", help='Force operation.')
+    subparser_cluster.add_argument('-f', '--force', default=False, action="store_true", help='Force operation.')
     
     subparser_node = subparsers.add_parser('node', help='Functionality to operate with nodes (machines)')
     group_node = subparser_node.add_mutually_exclusive_group(required=True)
-    group_node.add_argument('-a', '--add', nargs=4, metavar=('nodeId', 'hostname', 'ip', 'cluster'), help='Add new node to a cluster.')
-    group_node.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'cluster'), help='Remove node. It is also removed from cluster and service.')
+    group_node.add_argument('-a', '--add', nargs=4, metavar=('nodeId', 'hostname', 'ip', 'clusterId'), help='Add new node to a cluster.')
+    group_node.add_argument('-r', '--remove', nargs=2, metavar=('nodeId', 'clusterId'), help='Remove node. It is also removed from cluster and service.')
     group_node.add_argument('-i', '--info', metavar='nodeId', help='Information of a node.')
-    group_node.add_argument('-f', '--force', default=False, action="store_true", help='Force operation.')
+    subparser_node.add_argument('-f', '--force', default=False, action="store_true", help='Force operation.')
     
     
     subparser_service = subparsers.add_parser('service', help='Functionality to operate with services (infrastructures)')

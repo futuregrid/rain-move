@@ -25,8 +25,8 @@ setup(
     name = 'futuregrid_move',
     version = RELEASE,
     description = "FutureGrid Rain Move is a software to move resources between infrastructures. This will be part of Rain.",
-    author = 'Fugang Wang, Javier Diaz, Koji Tanaka, Gregor von Laszewski',
-    author_email = 'kevinwangfg@gmail.com',
+    author = 'Javier Diaz, Fugang Wang, Koji Tanaka, Gregor von Laszewski',
+    author_email = 'javier.diazmontes@gmail.com',
     license = "Apache Software License",
     url = "http://futuregrid.github.com/rain_move/index.html",
     classifiers = [

@@ -31,13 +31,11 @@ and `OpenStack <http://www.openstack.org>`_ frameworks. Additionally, we are wor
 on `Nimbus <http://www.nimbusproject.org>`_ and `OpenNebula <http://www.opennebula.org>`_ frameworks.
 
 
-
-
 Use Cases
 ---------
 
 * Re-assign machines based on user demands. This can be initiated manually, by creating a reservation or by predicting future needs (learning 
-for historical information).
+  for historical information).
 
 * Conduct tests on the same machines with different frameworks.
 
