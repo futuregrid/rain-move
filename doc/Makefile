@@ -13,8 +13,9 @@ PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
+VERSION                 = `python -c "import futuregrid_move; print futuregrid_move.RELEASE"`
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -41,7 +42,7 @@ help:
 clean:
 	-rm -rf $(BUILDDIR)/*
 
-html: clean 
+html:  
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
@@ -156,4 +157,15 @@ create:
 	cd ..; make force
 
 
+website: singlehtml html latexpdf
+	mkdir -p $(BUILDDIR)/web-$(VERSION)
+	cp -r $(BUILDDIR)/singlehtml $(BUILDDIR)/web-$(VERSION)/
+	cp $(BUILDDIR)/latex/FutureGrid.pdf $(BUILDDIR)/web-$(VERSION)/futuregrid-docs-pdf_$(VERSION).pdf
+
+	tar czf $(BUILDDIR)/web-$(VERSION)/futuregrid-docs-configsamples_$(VERSION).tar.gz -C $(BUILDDIR) ../../etc
+	zip -r $(BUILDDIR)/web-$(VERSION)/futuregrid-docs-configsamples_$(VERSION).zip $(BUILDDIR)/../../etc
+
+	$(SPHINXBUILD) -b html -Dwebsite=yes -Dmaster_doc=index $(ALLSPHINXOPTS) $(BUILDDIR)/web-$(VERSION)
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)/web."
 
