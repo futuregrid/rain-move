@@ -22,7 +22,8 @@ The following picture represents the architecture of FG Move.
 
 .. image:: fg-move_all.png
    :align: center
-   :scale: 60 %
+   :height: 350 px
+   :width: 600 px
 
 
 Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on `Eucalyptus <http://open.eucalyptus.com/>`_ 
