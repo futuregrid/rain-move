@@ -7,6 +7,30 @@
 #******************************************************************************
 
 #******************************************************************************
+# LDAP authentication configuration
+#------------------------------------------------------------------------------
+#  This define the LDAP information needed by the auth module
+#
+#  LDAPHOST: ldap server
+#
+#  LDAPUSER: dn that identified the user that will connect with ldap
+#
+#  LDAPPASS: password of the previous user for access to ldap server
+#
+#  log: file where logs are stored. You should include
+#  the full path, otherwise it will use the current directory or $HOME.
+#
+#  test=it does not contanct ldap server when True. False if not provided.
+#******************************************************************************
+[LDAP]
+LDAPHOST=im3r.idp.iu.futuregrid.org
+#ldap.futuregrid.org
+LDAPUSER=uid=USER,ou=People,dc=futuregrid,dc=org
+LDAPPASS=PASS
+log=~/fg-auth.log
+test=False
+
+#******************************************************************************
 # Rain Move Server configuration
 #------------------------------------------------------------------------------
 #  port: is the port where this server will be listening

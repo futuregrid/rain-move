@@ -8,9 +8,9 @@ needed for a successful registration in the new infrastructure. FG Move also mai
 composing each one of the different infrastructures, which can be queried to consult the current status or detailed information about
 a particular infrastructure.
 
-Currently, we support HPC (Torque), `Eucalyptus <http://open.eucalyptus.com/>`_ and `OpenStack <http://www.openstack.org>`_ infrastructures.
-However, we are working to provide support to `Nimbus <http://www.nimbusproject.org>`_ and `OpenNebula <http://www.opennebula.org>`_ infrastructures.
-
+Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on `Eucalyptus <http://open.eucalyptus.com/>`_ 
+and `OpenStack <http://www.openstack.org>`_ frameworks. Additionally, we are working to provide support to other cloud infrastructures based 
+on `Nimbus <http://www.nimbusproject.org>`_ and `OpenNebula <http://www.opennebula.org>`_ frameworks.
 
 .. toctree::
     :maxdepth: 1

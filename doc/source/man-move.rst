@@ -1,4 +1,4 @@
-.. _man-rain:
+.. _man-move:
 
 Move (fg-move)
 ==============
