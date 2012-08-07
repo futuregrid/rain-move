@@ -5,9 +5,9 @@ all:
 	cd /tmp
 	rm -rf /tmp/vc
 	mkdir -p /tmp/vc
-	cd /tmp/vc; git clone git://github.com/futuregrid/rain.git
-	cd /tmp/vc/rain/doc; ls; make website
-	cp -r /tmp/vc/rain/doc/build/web-${VERSION}/* .
+	cd /tmp/vc; git clone git://github.com/futuregrid/rain-move.git
+	cd /tmp/vc/rain-move/doc; ls; make website
+	cp -r /tmp/vc/rain-move/doc/build/web-${VERSION}/* .
 	find . -name "*.pyc" -exec rm {} \;
 	git add .
 	git reset -- doc
@@ -24,11 +24,11 @@ all-devmode:
 	cd /tmp
 	rm -rf /tmp/vc
 	mkdir -p /tmp/vc
-	cd /tmp/vc; git clone git://github.com/futuregrid/rain.git
+	cd /tmp/vc; git clone git://github.com/futuregrid/rain-move.git
 	git checkout master
-	cd /tmp/vc/rain/doc; ls; make website
+	cd /tmp/vc/rain-move/doc; ls; make website
 	git checkout gh-pages
-	cp -r /tmp/vc/rain/doc/build/web-${VERSION}/* .
+	cp -r /tmp/vc/rain-move/doc/build/web-${VERSION}/* .
 	find . -name "*.pyc" -exec rm {} \;
 	git add .
 	git reset -- doc
