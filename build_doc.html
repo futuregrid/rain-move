@@ -1,6 +1,4 @@
 
-
-
 <!-- This layout has been taken from http://globus.org/provision/ -->
 
 
@@ -12,7 +10,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; FutureGrid 0.1 documentation</title>
+    <title>Building the FG Move Documentation &mdash; FutureGrid 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +27,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" /> 
+    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
+    <link rel="up" title="FG Move Documentation" href="documentation.html" />
+    <link rel="next" title="Changelog and Release Notes" href="changelog.html" />
+    <link rel="prev" title="Configuring a Module for FutureGrid Software" href="modules_india.html" /> 
   </head>
   <body>
 <style>
@@ -62,8 +63,14 @@ body {
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="#" title="General Index"
+          <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changelog.html" title="Changelog and Release Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modules_india.html" title="Configuring a Module for FutureGrid Software"
+             accesskey="P">previous</a> |</li>
         <li><a href="index.html">Home</a>|&nbsp;</li>
         <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
         <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
@@ -72,15 +79,24 @@ body {
         <li><a href="support.html">Support</a>|&nbsp;</li>
         <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
         <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
- 
+
+          <li><a href="documentation.html" accesskey="U">FG Move Documentation</a> &raquo;</li> 
       </ul>
     </div>
 
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-
-   
-
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules_india.html"
+                        title="previous chapter">Configuring a Module for FutureGrid Software</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="changelog.html"
+                        title="next chapter">Changelog and Release Notes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/build_doc.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -104,11 +120,24 @@ body {
         <div class="bodywrapper">
           <div class="body">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="building-the-fg-move-documentation">
+<span id="build-doc"></span><h1>Building the FG Move Documentation<a class="headerlink" href="#building-the-fg-move-documentation" title="Permalink to this headline">¶</a></h1>
+<p>The documentation has been created using <a class="reference external" href="http://sphinx.pocoo.org/">Sphinx</a> and therefore you have to build it before you can see the final html files. The source
+files of the documentation can be found under the <tt class="docutils literal"><span class="pre">doc</span></tt> directory of our software package. Next, we define the needed steps to build the documentation.</p>
+<ol class="arabic">
+<li><p class="first">Install the documentation <a class="reference internal" href="install.html#source-tarball"><em>Using a source tarball</em></a> or <a class="reference internal" href="install.html#github-install"><em>Downloading the latest code from GitHub</em></a>.</p>
+</li>
+<li><p class="first">Change your current directory to the <tt class="docutils literal"><span class="pre">doc</span></tt> one.</p>
+<div class="highlight-python"><pre>cd doc</pre>
+</div>
+</li>
+<li><p class="first">Build the documentation using the Makefile.</p>
+<div class="highlight-python"><pre>make website</pre>
+</div>
+</li>
+<li><p class="first">The documentation should be in the directory <tt class="docutils literal"><span class="pre">build/web-&lt;version&gt;/</span></tt>. This basically contains html files that can be copied to a regular http server.</p>
+</li>
+</ol>
 </div>
 
 
@@ -137,8 +166,14 @@ body {
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="#" title="General Index"
+          <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="changelog.html" title="Changelog and Release Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modules_india.html" title="Configuring a Module for FutureGrid Software"
+             >previous</a> |</li>
         <li><a href="index.html">Home</a>|&nbsp;</li>
         <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
         <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
@@ -147,7 +182,8 @@ body {
         <li><a href="support.html">Support</a>|&nbsp;</li>
         <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
         <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
- 
+
+          <li><a href="documentation.html" >FG Move Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

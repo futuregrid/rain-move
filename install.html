@@ -1,0 +1,311 @@
+
+<!-- This layout has been taken from http://globus.org/provision/ -->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installing FutureGrid Move &mdash; FutureGrid 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
+    <link rel="up" title="FG Move Documentation" href="documentation.html" />
+    <link rel="next" title="Setting up the FutureGrid Software for FG Move" href="configure_futuregrid.html" />
+    <link rel="prev" title="Move (fg-move)" href="man-move.html" /> 
+  </head>
+  <body>
+<style>
+.header {
+        background-image: url(_static/move_header_bg.png);
+        background-color: #122A75;
+        text-align: left;
+}
+body {
+        background-image: url(_static/move_body_bg.png);
+        background-color: #E5D5AF;
+}
+</style>
+<div class="header">
+<table>
+  <tr>
+    <td>
+      <a href="index.html"><img src="_static/logo_grid_y.png" border="0" alt="FutureGrid Move"/></a>
+    </td>
+    <td>
+      <font size="6" color="white"><b><i>FutureGrid</i></b></font><br><br>
+      <font size="10" color="white" face="Comic Sans MS"><b><i>Move: Cloud/HPC Resource Re-allocation</i></b></font><br>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="configure_futuregrid.html" title="Setting up the FutureGrid Software for FG Move"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="man-move.html" title="Move (fg-move)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+
+          <li><a href="documentation.html" accesskey="U">FG Move Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installing FutureGrid Move</a><ul>
+<li><a class="reference internal" href="#using-easy-install">Using <tt class="docutils literal"><span class="pre">easy_install</span></tt></a></li>
+<li><a class="reference internal" href="#using-a-source-tarball">Using a source tarball</a></li>
+<li><a class="reference internal" href="#tracking-latest-code-from-github">Tracking latest code from GitHub</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="man-move.html"
+                        title="previous chapter">Move (fg-move)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="configure_futuregrid.html"
+                        title="next chapter">Setting up the FutureGrid Software for FG Move</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/install.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+<body></body>
+
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="chap-install-futuregrid"></span><div class="section" id="installing-futuregrid-move">
+<h1>Installing FutureGrid Move<a class="headerlink" href="#installing-futuregrid-move" title="Permalink to this headline">¶</a></h1>
+<p>You can install the FutureGrid Move using one of the following procedures.</p>
+<ul class="simple">
+<li><a class="reference internal" href="#easy-install"><em>Using the &#8220;easy_install&#8221; tool</em></a>. This is the simplest option, as <tt class="docutils literal"><span class="pre">easy_install</span></tt>
+will take care of downloading and installing not just FutureGrid Move but also its dependencies.
+You must already have <a class="reference external" href="http://www.python.org/">Python</a> (version 2.6 or higher) and
+<a class="reference external" href="http://packages.python.org/distribute/">Python Distribute</a> (version 0.6.15 or higher)
+installed on your machine (or you must be able to install them). To check if both are installed,
+try running <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">--version</span></tt> from the command line. If the command is available, and it
+prints out a version number equal or higher than 0.6.15, you will be able to install FutureGrid Move
+using <tt class="docutils literal"><span class="pre">easy_install</span></tt>.</li>
+<li><a class="reference internal" href="#source-tarball"><em>Using a source tarball</em></a>. If you are unable to install FutureGrid Move using
+<tt class="docutils literal"><span class="pre">easy_install</span></tt>, you can download a tarball with the FutureGrid Move source code. Your machine must
+have Python installed on it, but not the Python Distribute package (the tarball includes a setup
+script that will automatically download and install Python Distribute for you).</li>
+<li><a class="reference internal" href="#github-install"><em>Downloading the latest code from GitHub</em></a>. Choose this option if you want to track
+the latest code in our GitHub repository,</li>
+</ul>
+<div class="section" id="using-easy-install">
+<span id="easy-install"></span><h2>Using <tt class="docutils literal"><span class="pre">easy_install</span></tt><a class="headerlink" href="#using-easy-install" title="Permalink to this headline">¶</a></h2>
+<p>This option has the following prerequisites:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.python.org/">Python</a> 2.6 or higher. If Python is not available on your machine,
+you can find installation instructions here: <a class="reference external" href="http://www.python.org/getit/">http://www.python.org/getit/</a>. Take into account that,
+if you are using a Linux distribution, you should be able to install it using your distribution&#8217;s
+package manager (e.g., <tt class="docutils literal"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python</span></tt> on Debian and Ubuntu). If you are using a Mac,
+Python is included by default; however, if your version is too old, take a look at the following
+instructions: <a class="reference external" href="http://www.python.org/getit/mac/">http://www.python.org/getit/mac/</a></li>
+<li><a class="reference external" href="http://packages.python.org/distribute/">Python Distribute</a> 0.6.15 or higher. As noted above,
+you can verify if this package is installed by running <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">--version</span></tt>. If it is not
+available, you can find installation instructions here: <a class="reference external" href="http://pypi.python.org/pypi/distribute#installation-instructions">http://pypi.python.org/pypi/distribute#installation-instructions</a>.
+Take into account that, although Python Distribute is included as an optional package in most
+Linux distributions, it is sometimes available under the name &#8220;Setuptools&#8221; (e.g., <tt class="docutils literal"><span class="pre">python-setuptools</span></tt>
+in Debian and Ubuntu systems), since Python Distribute is a fork of the Setuptools project.</li>
+</ul>
+<p>If you meet these prerequisites, you should be able to
+install FutureGrid Move simply by running this as <tt class="docutils literal"><span class="pre">root</span></tt>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>easy_install -U futuregrid_move
+</pre></div>
+</div>
+<p>If you are using Ubuntu or Mac OS X, you will likely just need to run this:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo easy_install -U futuregrid_move
+</pre></div>
+</div>
+<p>If you do not have administrative privileges on your machine, you will have to install FutureGrid Move
+under your regular user account:</p>
+<div class="highlight-bash"><div class="highlight"><pre>easy_install -U futuregrid_move --user
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Installing FutureGrid Move in your home directory will install the FutureGrid Move commands
+in <tt class="docutils literal"><span class="pre">~/.local/bin</span></tt>, which may not be in your PATH environment variable. If not, make sure to
+update the definition of your PATH environment variable (e.g., in the <tt class="docutils literal"><span class="pre">~/.profile</span></tt> file if
+you are using a BASH shell).</p>
+<p>Alternatively, you can also request that the commands be installed in a directory that is
+already in your $PATH. You may want to use <tt class="docutils literal"><span class="pre">~/bin/</span></tt>, as most Linux distributions will
+automatically include that directory in your PATH.</p>
+<div class="last highlight-bash"><div class="highlight"><pre>easy_install -U futuregrid_move  --user -s ~/bin/
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-a-source-tarball">
+<span id="source-tarball"></span><h2>Using a source tarball<a class="headerlink" href="#using-a-source-tarball" title="Permalink to this headline">¶</a></h2>
+<p>If you do not have Python Distribute, or are unable to install it, you can still install FutureGrid Move
+by downloading a source tarball yourself. This tarball contains an installation script
+that will install and setup Python Distribute, and then proceed to install FutureGrid Move.</p>
+<p>You will first have to download the latest source tarball from the Python Package Index:
+<a class="reference external" href="http://pypi.python.org/pypi/futuregrid_move">http://pypi.python.org/pypi/futuregrid_move</a></p>
+<p>Next, untar the tarball and run the installation script as <tt class="docutils literal"><span class="pre">root</span></tt>:</p>
+<pre class="literal-block">
+tar xvzf futuregrid_move-0.1.tar.gz
+cd futuregrid_move-0.1
+python setup.py install
+</pre>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If you are using Ubuntu or Mac OS X, you will likely just need to run this:</p>
+<div class="last highlight-bash"><div class="highlight"><pre>sudo python setup.py install
+</pre></div>
+</div>
+</div>
+<p>If you do not have administrative privileges on your machine, you can choose to install
+everything inside your home directory:</p>
+<div class="highlight-bash"><div class="highlight"><pre>python setup.py install --user
+</pre></div>
+</div>
+</div>
+<div class="section" id="tracking-latest-code-from-github">
+<span id="github-install"></span><h2>Tracking latest code from GitHub<a class="headerlink" href="#tracking-latest-code-from-github" title="Permalink to this headline">¶</a></h2>
+<p>If you want to use the latest version of our code from our GitHub repository, the steps
+are similar to installing a source tarball. However, instead of downloading a tarball, you
+will use git to clone our repository on your machine. Simply run the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git clone git@github.com:futuregrid/rain-move.git
+</pre></div>
+</div>
+<p>This will create a directory called <tt class="docutils literal"><span class="pre">rain-move</span></tt>. In it, you will find the same <tt class="docutils literal"><span class="pre">setup.py</span></tt>
+script described in the previous section. If you want to install FutureGrid Move, and not
+make any modifications to the code, you should run <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> as described
+in the previous section.</p>
+<p>If you intend to modify the code, and want the FutureGrid Move commands to use the code
+in the git repository you&#8217;ve created on your machine, you can instead install FutureGrid
+Move in &#8220;developer&#8221; mode:</p>
+<div class="highlight-bash"><div class="highlight"><pre>python setup.py develop
+</pre></div>
+</div>
+<p>This will install FutureGrid Move but, instead of copying the Python source code
+to a system directory, it will create a pointer to the source directory you checked out.
+That way, any changes you make to the source code will take effect immediately
+(without having to reinstall FutureGrid Move).</p>
+<p>Take into account that there are, at least, two branches in our GitHub repository: <tt class="docutils literal"><span class="pre">master</span></tt>
+and <tt class="docutils literal"><span class="pre">dev</span></tt>. The former always contains the latest stable release, including bug fixes, and
+the former contains the very latest version of our code (which may not work as reliably
+as the code in the <tt class="docutils literal"><span class="pre">master</span></tt> branch). By default, your repository will track the <tt class="docutils literal"><span class="pre">master</span></tt>
+branch. To switch to the <tt class="docutils literal"><span class="pre">dev</span></tt> branch, run the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git checkout dev
+</pre></div>
+</div>
+<p>To pull the latest changes from our GitHub repository, run the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git pull origin
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33833781-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="configure_futuregrid.html" title="Setting up the FutureGrid Software for FG Move"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="man-move.html" title="Move (fg-move)"
+             >previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+
+          <li><a href="documentation.html" >FG Move Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Javier Diaz, Fugang Wang, Gregor von Laszewski.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

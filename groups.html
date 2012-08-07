@@ -1,6 +1,4 @@
 
-
-
 <!-- This layout has been taken from http://globus.org/provision/ -->
 
 
@@ -12,7 +10,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; FutureGrid 0.1 documentation</title>
+    <title>Groups &mdash; FutureGrid 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -62,7 +60,7 @@ body {
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="#" title="General Index"
+          <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li><a href="index.html">Home</a>|&nbsp;</li>
         <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
@@ -78,9 +76,19 @@ body {
 
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Groups</a><ul>
+<li><a class="reference internal" href="#group-commands">Group commands</a></li>
+</ul>
+</li>
+</ul>
 
-   
-
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/groups.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -104,11 +112,82 @@ body {
         <div class="bodywrapper">
           <div class="body">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="groups">
+<h1>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h1>
+<p>TODO: could we just not use operators from python and use eval to do this?</p>
+<p>The fabric command introduces the concept of a group. A group is a
+named array of strings. Groups are convenient to define simple nameing
+schemes defined for the user for a number of objects that can be
+identified by its name.</p>
+<p>Example:</p>
+<p>Let us assume you like to define a number of resources for your project and put them in the group MyResources. You can do this as follows:</p>
+<div class="highlight-python"><pre>&gt; fg-fabric
+fabric&gt; group create "MyResources"
+fabric&gt; group default "MyResources"
+fabric&gt; group add "host1.university.edu"
+fabric&gt; group add "host2.university.edu"</pre>
+</div>
+<p>This series of commands has now created a group that contains the strings host1.university.edu and host2.university.edu.</p>
+<p>If commands in fabric have the -group otion, the group can be passed allong instead of explicitly defining all the  names in that group.</p>
+<p>Example:</p>
+<p>Let us assume you like to rain an operating system onto this group, you can do this with</p>
+<blockquote>
+<div>fabric&gt; rain -image imagename -group &#8220;MyResources&#8221;</div></blockquote>
+<div class="section" id="group-commands">
+<h2>Group commands<a class="headerlink" href="#group-commands" title="Permalink to this headline">¶</a></h2>
+<p>Creating a group with the given name:</p>
+<div class="highlight-python"><pre>fabric group create &lt;name&gt;</pre>
+</div>
+<p>Deleting a group with the given name:</p>
+<div class="highlight-python"><pre>fabric group delete &lt;name&gt;</pre>
+</div>
+<p>Joining group a and b and putting them in a group with the name_c:</p>
+<div class="highlight-python"><pre>fabric group join &lt;name_a&gt; &lt;name_b&gt; &lt;name_c&gt;</pre>
+</div>
+<p>Replacing the group a with group b:</p>
+<div class="highlight-python"><pre>fabric group replace &lt;name_a&gt; &lt;name_b&gt;</pre>
+</div>
+<p>Printing the group members:</p>
+<div class="highlight-python"><pre>fabric group list</pre>
+</div>
+<p>Creating an empty group:</p>
+<div class="highlight-python"><pre>fabric group empty &lt;name&gt;</pre>
+</div>
+<p>All group commands such as adding deleting and so forth are
+applied to the group set with default:</p>
+<div class="highlight-python"><pre>fabric groug default &lt;name&gt;</pre>
+</div>
+<p>Returning the ith obgect of name:</p>
+<div class="highlight-python"><pre>fabric group get &lt;i&gt; of &lt;name&gt;</pre>
+</div>
+<p>Setting the ith object in the group to name:</p>
+<div class="highlight-python"><pre>fabric group set &lt;i&gt; in &lt;name&gt; to &lt;value&gt;</pre>
+</div>
+<p>Loading the group from a file:</p>
+<div class="highlight-python"><pre>fabric group load &lt;filename&gt;</pre>
+</div>
+<p>Loading without parameter loads the groups from ~/.futuregrid/futuregrid.cfg:</p>
+<div class="highlight-python"><pre>fabric group load</pre>
+</div>
+<p>Saving the group from a file:</p>
+<div class="highlight-python"><pre>fabric group save &lt;filename&gt;</pre>
+</div>
+<p>Save without parameter saves the groups from ~/.futuregrid/futuregrid.cfg existing groups in that file will be deleted. So be careful if you want to keep your old groups. In doubt use a named file:</p>
+<div class="highlight-python"><pre>fabric group load</pre>
+</div>
+<p>Using Python syntax to interface with groups is easily possible as follows:</p>
+<div class="highlight-python"><pre>fabric group eval &lt;string&gt;</pre>
+</div>
+<p>Thus the command:</p>
+<div class="highlight-python"><pre>fabric group eval "
+a = [] \n
+a = ["hostname1.university.edu", "hostname2.university.edu"] \n
+b = ["hostname3.university.edu", "hostname4.university.edu"] \n
+c = a + b \n
+print c"</pre>
+</div>
+<p>will create a group c with the strings in a and b combined.</p>
+</div>
 </div>
 
 
@@ -137,7 +216,7 @@ body {
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="#" title="General Index"
+          <a href="genindex.html" title="General Index"
              >index</a></li>
         <li><a href="index.html">Home</a>|&nbsp;</li>
         <li><a href="whatis.html">What is it?</a>|&nbsp;</li>

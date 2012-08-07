@@ -10,7 +10,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to FuturGrid Move Project &mdash; FutureGrid Cloud Code 0.1 documentation</title>
+    <title>Welcome to FuturGrid Move &mdash; FutureGrid 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,36 +27,30 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="FutureGrid Cloud Code 0.1 documentation" href="#" />
- 
-
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-11111']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-
+    <link rel="top" title="FutureGrid 0.1 documentation" href="#" />
+    <link rel="next" title="What is FutureGrid Move?" href="whatis.html" /> 
   </head>
   <body>
-
-<div style="background-image:url('_static/header_bg.png');background-color: black; text-align: left; padding: 10px 10px 15px 35px">
+<style>
+.header {
+        background-image: url(_static/move_header_bg.png);
+        background-color: #122A75;
+        text-align: left;
+}
+body {
+        background-image: url(_static/move_body_bg.png);
+        background-color: #E5D5AF;
+}
+</style>
+<div class="header">
 <table>
   <tr>
     <td>
-      <a href="#"><img src="_static/fg-logo-grid.png" border="0" alt="FutureGrid Move"/></a>
+      <a href="#"><img src="_static/logo_grid_y.png" border="0" alt="FutureGrid Move"/></a>
     </td>
     <td>
-      <font size="5" color="white"><b><i>FutureGrid</i></b></font><br><br>
-      <font size="10" color="white" face="Comic Sans MS"><b><i>Move: Cloud Shifting</i></b></font>
+      <font size="6" color="white"><b><i>FutureGrid</i></b></font><br><br>
+      <font size="10" color="white" face="Comic Sans MS"><b><i>Move: Cloud/HPC Resource Re-allocation</i></b></font><br>
     </td>
   </tr>
 </table>
@@ -69,7 +63,16 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="#">Projects</a>|&nbsp;</li>
+        <li class="right" >
+          <a href="whatis.html" title="What is FutureGrid Move?"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
         <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
  
       </ul>
@@ -77,6 +80,9 @@
 
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h4>Next topic</h4>
+  <p class="topless"><a href="whatis.html"
+                        title="next chapter">What is FutureGrid Move?</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -99,70 +105,24 @@
       </div>
 
     <div class="document">
-<body style="background-image:url('_static/header_bg.png');background-color: grey;">
-</body>
+<body></body>
 
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-futurgrid-move-project">
-<h1>Welcome to FuturGrid Move Project<a class="headerlink" href="#welcome-to-futurgrid-move-project" title="Permalink to this headline">¶</a></h1>
-<p>FutureGrid move deals with moving resources between multiple clouds
-and HPC services in a multicluster, multisite deployment.</p>
-<p>Assume you have a number of nodes in a cluster and what one day to use
-them for you r HPC services, but the next day as part of your cloud
-environment, or you want to move resources between different version
-of your cloudinstalation such as Opensatck Bexar and Essex.</p>
-<p>You can do this with:</p>
-<div class="highlight-python"><pre>fg-move -h &lt;list of hosts&gt; deactivate</pre>
-</div>
-<p>This will deactivate the ndes from the list and put them into a pool
-of available resources. To provide the state of the host you can use:</p>
-<div class="highlight-python"><pre>fg-move -h &lt;list of hosts&gt; -status</pre>
-</div>
-<p>For convenience you can create a group of hosts that are registered to
-a label:</p>
-<div class="highlight-python"><pre>fg-vgroup -h &lt;list of hosts&gt; -label &lt;label&gt;</pre>
-</div>
-<p>This will allow you to replace the hostlist with a group command with
-the -g option:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">fg</span><span class="o">-</span><span class="n">move</span> <span class="o">-</span><span class="n">g</span> <span class="o">&lt;</span><span class="n">groupname</span><span class="o">&gt;</span> <span class="n">status</span>
-</pre></div>
-</div>
-<p>The last gommand lists the status of all nodes in that group. To
-activate a service for that host, you simply specify:</p>
-<div class="highlight-python"><pre>fg-move -h &lt;hostlist&gt; -service &lt;servicename&gt;</pre>
-</div>
-<p>The service names are requstered with our framework and correspond to
-specific actions to be taken to activate and deacivate nodes from this
-service.</p>
-<p>We will support the following services:</p>
-<ul class="simple">
-<li>eucalyptus</li>
-<li>openstack</li>
-<li>nimbus</li>
-<li>opennebula</li>
-<li>hpc</li>
-</ul>
-<p>A version cnd a cluster name can be optionally provided. Thus the
-commands:</p>
-<div class="highlight-python"><pre>fg-move -g myEucalyptusCloud -h node1.machine.edu, node2.machine.edu
-fg-move -activate "eucalyptus" -v "3.0" -g myEucalyptusCloud-service myEucalyptusCloud</pre>
-</div>
-<p>Would provide a eucalyptus cloud with the node1 and node2 from
-machine.edu. The Eucalyptus zone name is tacken from the group name.</p>
-<p>Usecase 1: Adding more nodes to a cloud</p>
-<p>Assume you have the group</p>
-<blockquote>
-<div>indiaEuclyptusCloud that contains node[1-4].machine.edu</div></blockquote>
-<p>You like to add the machines node[5-9].machine.edu. This can be done via:</p>
-<div class="highlight-python"><pre>fg-move -g newNodes -h node[5-9].machine.edu
-fg-move -g newNodes -service indiaEucalyptus</pre>
-</div>
+  <div class="section" id="welcome-to-futurgrid-move">
+<h1>Welcome to FuturGrid Move<a class="headerlink" href="#welcome-to-futurgrid-move" title="Permalink to this headline">¶</a></h1>
+<p>FutureGrid Move is a service that enables physical resources re-allocation among infrastructures. By using a simple command line interface,
+this service is able to de-register a machine from a particular infrastructure and register it in a new one. Internally, this service
+makes use of <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> to dynamically provision the selected machine with the OS and software
+needed for a successful registration in the new infrastructure. FG Move also maintains a database with information about the machines
+composing each one of the different infrastructures, which can be queried to consult the current status or detailed information about
+a particular infrastructure.</p>
+<p>Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on <a class="reference external" href="http://open.eucalyptus.com/">Eucalyptus</a>
+and <a class="reference external" href="http://www.openstack.org">OpenStack</a> frameworks. Additionally, we are working to provide support to other cloud infrastructures based
+on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> and <a class="reference external" href="http://www.opennebula.org">OpenNebula</a> frameworks.</p>
 <div class="toctree-wrapper compound">
-<ul class="simple">
-</ul>
 </div>
 </div>
 
@@ -170,6 +130,21 @@ fg-move -g newNodes -service indiaEucalyptus</pre>
           </div>
         </div>
       </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33833781-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
 
       <div class="clearer"></div>
     </div>
@@ -179,13 +154,22 @@ fg-move -g newNodes -service indiaEucalyptus</pre>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="#">Projects</a>|&nbsp;</li>
+        <li class="right" >
+          <a href="whatis.html" title="What is FutureGrid Move?"
+             >next</a> |</li>
+        <li><a href="#">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
         <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
  
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Gregor von Laszewski, Fugang Wang, Hyungro Lee, Javier Diaz.
+        &copy; Copyright 2012, Javier Diaz, Fugang Wang, Gregor von Laszewski.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

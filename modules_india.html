@@ -10,7 +10,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Download &mdash; FutureGrid 0.1 documentation</title>
+    <title>Configuring a Module for FutureGrid Software &mdash; FutureGrid 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -28,8 +28,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
-    <link rel="next" title="Support" href="support.html" />
-    <link rel="prev" title="Changelog and Release Notes" href="changelog.html" /> 
+    <link rel="up" title="FG Move Documentation" href="documentation.html" />
+    <link rel="next" title="Building the FG Move Documentation" href="build_doc.html" />
+    <link rel="prev" title="fg-client.conf configuration file" href="config_ref_client.html" /> 
   </head>
   <body>
 <style>
@@ -65,43 +66,35 @@ body {
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="support.html" title="Support"
+          <a href="build_doc.html" title="Building the FG Move Documentation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="changelog.html" title="Changelog and Release Notes"
+          <a href="config_ref_client.html" title="fg-client.conf configuration file"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">Home</a>|&nbsp;</li>
         <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
         <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
         <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
-        <li><a href="#">Download</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
         <li><a href="support.html">Support</a>|&nbsp;</li>
         <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
         <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
- 
+
+          <li><a href="documentation.html" accesskey="U">FG Move Documentation</a> &raquo;</li> 
       </ul>
     </div>
 
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Download</a><ul>
-<li><a class="reference internal" href="#sample-files">Sample files</a></li>
-<li><a class="reference internal" href="#development-version">Development version</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="changelog.html"
-                        title="previous chapter">Changelog and Release Notes</a></p>
+  <p class="topless"><a href="config_ref_client.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">fg-client.conf</span></tt> configuration file</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="support.html"
-                        title="next chapter">Support</a></p>
+  <p class="topless"><a href="build_doc.html"
+                        title="next chapter">Building the FG Move Documentation</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/download.txt"
+    <li><a href="_sources/modules_india.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -127,25 +120,62 @@ body {
         <div class="bodywrapper">
           <div class="body">
             
-  <span class="target" id="downloads"></span><div class="section" id="download">
-<h1>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h1>
-<p>The latest version of the FutureGrid Move is 0.1</p>
-<p>The recommended way of installing Move is using <tt class="docutils literal"><span class="pre">easy_install</span></tt>. You can find instructions on how to do this in the
-<a class="reference internal" href="install.html#chap-install-futuregrid"><em>Installation</em></a> chapter of the documentation.</p>
-<p>If you do need to download FG Move as an installable Python Egg or as a source
-tarball, both are available for download in the Python Package Index: <a class="reference external" href="http://pypi.python.org/pypi/futuregrid_move">http://pypi.python.org/pypi/futuregrid_move</a></p>
-<div class="section" id="sample-files">
-<h2>Sample files<a class="headerlink" href="#sample-files" title="Permalink to this headline">¶</a></h2>
-<p>The sample configuration files shown in the documentation are available for download as a
-<a class="reference external" href="futuregrid-docs-configsamples_0.1.tar.gz">tarball</a> or a <a class="reference external" href="futuregrid-docs-configsamples_0.1.zip">ZIP file</a>.</p>
+  <div class="section" id="configuring-a-module-for-futuregrid-software">
+<span id="modules-india"></span><h1>Configuring a Module for FutureGrid Software<a class="headerlink" href="#configuring-a-module-for-futuregrid-software" title="Permalink to this headline">¶</a></h1>
+<p>The software packages on the FutureGrid machines is manage using the <a class="reference external" href="http://modules.sourceforge.net/">Environment Modules</a>.
+The Environment Modules package provides for the dynamic modification of a user&#8217;s environment via modulefiles.</p>
+<p>In this section, we explain how to create a module for our software.</p>
+<ol class="arabic">
+<li><p class="first">Create a directory to place the software <tt class="docutils literal"><span class="pre">/N/soft/futuregrid-1.0/</span></tt>.</p>
+</li>
+<li><p class="first">Locate the directory where Modules is installed. In the case of India, this is installed in <tt class="docutils literal"><span class="pre">/opt/Modules/</span></tt>. From now on
+we will refer to this location as <tt class="docutils literal"><span class="pre">$MODULES_PATH</span></tt>.</p>
+</li>
+<li><p class="first">Create a directory in <tt class="docutils literal"><span class="pre">$MODULES_PATH/default/modulefiles/tools/futuregrid</span></tt></p>
+</li>
+<li><p class="first">In this directory we need to create a file with the version number. In this example the file is named 1.0. The content of this file
+is some information about the software location and the list of modules that need to be loaded as requirements.</p>
+<div class="highlight-python"><pre>#%Module1.0#########################################################
+
+set ver 1.0
+set path /N/soft/futuregrid-$ver
+
+proc ModulesHelp { } {
+puts stderr "This module adds the FutureGrid toolkit to your environment"
+}
+
+module-whatis "Configures your environment for the FutureGrid toolkit"
+
+prepend-path PATH $path
+prepend-path PATH $path/bin/
+
+if [ module-info mode load ] {
+puts stderr "futuregrid version $ver loaded"
+}
+
+if [ module-info mode switch2 ] {
+puts stderr "futuregrid version $ver loaded"
+}
+
+if [ module-info mode remove ] {
+puts stderr "futuregrid version $ver unloaded"
+}
+
+module load euca2ools
+module load python_w-cmd2
+module load moab
+module load torque</pre>
 </div>
-<div class="section" id="development-version">
-<h2>Development version<a class="headerlink" href="#development-version" title="Permalink to this headline">¶</a></h2>
-<p>If you want to use the latest development version of FG Move, you can
-track our <a class="reference external" href="https://github.com/futuregrid/rain-move">GitHub repository</a>.</p>
-<p>The <a class="reference internal" href="install.html#chap-install-futuregrid"><em>Installation</em></a> chapter of the documentation provides
-instructions on how to check out our code from GitHub.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the python is not the one installed in the system, the binaries may be inside your python directory.</p>
 </div>
+<ol class="arabic simple">
+<li>In case the software binaries were copied into <tt class="docutils literal"><span class="pre">/usr/bin</span></tt> or <tt class="docutils literal"><span class="pre">/usr/local/bin</span></tt>. We need to move them to the directory
+<tt class="docutils literal"><span class="pre">/N/soft/futuregrid-1.0/bin/</span></tt></li>
+</ol>
 </div>
 
 
@@ -177,20 +207,21 @@ instructions on how to check out our code from GitHub.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="support.html" title="Support"
+          <a href="build_doc.html" title="Building the FG Move Documentation"
              >next</a> |</li>
         <li class="right" >
-          <a href="changelog.html" title="Changelog and Release Notes"
+          <a href="config_ref_client.html" title="fg-client.conf configuration file"
              >previous</a> |</li>
         <li><a href="index.html">Home</a>|&nbsp;</li>
         <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
         <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
         <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
-        <li><a href="#">Download</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
         <li><a href="support.html">Support</a>|&nbsp;</li>
         <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
         <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
- 
+
+          <li><a href="documentation.html" >FG Move Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

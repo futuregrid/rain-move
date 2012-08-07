@@ -1,0 +1,427 @@
+
+<!-- This layout has been taken from http://globus.org/provision/ -->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fg-server.conf configuration file &mdash; FutureGrid 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
+    <link rel="up" title="Configuration file reference" href="config_ref_index.html" />
+    <link rel="next" title="fg-client.conf configuration file" href="config_ref_client.html" />
+    <link rel="prev" title="Configuration file reference" href="config_ref_index.html" /> 
+  </head>
+  <body>
+<style>
+.header {
+        background-image: url(_static/move_header_bg.png);
+        background-color: #122A75;
+        text-align: left;
+}
+body {
+        background-image: url(_static/move_body_bg.png);
+        background-color: #E5D5AF;
+}
+</style>
+<div class="header">
+<table>
+  <tr>
+    <td>
+      <a href="index.html"><img src="_static/logo_grid_y.png" border="0" alt="FutureGrid Move"/></a>
+    </td>
+    <td>
+      <font size="6" color="white"><b><i>FutureGrid</i></b></font><br><br>
+      <font size="10" color="white" face="Comic Sans MS"><b><i>Move: Cloud/HPC Resource Re-allocation</i></b></font><br>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="config_ref_client.html" title="fg-client.conf configuration file"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="config_ref_index.html" title="Configuration file reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+
+          <li><a href="documentation.html" >FG Move Documentation</a> &raquo;</li>
+          <li><a href="config_ref_index.html" accesskey="U">Configuration file reference</a> &raquo;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">fg-server.conf</span></tt> configuration file</a><ul>
+<li><a class="reference internal" href="#section-ldap">Section <tt class="docutils literal"><span class="pre">[LDAP]</span></tt></a><ul>
+<li><a class="reference internal" href="#option-ldaphost">Option <tt class="docutils literal"><span class="pre">LDAPHOST</span></tt></a></li>
+<li><a class="reference internal" href="#option-ldapuser">Option <tt class="docutils literal"><span class="pre">LDAPUSER</span></tt></a></li>
+<li><a class="reference internal" href="#option-ldappass">Option <tt class="docutils literal"><span class="pre">LDAPPASS</span></tt></a></li>
+<li><a class="reference internal" href="#option-log">Option <tt class="docutils literal"><span class="pre">log</span></tt></a></li>
+<li><a class="reference internal" href="#option-test">Option <tt class="docutils literal"><span class="pre">test</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#section-rainmoveserver">Section <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt></a><ul>
+<li><a class="reference internal" href="#option-port">Option <tt class="docutils literal"><span class="pre">port</span></tt></a></li>
+<li><a class="reference internal" href="#option-proc-max">Option <tt class="docutils literal"><span class="pre">proc_max</span></tt></a></li>
+<li><a class="reference internal" href="#option-refresh">Option <tt class="docutils literal"><span class="pre">refresh</span></tt></a></li>
+<li><a class="reference internal" href="#option-authorizedusers">Option <tt class="docutils literal"><span class="pre">authorizedusers</span></tt></a></li>
+<li><a class="reference internal" href="#id1">Option <tt class="docutils literal"><span class="pre">log</span></tt></a></li>
+<li><a class="reference internal" href="#option-log-level">Option <tt class="docutils literal"><span class="pre">log_level</span></tt></a></li>
+<li><a class="reference internal" href="#option-ca-cert">Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt></a></li>
+<li><a class="reference internal" href="#option-certfile">Option <tt class="docutils literal"><span class="pre">certfile</span></tt></a></li>
+<li><a class="reference internal" href="#option-keyfile">Option <tt class="docutils literal"><span class="pre">keyfile</span></tt></a></li>
+<li><a class="reference internal" href="#option-clientca-cert">Option <tt class="docutils literal"><span class="pre">Clientca_cert</span></tt></a></li>
+<li><a class="reference internal" href="#option-clientcertfile">Option <tt class="docutils literal"><span class="pre">Clientcertfile</span></tt></a></li>
+<li><a class="reference internal" href="#option-clientkeyfile">Option <tt class="docutils literal"><span class="pre">Clientkeyfile</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sections-move-service-serviceid-such-as-move-eucalyptus-indiaeuca-or-move-hpc-indiahpc">Sections <tt class="docutils literal"><span class="pre">[Move-&lt;service&gt;-&lt;serviceID&gt;]</span></tt> such as <tt class="docutils literal"><span class="pre">[Move-eucalyptus-indiaeuca]</span></tt> or <tt class="docutils literal"><span class="pre">[Move-Hpc-indiahpc]</span></tt></a><ul>
+<li><a class="reference internal" href="#option-address">Option <tt class="docutils literal"><span class="pre">address</span></tt></a></li>
+<li><a class="reference internal" href="#id2">Option <tt class="docutils literal"><span class="pre">port</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#section-rainmovesiteserver">Section <tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt></a><ul>
+<li><a class="reference internal" href="#id3">Option <tt class="docutils literal"><span class="pre">port</span></tt></a></li>
+<li><a class="reference internal" href="#id4">Option <tt class="docutils literal"><span class="pre">proc_max</span></tt></a></li>
+<li><a class="reference internal" href="#id5">Option <tt class="docutils literal"><span class="pre">refresh</span></tt></a></li>
+<li><a class="reference internal" href="#id6">Option <tt class="docutils literal"><span class="pre">log</span></tt></a></li>
+<li><a class="reference internal" href="#id7">Option <tt class="docutils literal"><span class="pre">log_level</span></tt></a></li>
+<li><a class="reference internal" href="#option-ec2varfile">Option <tt class="docutils literal"><span class="pre">ec2varfile</span></tt></a></li>
+<li><a class="reference internal" href="#id8">Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt></a></li>
+<li><a class="reference internal" href="#id9">Option <tt class="docutils literal"><span class="pre">certfile</span></tt></a></li>
+<li><a class="reference internal" href="#id10">Option <tt class="docutils literal"><span class="pre">keyfile</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="config_ref_index.html"
+                        title="previous chapter">Configuration file reference</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="config_ref_client.html"
+                        title="next chapter"><tt class="docutils literal docutils literal"><span class="pre">fg-client.conf</span></tt> configuration file</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/config_ref_server.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+<body></body>
+
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fg-server-conf-configuration-file">
+<span id="sec-fg-server-conf"></span><h1><tt class="docutils literal"><span class="pre">fg-server.conf</span></tt> configuration file<a class="headerlink" href="#fg-server-conf-configuration-file" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="section-ldap">
+<span id="fg-server-ldap"></span><h2>Section <tt class="docutils literal"><span class="pre">[LDAP]</span></tt><a class="headerlink" href="#section-ldap" title="Permalink to this headline">¶</a></h2>
+<p>This section is used to configure the access to LDAP to verify the user passwords.</p>
+<p><em>This section is required by all services</em></p>
+<div class="section" id="option-ldaphost">
+<h3>Option <tt class="docutils literal"><span class="pre">LDAPHOST</span></tt><a class="headerlink" href="#option-ldaphost" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Hostname or IP address of the LDAP server that manages the user&#8217;s authentication.</p>
+</div>
+<div class="section" id="option-ldapuser">
+<h3>Option <tt class="docutils literal"><span class="pre">LDAPUSER</span></tt><a class="headerlink" href="#option-ldapuser" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> user-dn</p>
+<p><strong>Required:</strong> Yes</p>
+<p>This is the DN of an user that have read access to the encrypted passwords of every user. This looks
+like <tt class="docutils literal"><span class="pre">uid=USER,ou=People,dc=futuregrid,dc=org</span></tt></p>
+</div>
+<div class="section" id="option-ldappass">
+<h3>Option <tt class="docutils literal"><span class="pre">LDAPPASS</span></tt><a class="headerlink" href="#option-ldappass" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Password of the user specified in the previous section.</p>
+</div>
+<div class="section" id="option-log">
+<h3>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#option-log" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> log-file</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the file where the logs will be stored.</p>
+</div>
+<div class="section" id="option-test">
+<h3>Option <tt class="docutils literal"><span class="pre">test</span></tt><a class="headerlink" href="#option-test" title="Permalink to this headline">¶</a></h3>
+<p><strong>Valid values:</strong> <tt class="docutils literal"><span class="pre">True</span></tt>, <tt class="docutils literal"><span class="pre">False</span></tt></p>
+<p><strong>Required:</strong> No</p>
+<p>This option is for development purposes. For security reasons, the LDAP server cannot be contacted from outside of FutureGrid network.
+Therefore, we need this option to go test our services before we deploy them on production.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="section-rainmoveserver">
+<span id="fg-server-rainmoveserver"></span><h2>Section <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt><a class="headerlink" href="#section-rainmoveserver" title="Permalink to this headline">¶</a></h2>
+<p>This section is used to configure the FG Move Server.</p>
+<div class="section" id="option-port">
+<h3>Option <tt class="docutils literal"><span class="pre">port</span></tt><a class="headerlink" href="#option-port" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Port where the FG Move server will be listening.</p>
+</div>
+<div class="section" id="option-proc-max">
+<h3>Option <tt class="docutils literal"><span class="pre">proc_max</span></tt><a class="headerlink" href="#option-proc-max" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Maximum number of request that can be processed at the same time.</p>
+</div>
+<div class="section" id="option-refresh">
+<h3>Option <tt class="docutils literal"><span class="pre">refresh</span></tt><a class="headerlink" href="#option-refresh" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Interval to check the status of the running requests when <tt class="docutils literal"><span class="pre">proc_max</span></tt> is reached and determine if new request can be processed.</p>
+</div>
+<div class="section" id="option-authorizedusers">
+<h3>Option <tt class="docutils literal"><span class="pre">authorizedusers</span></tt><a class="headerlink" href="#option-authorizedusers" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> String-list (comma separated)</p>
+<p><strong>Required:</strong> No</p>
+<p>List of users (separated by commas) that can use this service.</p>
+</div>
+<div class="section" id="id1">
+<h3>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> log-file</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the file where the logs will be stored.</p>
+</div>
+<div class="section" id="option-log-level">
+<h3>Option <tt class="docutils literal"><span class="pre">log_level</span></tt><a class="headerlink" href="#option-log-level" title="Permalink to this headline">¶</a></h3>
+<p><strong>Valid values:</strong> <tt class="docutils literal"><span class="pre">debug</span></tt>, <tt class="docutils literal"><span class="pre">error</span></tt>, <tt class="docutils literal"><span class="pre">warning</span></tt>, <tt class="docutils literal"><span class="pre">info</span></tt></p>
+<p><strong>Required:</strong> No</p>
+<p>Desired log level. The default option is <tt class="docutils literal"><span class="pre">debug</span></tt>.</p>
+</div>
+<div class="section" id="option-ca-cert">
+<h3>Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt><a class="headerlink" href="#option-ca-cert" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> ca-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of CA certificate (PEM-encoded) used to generate user and service certificates. Server certificates.</p>
+</div>
+<div class="section" id="option-certfile">
+<h3>Option <tt class="docutils literal"><span class="pre">certfile</span></tt><a class="headerlink" href="#option-certfile" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> service-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the certificate (PEM-encoded) used by the FG Move server. Server certificates.</p>
+</div>
+<div class="section" id="option-keyfile">
+<h3>Option <tt class="docutils literal"><span class="pre">keyfile</span></tt><a class="headerlink" href="#option-keyfile" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> key-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the private key (PEM-encoded) of the certificate specified in <tt class="docutils literal"><span class="pre">certfile</span></tt>. Server certificates.</p>
+</div>
+<div class="section" id="option-clientca-cert">
+<h3>Option <tt class="docutils literal"><span class="pre">Clientca_cert</span></tt><a class="headerlink" href="#option-clientca-cert" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> ca-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of CA certificate (PEM-encoded) used to generate user and service certificates. Client certificates.</p>
+</div>
+<div class="section" id="option-clientcertfile">
+<h3>Option <tt class="docutils literal"><span class="pre">Clientcertfile</span></tt><a class="headerlink" href="#option-clientcertfile" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> service-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the certificate (PEM-encoded) used by the FG Move server to contact with the Move site controllers. Client certificates.</p>
+</div>
+<div class="section" id="option-clientkeyfile">
+<h3>Option <tt class="docutils literal"><span class="pre">Clientkeyfile</span></tt><a class="headerlink" href="#option-clientkeyfile" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> key-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the private key (PEM-encoded) of the certificate specified in <tt class="docutils literal"><span class="pre">certfile</span></tt>. Client certificates.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="sections-move-service-serviceid-such-as-move-eucalyptus-indiaeuca-or-move-hpc-indiahpc">
+<span id="fg-server-move-remote-sites-example"></span><h2>Sections <tt class="docutils literal"><span class="pre">[Move-&lt;service&gt;-&lt;serviceID&gt;]</span></tt> such as <tt class="docutils literal"><span class="pre">[Move-eucalyptus-indiaeuca]</span></tt> or <tt class="docutils literal"><span class="pre">[Move-Hpc-indiahpc]</span></tt><a class="headerlink" href="#sections-move-service-serviceid-such-as-move-eucalyptus-indiaeuca-or-move-hpc-indiahpc" title="Permalink to this headline">¶</a></h2>
+<p>This sections are to define how to contact the remove site controllers (<tt class="docutils literal"><span class="pre">RainMoveSiteServer.py</span></tt> server)</p>
+<div class="section" id="option-address">
+<h3>Option <tt class="docutils literal"><span class="pre">address</span></tt><a class="headerlink" href="#option-address" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Address of the server where FG Move site server will be running.</p>
+</div>
+<div class="section" id="id2">
+<h3>Option <tt class="docutils literal"><span class="pre">port</span></tt><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Port where the FG Move site server will be listening.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="section-rainmovesiteserver">
+<span id="fg-server-rainmovesiteserver"></span><h2>Section <tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt><a class="headerlink" href="#section-rainmovesiteserver" title="Permalink to this headline">¶</a></h2>
+<p>This section is used to configure the FG Move Site Server, which is the FG Move controller place in the management machines.</p>
+<p>port = 56796
+proc_max = 5
+refresh = 20
+log = movesiteserver.log
+log_level = debug
+max_wait = 1000
+ec2varfile = ~/eucarc
+ca_cert=/etc/futuregrid/imdserver/cacert.pem
+certfile=/etc/futuregrid/imdserver/imdscert.pem
+keyfile=/etc/futuregrid/imdserver/privkey.pem</p>
+<div class="section" id="id3">
+<h3>Option <tt class="docutils literal"><span class="pre">port</span></tt><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Port where the FG Move server will be listening.</p>
+</div>
+<div class="section" id="id4">
+<h3>Option <tt class="docutils literal"><span class="pre">proc_max</span></tt><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Maximum number of request that can be processed at the same time.</p>
+</div>
+<div class="section" id="id5">
+<h3>Option <tt class="docutils literal"><span class="pre">refresh</span></tt><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Interval to check the status of the running requests when <tt class="docutils literal"><span class="pre">proc_max</span></tt> is reached and determine if new request can be processed.</p>
+</div>
+<div class="section" id="id6">
+<h3>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> log-file</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the file where the logs will be stored.</p>
+</div>
+<div class="section" id="id7">
+<h3>Option <tt class="docutils literal"><span class="pre">log_level</span></tt><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p><strong>Valid values:</strong> <tt class="docutils literal"><span class="pre">debug</span></tt>, <tt class="docutils literal"><span class="pre">error</span></tt>, <tt class="docutils literal"><span class="pre">warning</span></tt>, <tt class="docutils literal"><span class="pre">info</span></tt></p>
+<p><strong>Required:</strong> No</p>
+<p>Desired log level. The default option is <tt class="docutils literal"><span class="pre">debug</span></tt>.</p>
+</div>
+<div class="section" id="option-ec2varfile">
+<h3>Option <tt class="docutils literal"><span class="pre">ec2varfile</span></tt><a class="headerlink" href="#option-ec2varfile" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> EC2-file</p>
+<p><strong>Required:</strong> (Only for Cloud infrastructures)</p>
+<p>Location of the EC2 environment variable file, which typically is eucarc or novarc.</p>
+</div>
+<div class="section" id="id8">
+<h3>Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> ca-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of CA certificate (PEM-encoded) used to generate user and service certificates. Server certificates.</p>
+</div>
+<div class="section" id="id9">
+<h3>Option <tt class="docutils literal"><span class="pre">certfile</span></tt><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> service-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the certificate (PEM-encoded) used by the FG Move server. Server certificates.</p>
+</div>
+<div class="section" id="id10">
+<h3>Option <tt class="docutils literal"><span class="pre">keyfile</span></tt><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> key-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the private key (PEM-encoded) of the certificate specified in <tt class="docutils literal"><span class="pre">certfile</span></tt>. Server certificates.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33833781-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="config_ref_client.html" title="fg-client.conf configuration file"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="config_ref_index.html" title="Configuration file reference"
+             >previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+
+          <li><a href="documentation.html" >FG Move Documentation</a> &raquo;</li>
+          <li><a href="config_ref_index.html" >Configuration file reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Javier Diaz, Fugang Wang, Gregor von Laszewski.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

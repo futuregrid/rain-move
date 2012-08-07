@@ -1,6 +1,4 @@
 
-
-
 <!-- This layout has been taken from http://globus.org/provision/ -->
 
 
@@ -12,7 +10,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; FutureGrid 0.1 documentation</title>
+    <title>What is FutureGrid Move? &mdash; FutureGrid 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,7 +27,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" /> 
+    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
+    <link rel="next" title="FG Move QuickStart" href="quickstart.html" />
+    <link rel="prev" title="Welcome to FuturGrid Move" href="index.html" /> 
   </head>
   <body>
 <style>
@@ -62,10 +62,16 @@ body {
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="#" title="General Index"
+          <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="quickstart.html" title="FG Move QuickStart"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to FuturGrid Move"
+             accesskey="P">previous</a> |</li>
         <li><a href="index.html">Home</a>|&nbsp;</li>
-        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="#">What is it?</a>|&nbsp;</li>
         <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
         <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
         <li><a href="download.html">Download</a>|&nbsp;</li>
@@ -78,9 +84,26 @@ body {
 
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">What is FutureGrid Move?</a><ul>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#use-cases">Use Cases</a></li>
+</ul>
+</li>
+</ul>
 
-   
-
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to FuturGrid Move</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="next chapter">FG Move QuickStart</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/whatis.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -104,11 +127,33 @@ body {
         <div class="bodywrapper">
           <div class="body">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="what-is-futuregrid-move">
+<span id="chap-whatis"></span><h1>What is FutureGrid Move?<a class="headerlink" href="#what-is-futuregrid-move" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>FutureGrid Move is a service that enables physical resources re-allocation among infrastructures. By using a simple command line interface,
+this service is able to de-register a machine from a particular infrastructure and register it in a new one. Internally, this service
+makes use of <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> to dynamically provision the selected machine with the OS and software
+needed for a successful registration in the new infrastructure. FG Move also maintains a database with information about the machines
+composing each one of the different infrastructures, which can be queried to consult the current status or detailed information about
+a particular infrastructure.</p>
+<p>This service will create an scheduler to integrate the <a class="reference external" href="https://portal.futuregrid.org/metrics/html/index.html">FutureGrid Metrics</a>. In this
+way, it will allow us to make reservations or analyze the historical usage to automatically move resources according to user demand.</p>
+<p>The following picture represents the architecture of FG Move.</p>
+<img alt="_images/fg-move_all.png" class="align-center" src="_images/fg-move_all.png" style="width: 600px; height: 350px;" />
+<p>Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on <a class="reference external" href="http://open.eucalyptus.com/">Eucalyptus</a>
+and <a class="reference external" href="http://www.openstack.org">OpenStack</a> frameworks. Additionally, we are working to provide support to other cloud infrastructures based
+on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> and <a class="reference external" href="http://www.opennebula.org">OpenNebula</a> frameworks.</p>
+</div>
+<div class="section" id="use-cases">
+<h2>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Re-assign machines based on user demands. This can be initiated manually, by creating a reservation or by predicting future needs (learning
+for historical information).</li>
+<li>Conduct tests on the same machines with different frameworks.</li>
+<li>Re-use images created for experiments</li>
+</ul>
+</div>
 </div>
 
 
@@ -137,10 +182,16 @@ body {
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="#" title="General Index"
+          <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="quickstart.html" title="FG Move QuickStart"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to FuturGrid Move"
+             >previous</a> |</li>
         <li><a href="index.html">Home</a>|&nbsp;</li>
-        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="#">What is it?</a>|&nbsp;</li>
         <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
         <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
         <li><a href="download.html">Download</a>|&nbsp;</li>

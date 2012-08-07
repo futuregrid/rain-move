@@ -1,0 +1,1389 @@
+
+<!-- This layout has been taken from http://globus.org/provision/ -->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FutureGrid 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="None" href="index.html#document-index" /> 
+  </head>
+  <body>
+<style>
+.header {
+        background-image: url(_static/move_header_bg.png);
+        background-color: #122A75;
+        text-align: left;
+}
+body {
+        background-image: url(_static/move_body_bg.png);
+        background-color: #E5D5AF;
+}
+</style>
+<div class="header">
+<table>
+  <tr>
+    <td>
+      <a href="index.html#document-index"><img src="_static/logo_grid_y.png" border="0" alt="FutureGrid Move"/></a>
+    </td>
+    <td>
+      <font size="6" color="white"><b><i>FutureGrid</i></b></font><br><br>
+      <font size="10" color="white" face="Comic Sans MS"><b><i>Move: Cloud/HPC Resource Re-allocation</i></b></font><br>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="index.html#document-index">Home</a>|&nbsp;</li>
+        <li><a href="index.html#document-whatis">What is it?</a>|&nbsp;</li>
+        <li><a href="index.html#document-quickstart">Quickstart</a>|&nbsp;</li>
+        <li><a href="index.html#document-documentation">Documentation</a>|&nbsp;</li>
+        <li><a href="index.html#document-download">Download</a>|&nbsp;</li>
+        <li><a href="index.html#document-support">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html#document-index">Table Of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-whatis">What is FutureGrid Move?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-quickstart">FG Move QuickStart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-documentation">FG Move Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-download">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-support">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#known-problems">Known problems</a></li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+<body></body>
+
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-futurgrid-move">
+<h1>Welcome to FuturGrid Move<a class="headerlink" href="#welcome-to-futurgrid-move" title="Permalink to this headline">¶</a></h1>
+<p>FutureGrid Move is a service that enables physical resources re-allocation among infrastructures. By using a simple command line interface,
+this service is able to de-register a machine from a particular infrastructure and register it in a new one. Internally, this service
+makes use of <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> to dynamically provision the selected machine with the OS and software
+needed for a successful registration in the new infrastructure. FG Move also maintains a database with information about the machines
+composing each one of the different infrastructures, which can be queried to consult the current status or detailed information about
+a particular infrastructure.</p>
+<p>Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on <a class="reference external" href="http://open.eucalyptus.com/">Eucalyptus</a>
+and <a class="reference external" href="http://www.openstack.org">OpenStack</a> frameworks. Additionally, we are working to provide support to other cloud infrastructures based
+on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> and <a class="reference external" href="http://www.opennebula.org">OpenNebula</a> frameworks.</p>
+<div class="toctree-wrapper compound">
+<span id="document-whatis"></span><div class="section" id="what-is-futuregrid-move">
+<span id="chap-whatis"></span><h2>What is FutureGrid Move?<a class="headerlink" href="#what-is-futuregrid-move" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+<p>FutureGrid Move is a service that enables physical resources re-allocation among infrastructures. By using a simple command line interface,
+this service is able to de-register a machine from a particular infrastructure and register it in a new one. Internally, this service
+makes use of <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> to dynamically provision the selected machine with the OS and software
+needed for a successful registration in the new infrastructure. FG Move also maintains a database with information about the machines
+composing each one of the different infrastructures, which can be queried to consult the current status or detailed information about
+a particular infrastructure.</p>
+<p>This service will create an scheduler to integrate the <a class="reference external" href="https://portal.futuregrid.org/metrics/html/index.html">FutureGrid Metrics</a>. In this
+way, it will allow us to make reservations or analyze the historical usage to automatically move resources according to user demand.</p>
+<p>The following picture represents the architecture of FG Move.</p>
+<img alt="_images/fg-move_all.png" class="align-center" src="_images/fg-move_all.png" style="width: 600px; height: 350px;" />
+<p>Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on <a class="reference external" href="http://open.eucalyptus.com/">Eucalyptus</a>
+and <a class="reference external" href="http://www.openstack.org">OpenStack</a> frameworks. Additionally, we are working to provide support to other cloud infrastructures based
+on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> and <a class="reference external" href="http://www.opennebula.org">OpenNebula</a> frameworks.</p>
+</div>
+<div class="section" id="use-cases">
+<h3>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Re-assign machines based on user demands. This can be initiated manually, by creating a reservation or by predicting future needs (learning
+for historical information).</li>
+<li>Conduct tests on the same machines with different frameworks.</li>
+<li>Re-use images created for experiments</li>
+</ul>
+</div>
+</div>
+<span id="document-quickstart"></span><div class="section" id="fg-move-quickstart">
+<span id="quickstart"></span><h2>FG Move QuickStart<a class="headerlink" href="#fg-move-quickstart" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="requirements">
+<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h3>
+<p>At this moment, our software only provides command line interfaces. Thus, users need access to the machine where the client part of the
+software is installed. Currently, this is installed and configured in the India cluster (<tt class="docutils literal"><span class="pre">india.futuregrid.org</span></tt>).</p>
+<p>Login on India and use the module functionality to load the environment variables:</p>
+<blockquote>
+<div><div class="highlight-python"><pre>$ ssh &lt;username&gt;@india.futuregrid.org
+$ module load futuregrid</pre>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">At this point, FG Move is only available for administrators.</p>
+</div>
+<p>The authentication is done via FutureGrid Ldap server. Thus, in each command we need to specify our FutureGrid username and we
+will be asked for our portal password</p>
+<blockquote>
+<div><div class="highlight-python"><pre>$ fg-move -u &lt;username&gt; ...</pre>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Users need to use their FutureGrid username and portal password.</p>
+</div>
+</div>
+<div class="section" id="using-fg-move">
+<h3>Using FG Move<a class="headerlink" href="#using-fg-move" title="Permalink to this headline">¶</a></h3>
+<p>The command line of this service is organized in three specialized subparsers.</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">node</span></tt>. A node is the representation of a physical machine. This subparses exposes the functionality to operate with them.</li>
+<li><tt class="docutils literal"><span class="pre">cluster</span></tt>. A cluster is a set of nodes identified by a name. This subparser exposes the functionality to operate with them.</li>
+<li><tt class="docutils literal"><span class="pre">service</span></tt>. A service is the representation of an infrastructure, which is composed by nodes. It exposes the functionality to operate with them (move, add, delete, list nodes)</li>
+</ul>
+<div class="section" id="operating-with-clusters">
+<h4>Operating with Clusters<a class="headerlink" href="#operating-with-clusters" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">Create a cluster named Indiana</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --create Indiana</pre>
+</div>
+</li>
+<li><p class="first">List available clusters</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --list</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular cluster</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --list Indiana</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="operating-with-nodes">
+<h4>Operating with Nodes<a class="headerlink" href="#operating-with-nodes" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node. They are identified of the node, hostname, IP and the cluster.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz node --add i90.india i90 10.0.1.2 Indiana</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular node.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --info i90.india</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="operating-with-services">
+<h4>Operating with Services<a class="headerlink" href="#operating-with-services" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">Create a service named IndianaOpenStack.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --create IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">List available services.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --list</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular service.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --list IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">List nodes that are not assigned to any service.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --listfreenodes</pre>
+</div>
+</li>
+<li><p class="first">Add nodes to the service. The nodes cannot be assigned to another service, that is they must be free.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --add i90.india i20.india IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">Remove a node from a service. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --remove i20.india IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --move i90.india IndianaOpenStack IndianaEucalyptus</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<span id="document-documentation"></span><div class="section" id="fg-move-documentation">
+<span id="documentation"></span><h2>FG Move Documentation<a class="headerlink" href="#fg-move-documentation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="user-documentation">
+<h3>User Documentation<a class="headerlink" href="#user-documentation" title="Permalink to this headline">¶</a></h3>
+<p>In this section you will find information on how to use the command line interfaces of our tools.</p>
+<div class="toctree-wrapper compound">
+<span id="document-man-move"></span><div class="section" id="move-fg-move">
+<span id="man-move"></span><h4>Move (fg-move)<a class="headerlink" href="#move-fg-move" title="Permalink to this headline">¶</a></h4>
+<p>FG Move is a service to re-allocate resources among infrastructures.</p>
+<div class="section" id="general-usage">
+<h5>General Usage<a class="headerlink" href="#general-usage" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python"><pre>usage: fg-move [-h] -u user {node,cluster,service} ...
+
+
+positional arguments:
+          {node,cluster,service}  Positional arguments group different options
+                                  that can be displayed by specifying &lt;positional_argument&gt; -h</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Option</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-h/--help</span></tt></td>
+<td>Shows help information and exit.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-u/--user</span> <span class="pre">&lt;userName&gt;</span></tt></td>
+<td>FutureGrid HPC user name, that is, the one used to login into the FG resources.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="node-subparser">
+<h5>Node subparser<a class="headerlink" href="#node-subparser" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python"><pre>usage: fg-move node [-h] (-a nodeId hostname ip cluster | -r nodeId cluster | -i nodeId ) [-f]
+
+Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Option</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-h/--help</span></tt></td>
+<td>Shows help information and exit.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-a</span> <span class="pre">&lt;nodeId&gt;</span> <span class="pre">&lt;hostname&gt;</span> <span class="pre">&lt;ip&gt;</span> <span class="pre">&lt;clusterId&gt;,</span> <span class="pre">--add</span> <span class="pre">&lt;nodeId&gt;</span> <span class="pre">&lt;hostname&gt;</span> <span class="pre">&lt;ip&gt;</span> <span class="pre">&lt;clusterId&gt;</span></tt></td>
+<td>Add new node to a cluster.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">&lt;nodeId&gt;</span> <span class="pre">&lt;clusterId&gt;,</span> <span class="pre">--remove</span> <span class="pre">&lt;nodeId&gt;</span> <span class="pre">&lt;clusterId&gt;</span></tt></td>
+<td>Remove node. It is also removed from cluster and service. (not supported yet)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-i</span> <span class="pre">&lt;nodeId&gt;,</span> <span class="pre">--info</span> <span class="pre">&lt;nodeId&gt;</span></tt></td>
+<td>Information of a node.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-f,</span> <span class="pre">--force</span></tt></td>
+<td>Force operation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h5>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h5>
+<ul>
+<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node. They are identified of the node, hostname, IP and the cluster.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz node --add i90.india i90 10.0.1.2 Indiana</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular node.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --info i90.india</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="cluster-subparser">
+<h5>Cluster subparser<a class="headerlink" href="#cluster-subparser" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python"><pre>usage: fg-move cluster [-h] (-c clusterId | -r clusterId | -l [clusterId]) [-f]
+
+
+Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Option</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-h/--help</span></tt></td>
+<td>Shows help information and exit.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-c</span> <span class="pre">&lt;clusterId&gt;,</span> <span class="pre">--create</span> <span class="pre">&lt;clusterId&gt;</span></tt></td>
+<td>Create a new cluster.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">&lt;clusterId&gt;,</span> <span class="pre">--remove</span> <span class="pre">&lt;clusterId&gt;</span></tt></td>
+<td>Remove cluster (not supported yet)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-l</span> <span class="pre">[clusterId],</span> <span class="pre">--list</span> <span class="pre">[clusterId]</span></tt></td>
+<td>List available clusters or the information about a particular one if a clusterId is provided.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-f,</span> <span class="pre">--force</span></tt></td>
+<td>Force operation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id1">
+<h5>Examples<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h5>
+<ul>
+<li><p class="first">Create a cluster named Indiana</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --create Indiana</pre>
+</div>
+</li>
+<li><p class="first">List available clusters</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --list</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular cluster</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --list Indiana</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="service-subparser">
+<h5>Service subparser<a class="headerlink" href="#service-subparser" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-python"><pre>usage: fg-move service [-h] (-c serviceId type | -a nodeId/s... [nodeId/s...] serviceId | -r nodeId/s... [nodeId/s...] serviceId
+                           | -m nodeId/s... [nodeId/s...] serviceIdorigin serviceIddestination | -l [serviceId] | -s [clusterId])
+                       [-f]
+
+
+Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="44%" />
+<col width="56%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Option</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-h/--help</span></tt></td>
+<td>Shows help information and exit.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-c/--create</span> <span class="pre">&lt;serviceId&gt;</span></tt></td>
+<td>Create a new service.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-a/--add</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceId&gt;</span></tt></td>
+<td>Add a node or list of nodes to a service.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-r/--remove</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceId&gt;</span></tt></td>
+<td>Remove a node or list of nodes from a service.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-m/--move</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceIdorigin&gt;</span> <span class="pre">&lt;serviceIddestination&gt;</span></tt></td>
+<td>Move a node or list of nodes from a service to another.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-l/--list</span> <span class="pre">[serviceId]</span></tt></td>
+<td>List available services or the information about a particular one if a clusterId is provided.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-s/--listfreenodes</span> <span class="pre">[clusterId]</span></tt></td>
+<td>List of nodes that are not assigned to any service. The list can be restricted to a particular cluster</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-f/--force</span></tt></td>
+<td>Force operation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id2">
+<h5>Examples<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h5>
+<ul>
+<li><p class="first">Create a service named IndianaOpenStack.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --create IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">List available services.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --list</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular service.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --list IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">List nodes that are not assigned to any service.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --listfreenodes</pre>
+</div>
+</li>
+<li><p class="first">Add nodes to the service. The nodes cannot be assigned to another service, that is they must be free.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --add i90.india i20.india IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">Remove a node from a service. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --remove i20.india IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --move i90.india IndianaOpenStack IndianaEucalyptus</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These tools require users to authenticate using their FG usernames and FG portal passwords.</p>
+</div>
+</div>
+<div class="section" id="administrator-documentation">
+<h3>Administrator Documentation<a class="headerlink" href="#administrator-documentation" title="Permalink to this headline">¶</a></h3>
+<p>In this section you will find information on software deployment details.</p>
+<div class="toctree-wrapper compound">
+<span id="document-install"></span><span class="target" id="chap-install-futuregrid"></span><div class="section" id="installing-futuregrid-move">
+<h4>Installing FutureGrid Move<a class="headerlink" href="#installing-futuregrid-move" title="Permalink to this headline">¶</a></h4>
+<p>You can install the FutureGrid Move using one of the following procedures.</p>
+<ul class="simple">
+<li><a class="reference internal" href="index.html#easy-install"><em>Using the &#8220;easy_install&#8221; tool</em></a>. This is the simplest option, as <tt class="docutils literal"><span class="pre">easy_install</span></tt>
+will take care of downloading and installing not just FutureGrid Move but also its dependencies.
+You must already have <a class="reference external" href="http://www.python.org/">Python</a> (version 2.6 or higher) and
+<a class="reference external" href="http://packages.python.org/distribute/">Python Distribute</a> (version 0.6.15 or higher)
+installed on your machine (or you must be able to install them). To check if both are installed,
+try running <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">--version</span></tt> from the command line. If the command is available, and it
+prints out a version number equal or higher than 0.6.15, you will be able to install FutureGrid Move
+using <tt class="docutils literal"><span class="pre">easy_install</span></tt>.</li>
+<li><a class="reference internal" href="index.html#source-tarball"><em>Using a source tarball</em></a>. If you are unable to install FutureGrid Move using
+<tt class="docutils literal"><span class="pre">easy_install</span></tt>, you can download a tarball with the FutureGrid Move source code. Your machine must
+have Python installed on it, but not the Python Distribute package (the tarball includes a setup
+script that will automatically download and install Python Distribute for you).</li>
+<li><a class="reference internal" href="index.html#github-install"><em>Downloading the latest code from GitHub</em></a>. Choose this option if you want to track
+the latest code in our GitHub repository,</li>
+</ul>
+<div class="section" id="using-easy-install">
+<span id="easy-install"></span><h5>Using <tt class="docutils literal"><span class="pre">easy_install</span></tt><a class="headerlink" href="#using-easy-install" title="Permalink to this headline">¶</a></h5>
+<p>This option has the following prerequisites:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.python.org/">Python</a> 2.6 or higher. If Python is not available on your machine,
+you can find installation instructions here: <a class="reference external" href="http://www.python.org/getit/">http://www.python.org/getit/</a>. Take into account that,
+if you are using a Linux distribution, you should be able to install it using your distribution&#8217;s
+package manager (e.g., <tt class="docutils literal"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python</span></tt> on Debian and Ubuntu). If you are using a Mac,
+Python is included by default; however, if your version is too old, take a look at the following
+instructions: <a class="reference external" href="http://www.python.org/getit/mac/">http://www.python.org/getit/mac/</a></li>
+<li><a class="reference external" href="http://packages.python.org/distribute/">Python Distribute</a> 0.6.15 or higher. As noted above,
+you can verify if this package is installed by running <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">--version</span></tt>. If it is not
+available, you can find installation instructions here: <a class="reference external" href="http://pypi.python.org/pypi/distribute#installation-instructions">http://pypi.python.org/pypi/distribute#installation-instructions</a>.
+Take into account that, although Python Distribute is included as an optional package in most
+Linux distributions, it is sometimes available under the name &#8220;Setuptools&#8221; (e.g., <tt class="docutils literal"><span class="pre">python-setuptools</span></tt>
+in Debian and Ubuntu systems), since Python Distribute is a fork of the Setuptools project.</li>
+</ul>
+<p>If you meet these prerequisites, you should be able to
+install FutureGrid Move simply by running this as <tt class="docutils literal"><span class="pre">root</span></tt>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>easy_install -U futuregrid_move
+</pre></div>
+</div>
+<p>If you are using Ubuntu or Mac OS X, you will likely just need to run this:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo easy_install -U futuregrid_move
+</pre></div>
+</div>
+<p>If you do not have administrative privileges on your machine, you will have to install FutureGrid Move
+under your regular user account:</p>
+<div class="highlight-bash"><div class="highlight"><pre>easy_install -U futuregrid_move --user
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Installing FutureGrid Move in your home directory will install the FutureGrid Move commands
+in <tt class="docutils literal"><span class="pre">~/.local/bin</span></tt>, which may not be in your PATH environment variable. If not, make sure to
+update the definition of your PATH environment variable (e.g., in the <tt class="docutils literal"><span class="pre">~/.profile</span></tt> file if
+you are using a BASH shell).</p>
+<p>Alternatively, you can also request that the commands be installed in a directory that is
+already in your $PATH. You may want to use <tt class="docutils literal"><span class="pre">~/bin/</span></tt>, as most Linux distributions will
+automatically include that directory in your PATH.</p>
+<div class="last highlight-bash"><div class="highlight"><pre>easy_install -U futuregrid_move  --user -s ~/bin/
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-a-source-tarball">
+<span id="source-tarball"></span><h5>Using a source tarball<a class="headerlink" href="#using-a-source-tarball" title="Permalink to this headline">¶</a></h5>
+<p>If you do not have Python Distribute, or are unable to install it, you can still install FutureGrid Move
+by downloading a source tarball yourself. This tarball contains an installation script
+that will install and setup Python Distribute, and then proceed to install FutureGrid Move.</p>
+<p>You will first have to download the latest source tarball from the Python Package Index:
+<a class="reference external" href="http://pypi.python.org/pypi/futuregrid_move">http://pypi.python.org/pypi/futuregrid_move</a></p>
+<p>Next, untar the tarball and run the installation script as <tt class="docutils literal"><span class="pre">root</span></tt>:</p>
+<pre class="literal-block">
+tar xvzf futuregrid_move-0.1.tar.gz
+cd futuregrid_move-0.1
+python setup.py install
+</pre>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If you are using Ubuntu or Mac OS X, you will likely just need to run this:</p>
+<div class="last highlight-bash"><div class="highlight"><pre>sudo python setup.py install
+</pre></div>
+</div>
+</div>
+<p>If you do not have administrative privileges on your machine, you can choose to install
+everything inside your home directory:</p>
+<div class="highlight-bash"><div class="highlight"><pre>python setup.py install --user
+</pre></div>
+</div>
+</div>
+<div class="section" id="tracking-latest-code-from-github">
+<span id="github-install"></span><h5>Tracking latest code from GitHub<a class="headerlink" href="#tracking-latest-code-from-github" title="Permalink to this headline">¶</a></h5>
+<p>If you want to use the latest version of our code from our GitHub repository, the steps
+are similar to installing a source tarball. However, instead of downloading a tarball, you
+will use git to clone our repository on your machine. Simply run the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git clone git@github.com:futuregrid/rain-move.git
+</pre></div>
+</div>
+<p>This will create a directory called <tt class="docutils literal"><span class="pre">rain-move</span></tt>. In it, you will find the same <tt class="docutils literal"><span class="pre">setup.py</span></tt>
+script described in the previous section. If you want to install FutureGrid Move, and not
+make any modifications to the code, you should run <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> as described
+in the previous section.</p>
+<p>If you intend to modify the code, and want the FutureGrid Move commands to use the code
+in the git repository you&#8217;ve created on your machine, you can instead install FutureGrid
+Move in &#8220;developer&#8221; mode:</p>
+<div class="highlight-bash"><div class="highlight"><pre>python setup.py develop
+</pre></div>
+</div>
+<p>This will install FutureGrid Move but, instead of copying the Python source code
+to a system directory, it will create a pointer to the source directory you checked out.
+That way, any changes you make to the source code will take effect immediately
+(without having to reinstall FutureGrid Move).</p>
+<p>Take into account that there are, at least, two branches in our GitHub repository: <tt class="docutils literal"><span class="pre">master</span></tt>
+and <tt class="docutils literal"><span class="pre">dev</span></tt>. The former always contains the latest stable release, including bug fixes, and
+the former contains the very latest version of our code (which may not work as reliably
+as the code in the <tt class="docutils literal"><span class="pre">master</span></tt> branch). By default, your repository will track the <tt class="docutils literal"><span class="pre">master</span></tt>
+branch. To switch to the <tt class="docutils literal"><span class="pre">dev</span></tt> branch, run the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git checkout dev
+</pre></div>
+</div>
+<p>To pull the latest changes from our GitHub repository, run the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git pull origin
+</pre></div>
+</div>
+</div>
+</div>
+<span id="document-configure_futuregrid"></span><div class="section" id="setting-up-the-futuregrid-software-for-fg-move">
+<span id="chap-configure-futuregrid-move"></span><h4>Setting up the FutureGrid Software for FG Move<a class="headerlink" href="#setting-up-the-futuregrid-software-for-fg-move" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="configuration-files">
+<h5>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h5>
+<p>There are two places where we can locate the configuration files. Our software will look into these places in the following order:</p>
+<ol class="arabic simple">
+<li>In the directory <tt class="docutils literal"><span class="pre">~/.fg/</span></tt></li>
+<li>In the directory <tt class="docutils literal"><span class="pre">/etc/futuregrid/</span></tt></li>
+</ol>
+<p>If you have installed FutureGrid Move using the tarball file (<a class="reference internal" href="index.html#source-tarball"><em>Using a source tarball</em></a>) you will find the configuration
+sample files in /etc/futuregrid/. Otherwise, you can download them as a <a class="reference external" href="futuregrid-docs-configsamples_0.1.tar.gz">tarball</a> or a <a class="reference external" href="futuregrid-docs-configsamples_0.1.zip">ZIP file</a>.</p>
+<p><strong>Server Side</strong>: The configuration file has to be renamed as <tt class="docutils literal"><span class="pre">fg-server.conf</span></tt>.</p>
+<p><strong>Client Side</strong>: The configuration file has to be renamed as <tt class="docutils literal"><span class="pre">fg-client.conf</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you configure several clients or servers in the same machine, the <tt class="docutils literal"><span class="pre">fg-client.conf</span></tt> or <tt class="docutils literal"><span class="pre">fg-server.conf</span></tt> must be the same file.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the <strong>Client Side</strong>, the path of the log files must be relative to each users. Using the <tt class="docutils literal"><span class="pre">$HOME</span></tt> directory is a good idea.</p>
+</div>
+</div>
+<div class="section" id="setting-up-ldap">
+<h5>Setting up LDAP<a class="headerlink" href="#setting-up-ldap" title="Permalink to this headline">¶</a></h5>
+<p>The authentication of our software is based on LDAP. So, we need to configure some options in the configuration files to make it possible.</p>
+<div class="section" id="server-side">
+<h6>Server Side<a class="headerlink" href="#server-side" title="Permalink to this headline">¶</a></h6>
+<p>We need to configure the <tt class="docutils literal"><span class="pre">[LDAP]</span></tt> section. This is going to be use by all servers. More information about this section
+of the server configuration file can be found in <a class="reference internal" href="index.html#fg-server-ldap"><em>LDAP section</em></a>.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>LDAP<span class="o">]</span>
+<span class="nv">LDAPHOST</span><span class="o">=</span> ldap.futuregrid.org
+<span class="nv">LDAPUSER</span><span class="o">=</span> <span class="nv">uid</span><span class="o">=</span>rainadmin,ou<span class="o">=</span>People,dc<span class="o">=</span>futuregrid,dc<span class="o">=</span>org
+<span class="nv">LDAPPASS</span><span class="o">=</span> passwordrainadmin
+<span class="nv">log</span><span class="o">=</span> ~/fg-auth.log
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="setting-up-fg-move">
+<h5>Setting up FG Move<a class="headerlink" href="#setting-up-fg-move" title="Permalink to this headline">¶</a></h5>
+<p>In this section we explain how to configure FG Move. FG Move is composed by a main server that orchestrates different FG Move controllers
+distributed among the different infrastructures head nodes. There controllers make sure that the machines are properly added or removed
+from the infrastructure.</p>
+<div class="section" id="move-config">
+<span id="id1"></span><h6>Server Side<a class="headerlink" href="#move-config" title="Permalink to this headline">¶</a></h6>
+<p>First, we are going to configure the main server. We need to configure the <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt> Section
+(see <a class="reference internal" href="index.html#fg-server-rainmoveserver"><em>MoveServer section</em></a>).</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMoveServer<span class="o">]</span>
+<span class="nv">port</span> <span class="o">=</span> 56795
+<span class="nv">proc_max</span><span class="o">=</span>5
+<span class="nv">refresh</span><span class="o">=</span>20
+<span class="nv">authorizedusers</span> <span class="o">=</span> adminuser1, adminuser2
+<span class="nv">log</span> <span class="o">=</span> moveserver.log
+<span class="nv">log_level</span> <span class="o">=</span> debug
+<span class="nv">ca_cert</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
+<span class="nv">certfile</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdserver/imdscert.pem
+<span class="nv">keyfile</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdserver/privkey.pem
+<span class="nv">Clientca_cert</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdclient/cacert.pem
+<span class="nv">Clientcertfile</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdclient/imdccert.pem
+<span class="nv">Clientkeyfile</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdclient/privkey.pem
+</pre></div>
+</div>
+</div></blockquote>
+<p id="move-sites-sections">Next we need to create sections for each one of the FG Move controllers. This sections are read on execution time, so we can
+modify them any time without restarting the FG Move server (see <a class="reference internal" href="index.html#fg-server-move-remote-sites-example"><em>Move Remote Site Controllers</em></a>.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>Move-eucalyptus-indiaeuca<span class="o">]</span>
+<span class="nv">address</span><span class="o">=</span>129.79.49.12
+<span class="nv">port</span><span class="o">=</span>56804
+
+<span class="o">[</span>Move-openstack-indiaopenstack<span class="o">]</span>
+<span class="nv">address</span><span class="o">=</span>129.79.49.13
+<span class="nv">port</span><span class="o">=</span>56805
+
+<span class="o">[</span>Move-hpc-indiahpc<span class="o">]</span>
+<span class="nv">address</span><span class="o">=</span>129.79.49.10
+<span class="nv">port</span><span class="o">=</span>56806
+
+<span class="o">[</span>Move-nimbus-hotelnimbus<span class="o">]</span>
+<span class="nv">address</span><span class="o">=</span>129.79.49.11
+<span class="nv">port</span><span class="o">=</span>56807
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Make sure that <tt class="docutils literal"><span class="pre">port</span></tt> and <tt class="docutils literal"><span class="pre">address</span></tt> matches with those used by the Move controllers <a class="reference internal" href="index.html#move-sites-server"><em>Move Site Server</em></a>.</p>
+</div>
+<p>We also have to create an inventory file that will describe the nodes, clusters and services. This file will be read by the RainMoveServer
+during its initialization. The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the
+label <strong>CLUSTER:</strong> followed by the name of the cluster.</p>
+<blockquote>
+<div><p>This file looks like:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>CLUSTER:HOTEL<span class="o">]</span>
+c01.hotel,c01,149.165.147.1
+c02.hotel,c02,149.165.147.2
+
+<span class="o">[</span>CLUSTER:INDIA<span class="o">]</span>
+i01.india,i01,149.165.148.1
+i02.india,i02,149.165.148.2
+i100.india,i200,149.165.148.100
+i101.india,i101,149.165.148.101
+i102.india,i102,149.165.148.102
+
+<span class="o">[</span>SERVICE:NIMBUS:HOTELNIMBUS<span class="o">]</span>
+c01.hotel
+c02.hotel
+
+<span class="o">[</span>SERVICE:EUCALYPTUS:INDIAEUCA<span class="o">]</span>
+i100.india
+i102.india
+
+<span class="o">[</span>SERVICE:OPENSTACK:INDIAOPENSTACK<span class="o">]</span>
+i101.india
+
+<span class="o">[</span>SERVICE:HPC:INDIAHPC<span class="o">]</span>
+i01.india
+i02.india
+</pre></div>
+</div>
+</div></blockquote>
+</div></blockquote>
+<p>This server requires to have <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> installed in the same machine (see</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">link?? how to install and configure Teefaa)</p>
+</div>
+<p>Once everything is set up (including Teefaa), you can start the server by execution <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We recommend to have a system user that run all the servers. In this way it will be easier to manage the sudoers file when necessary.</p>
+</div>
+</div>
+<div class="section" id="client-side">
+<span id="move-client-conf"></span><h6>Client Side<a class="headerlink" href="#client-side" title="Permalink to this headline">¶</a></h6>
+<p>In the client side, we need to configure the <tt class="docutils literal"><span class="pre">[RainMove]</span></tt> section. More information
+about this section of the client configuration file can be found in <a class="reference internal" href="index.html#fg-client-move"><em>Move section</em></a>.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMove<span class="o">]</span>
+<span class="nv">port</span> <span class="o">=</span> 56796
+<span class="nv">proc_max</span> <span class="o">=</span> 5
+<span class="nv">refresh</span> <span class="o">=</span> 20
+<span class="nv">log</span> <span class="o">=</span> movesiteserver.log
+<span class="nv">log_level</span> <span class="o">=</span> debug
+<span class="nv">max_wait</span> <span class="o">=</span> 1000
+<span class="nv">ec2varfile</span> <span class="o">=</span> ~/eucarc
+<span class="nv">ca_cert</span><span class="o">=</span>/etc/futuregrid/imdserver/cacert.pem
+<span class="nv">certfile</span><span class="o">=</span>/etc/futuregrid/imdserver/imdscert.pem
+<span class="nv">keyfile</span><span class="o">=</span>/etc/futuregrid/imdserver/privkey.pem
+</pre></div>
+</div>
+</div></blockquote>
+<p>Once you have everything set up, any user that is in the <tt class="docutils literal"><span class="pre">authorizedusers</span></tt> field of the section <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt> will be able to
+use this service. Of course, the user has to authenticate against LDAP too.</p>
+<p>The executable file of this client is <tt class="docutils literal"><span class="pre">fg-move</span></tt>. More information about how to use FG Move can be found in the <a class="reference internal" href="index.html#man-move"><em>FG Move Manual</em></a>.</p>
+</div>
+<div class="section" id="fg-move-check-list">
+<h6>FG Move Check List<a class="headerlink" href="#fg-move-check-list" title="Permalink to this headline">¶</a></h6>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="56%" />
+<col width="29%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">Server Side (<tt class="docutils literal"><span class="pre">fg-server.conf</span></tt>)</th>
+<th class="head">Client Side (<tt class="docutils literal"><span class="pre">fg-client.conf</span></tt>)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>Requirement</strong></td>
+<td><ul class="first last simple">
+<li>Teefaa installed and configured in the same machine</li>
+</ul>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><strong>Configure</strong></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt> section</li>
+<li><tt class="docutils literal"><span class="pre">[LDAP]</span></tt> section</li>
+<li>Move Site controllers sections <tt class="docutils literal"><span class="pre">Move-&lt;service&gt;-&lt;serviceID&gt;</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">[RainMove]</span></tt> section</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><strong>Executables</strong></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">RainMoveServer.py</span></tt></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">fg-move</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="setting-up-fg-move-site-controller">
+<span id="move-sites-server"></span><h5>Setting up FG Move Site Controller<a class="headerlink" href="#setting-up-fg-move-site-controller" title="Permalink to this headline">¶</a></h5>
+<p>In this section, we explain how to configure the FG Move Site Controller. As we said previously, this service will make sure that the machines
+are properly added or removed from the infrastructure. Therefore, it has to run in the machine that controls the infrastructure
+(i.e. where Torque, OpenStack Nova manager or Eucalyptus cloud controller is installed). Our service controller is generic and works for
+every supported infrastructure, we only need to tune it up properly.</p>
+<div class="section" id="id2">
+<h6>Server Side<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h6>
+<p>In the Server side we need to configure the <tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt> Section (see <a class="reference internal" href="index.html#fg-server-rainmoveserver"><em>RainMoveSiteServer section</em></a>).</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMoveSiteServer<span class="o">]</span>
+<span class="nv">port</span> <span class="o">=</span> 56796
+<span class="nv">proc_max</span> <span class="o">=</span> 5
+<span class="nv">refresh</span> <span class="o">=</span> 20
+<span class="nv">log</span> <span class="o">=</span> movesiteserver.log
+<span class="nv">log_level</span> <span class="o">=</span> debug
+<span class="nv">max_wait</span> <span class="o">=</span> 1000
+<span class="nv">ec2varfile</span> <span class="o">=</span> ~/eucarc
+<span class="nv">ca_cert</span><span class="o">=</span>/etc/futuregrid/imdserver/cacert.pem
+<span class="nv">certfile</span><span class="o">=</span>/etc/futuregrid/imdserver/imdscert.pem
+<span class="nv">keyfile</span><span class="o">=</span>/etc/futuregrid/imdserver/privkey.pem
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Make sure that the <tt class="docutils literal"><span class="pre">port</span></tt> specified here matches with the one specified in the sections defined when configuring the main <a class="reference internal" href="index.html#move-sites-sections"><em>FG Move server</em></a>.</p>
+</div>
+<p>Next, we need to do specific configurations depending on the infrastructure we are targeting. Typically, you only need to do one of the following
+subsections per</p>
+<ul class="simple">
+<li><strong>HPC infrastructure</strong></li>
+</ul>
+<blockquote>
+<div><p>Considering that <tt class="docutils literal"><span class="pre">imageman</span></tt> is the user that will run the service, we need to allow this user to execute the <tt class="docutils literal"><span class="pre">pbsnodes</span></tt> command and some
+other commands as <tt class="docutils literal"><span class="pre">root</span></tt> user.</p>
+<p>Edit <tt class="docutils literal"><span class="pre">sudoers</span></tt> file by executing <tt class="docutils literal"><span class="pre">visudo</span></tt> as <tt class="docutils literal"><span class="pre">root</span></tt> user and add the following lines:</p>
+<blockquote>
+<div><blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>Defaults    <span class="nv">secure_path</span> <span class="o">=</span> /sbin:/bin:/usr/sbin:/usr/bin:/opt/moab/bin:/opt/torque/bin
+
+imageman <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: /opt/moab/bin/mschedctl -R
+imageman <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: /opt/torque/bin/pbsnodes
+imageman <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: /opt/torque/bin/qmgr
+imageman <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: /opt/torque/bin/qdel
+</pre></div>
+</div>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<ul>
+<li><p class="first"><strong>Eucalyptus Infrastructure</strong></p>
+<p>Here, we need to provide <tt class="docutils literal"><span class="pre">imageman</span></tt> with an Eucalyptus credentials of an admin user. This is basically needed to terminate instances when
+we use the <tt class="docutils literal"><span class="pre">--force</span></tt> option with fg-move. A good place to place the creadentials is the home directory of this user.</p>
+<p>Next, we need to edit <tt class="docutils literal"><span class="pre">sudoers</span></tt> file by executing <tt class="docutils literal"><span class="pre">visudo</span></tt> as <tt class="docutils literal"><span class="pre">root</span></tt> user and add the following lines:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>Defaults    <span class="nv">secure_path</span> <span class="o">=</span> /sbin:/bin:/usr/sbin:/usr/bin:/opt/euca/bin
+
+imageman <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: /opt/euca/bin/euca_conf
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>OpenStack Infrastructure</strong></p>
+<p>Here, we need to provide <tt class="docutils literal"><span class="pre">imageman</span></tt> with an OpenStack credentials of an admin user. This is basically needed to terminate instances when
+we use the <tt class="docutils literal"><span class="pre">--force</span></tt> option with fg-move. A good place to place the creadentials is the home directory of this user.</p>
+<p>Next, we need to edit <tt class="docutils literal"><span class="pre">sudoers</span></tt> file by executing <tt class="docutils literal"><span class="pre">visudo</span></tt> as <tt class="docutils literal"><span class="pre">root</span></tt> user and add the following lines:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>Defaults    <span class="nv">secure_path</span> <span class="o">=</span> /sbin:/bin:/usr/sbin:/usr/bin:/opt/openstack/bin
+
+imageman <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: /opt/openstack/bin/nova-manage
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Nimbus Infrastructure</strong></p>
+<blockquote>
+<div><p>Not developed yet</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>OpenNebula Infrastructure</strong></p>
+<blockquote>
+<div><p>Not developed yet</p>
+</div></blockquote>
+</li>
+</ul>
+<p>Once everything is set up, you can start the server by execution <tt class="docutils literal"><span class="pre">RainMoveSiteServer.py</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
+</div>
+<div class="section" id="fg-move-site-check-list">
+<h6>FG Move Site Check List<a class="headerlink" href="#fg-move-site-check-list" title="Permalink to this headline">¶</a></h6>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">Server Side (<tt class="docutils literal"><span class="pre">fg-server.conf</span></tt>)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>Access to</strong></td>
+<td><ul class="first last simple">
+<li>Cloud credentials of an admin user (not needed for HPC)</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><strong>Configure</strong></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt> section</li>
+<li>sudoers</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><strong>Executables</strong></td>
+<td><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">RainMoveSiteServer.py</span></tt></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<span id="document-config_ref_index"></span><div class="section" id="configuration-file-reference">
+<span id="chap-config-ref"></span><h4>Configuration file reference<a class="headerlink" href="#configuration-file-reference" title="Permalink to this headline">¶</a></h4>
+<div class="toctree-wrapper compound">
+<span id="document-config_ref_server"></span><div class="section" id="fg-server-conf-configuration-file">
+<span id="sec-fg-server-conf"></span><h5><tt class="docutils literal"><span class="pre">fg-server.conf</span></tt> configuration file<a class="headerlink" href="#fg-server-conf-configuration-file" title="Permalink to this headline">¶</a></h5>
+<div class="section" id="section-ldap">
+<span id="fg-server-ldap"></span><h6>Section <tt class="docutils literal"><span class="pre">[LDAP]</span></tt><a class="headerlink" href="#section-ldap" title="Permalink to this headline">¶</a></h6>
+<p>This section is used to configure the access to LDAP to verify the user passwords.</p>
+<p><em>This section is required by all services</em></p>
+<div class="section" id="option-ldaphost">
+<h7>Option <tt class="docutils literal"><span class="pre">LDAPHOST</span></tt><a class="headerlink" href="#option-ldaphost" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Hostname or IP address of the LDAP server that manages the user&#8217;s authentication.</p>
+</div>
+<div class="section" id="option-ldapuser">
+<h7>Option <tt class="docutils literal"><span class="pre">LDAPUSER</span></tt><a class="headerlink" href="#option-ldapuser" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> user-dn</p>
+<p><strong>Required:</strong> Yes</p>
+<p>This is the DN of an user that have read access to the encrypted passwords of every user. This looks
+like <tt class="docutils literal"><span class="pre">uid=USER,ou=People,dc=futuregrid,dc=org</span></tt></p>
+</div>
+<div class="section" id="option-ldappass">
+<h7>Option <tt class="docutils literal"><span class="pre">LDAPPASS</span></tt><a class="headerlink" href="#option-ldappass" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Password of the user specified in the previous section.</p>
+</div>
+<div class="section" id="option-log">
+<h7>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#option-log" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> log-file</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the file where the logs will be stored.</p>
+</div>
+<div class="section" id="option-test">
+<h7>Option <tt class="docutils literal"><span class="pre">test</span></tt><a class="headerlink" href="#option-test" title="Permalink to this headline">¶</a></h7>
+<p><strong>Valid values:</strong> <tt class="docutils literal"><span class="pre">True</span></tt>, <tt class="docutils literal"><span class="pre">False</span></tt></p>
+<p><strong>Required:</strong> No</p>
+<p>This option is for development purposes. For security reasons, the LDAP server cannot be contacted from outside of FutureGrid network.
+Therefore, we need this option to go test our services before we deploy them on production.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="section-rainmoveserver">
+<span id="fg-server-rainmoveserver"></span><h6>Section <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt><a class="headerlink" href="#section-rainmoveserver" title="Permalink to this headline">¶</a></h6>
+<p>This section is used to configure the FG Move Server.</p>
+<div class="section" id="option-port">
+<h7>Option <tt class="docutils literal"><span class="pre">port</span></tt><a class="headerlink" href="#option-port" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Port where the FG Move server will be listening.</p>
+</div>
+<div class="section" id="option-proc-max">
+<h7>Option <tt class="docutils literal"><span class="pre">proc_max</span></tt><a class="headerlink" href="#option-proc-max" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Maximum number of request that can be processed at the same time.</p>
+</div>
+<div class="section" id="option-refresh">
+<h7>Option <tt class="docutils literal"><span class="pre">refresh</span></tt><a class="headerlink" href="#option-refresh" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Interval to check the status of the running requests when <tt class="docutils literal"><span class="pre">proc_max</span></tt> is reached and determine if new request can be processed.</p>
+</div>
+<div class="section" id="option-authorizedusers">
+<h7>Option <tt class="docutils literal"><span class="pre">authorizedusers</span></tt><a class="headerlink" href="#option-authorizedusers" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> String-list (comma separated)</p>
+<p><strong>Required:</strong> No</p>
+<p>List of users (separated by commas) that can use this service.</p>
+</div>
+<div class="section" id="id1">
+<h7>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> log-file</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the file where the logs will be stored.</p>
+</div>
+<div class="section" id="option-log-level">
+<h7>Option <tt class="docutils literal"><span class="pre">log_level</span></tt><a class="headerlink" href="#option-log-level" title="Permalink to this headline">¶</a></h7>
+<p><strong>Valid values:</strong> <tt class="docutils literal"><span class="pre">debug</span></tt>, <tt class="docutils literal"><span class="pre">error</span></tt>, <tt class="docutils literal"><span class="pre">warning</span></tt>, <tt class="docutils literal"><span class="pre">info</span></tt></p>
+<p><strong>Required:</strong> No</p>
+<p>Desired log level. The default option is <tt class="docutils literal"><span class="pre">debug</span></tt>.</p>
+</div>
+<div class="section" id="option-ca-cert">
+<h7>Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt><a class="headerlink" href="#option-ca-cert" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> ca-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of CA certificate (PEM-encoded) used to generate user and service certificates. Server certificates.</p>
+</div>
+<div class="section" id="option-certfile">
+<h7>Option <tt class="docutils literal"><span class="pre">certfile</span></tt><a class="headerlink" href="#option-certfile" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> service-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the certificate (PEM-encoded) used by the FG Move server. Server certificates.</p>
+</div>
+<div class="section" id="option-keyfile">
+<h7>Option <tt class="docutils literal"><span class="pre">keyfile</span></tt><a class="headerlink" href="#option-keyfile" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> key-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the private key (PEM-encoded) of the certificate specified in <tt class="docutils literal"><span class="pre">certfile</span></tt>. Server certificates.</p>
+</div>
+<div class="section" id="option-clientca-cert">
+<h7>Option <tt class="docutils literal"><span class="pre">Clientca_cert</span></tt><a class="headerlink" href="#option-clientca-cert" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> ca-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of CA certificate (PEM-encoded) used to generate user and service certificates. Client certificates.</p>
+</div>
+<div class="section" id="option-clientcertfile">
+<h7>Option <tt class="docutils literal"><span class="pre">Clientcertfile</span></tt><a class="headerlink" href="#option-clientcertfile" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> service-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the certificate (PEM-encoded) used by the FG Move server to contact with the Move site controllers. Client certificates.</p>
+</div>
+<div class="section" id="option-clientkeyfile">
+<h7>Option <tt class="docutils literal"><span class="pre">Clientkeyfile</span></tt><a class="headerlink" href="#option-clientkeyfile" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> key-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the private key (PEM-encoded) of the certificate specified in <tt class="docutils literal"><span class="pre">certfile</span></tt>. Client certificates.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="sections-move-service-serviceid-such-as-move-eucalyptus-indiaeuca-or-move-hpc-indiahpc">
+<span id="fg-server-move-remote-sites-example"></span><h6>Sections <tt class="docutils literal"><span class="pre">[Move-&lt;service&gt;-&lt;serviceID&gt;]</span></tt> such as <tt class="docutils literal"><span class="pre">[Move-eucalyptus-indiaeuca]</span></tt> or <tt class="docutils literal"><span class="pre">[Move-Hpc-indiahpc]</span></tt><a class="headerlink" href="#sections-move-service-serviceid-such-as-move-eucalyptus-indiaeuca-or-move-hpc-indiahpc" title="Permalink to this headline">¶</a></h6>
+<p>This sections are to define how to contact the remove site controllers (<tt class="docutils literal"><span class="pre">RainMoveSiteServer.py</span></tt> server)</p>
+<div class="section" id="option-address">
+<h7>Option <tt class="docutils literal"><span class="pre">address</span></tt><a class="headerlink" href="#option-address" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Address of the server where FG Move site server will be running.</p>
+</div>
+<div class="section" id="id2">
+<h7>Option <tt class="docutils literal"><span class="pre">port</span></tt><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Port where the FG Move site server will be listening.</p>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="section-rainmovesiteserver">
+<span id="fg-server-rainmovesiteserver"></span><h6>Section <tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt><a class="headerlink" href="#section-rainmovesiteserver" title="Permalink to this headline">¶</a></h6>
+<p>This section is used to configure the FG Move Site Server, which is the FG Move controller place in the management machines.</p>
+<p>port = 56796
+proc_max = 5
+refresh = 20
+log = movesiteserver.log
+log_level = debug
+max_wait = 1000
+ec2varfile = ~/eucarc
+ca_cert=/etc/futuregrid/imdserver/cacert.pem
+certfile=/etc/futuregrid/imdserver/imdscert.pem
+keyfile=/etc/futuregrid/imdserver/privkey.pem</p>
+<div class="section" id="id3">
+<h7>Option <tt class="docutils literal"><span class="pre">port</span></tt><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Port where the FG Move server will be listening.</p>
+</div>
+<div class="section" id="id4">
+<h7>Option <tt class="docutils literal"><span class="pre">proc_max</span></tt><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Maximum number of request that can be processed at the same time.</p>
+</div>
+<div class="section" id="id5">
+<h7>Option <tt class="docutils literal"><span class="pre">refresh</span></tt><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Interval to check the status of the running requests when <tt class="docutils literal"><span class="pre">proc_max</span></tt> is reached and determine if new request can be processed.</p>
+</div>
+<div class="section" id="id6">
+<h7>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> log-file</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the file where the logs will be stored.</p>
+</div>
+<div class="section" id="id7">
+<h7>Option <tt class="docutils literal"><span class="pre">log_level</span></tt><a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h7>
+<p><strong>Valid values:</strong> <tt class="docutils literal"><span class="pre">debug</span></tt>, <tt class="docutils literal"><span class="pre">error</span></tt>, <tt class="docutils literal"><span class="pre">warning</span></tt>, <tt class="docutils literal"><span class="pre">info</span></tt></p>
+<p><strong>Required:</strong> No</p>
+<p>Desired log level. The default option is <tt class="docutils literal"><span class="pre">debug</span></tt>.</p>
+</div>
+<div class="section" id="option-ec2varfile">
+<h7>Option <tt class="docutils literal"><span class="pre">ec2varfile</span></tt><a class="headerlink" href="#option-ec2varfile" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> EC2-file</p>
+<p><strong>Required:</strong> (Only for Cloud infrastructures)</p>
+<p>Location of the EC2 environment variable file, which typically is eucarc or novarc.</p>
+</div>
+<div class="section" id="id8">
+<h7>Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> ca-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of CA certificate (PEM-encoded) used to generate user and service certificates. Server certificates.</p>
+</div>
+<div class="section" id="id9">
+<h7>Option <tt class="docutils literal"><span class="pre">certfile</span></tt><a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> service-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the certificate (PEM-encoded) used by the FG Move server. Server certificates.</p>
+</div>
+<div class="section" id="id10">
+<h7>Option <tt class="docutils literal"><span class="pre">keyfile</span></tt><a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> key-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the private key (PEM-encoded) of the certificate specified in <tt class="docutils literal"><span class="pre">certfile</span></tt>. Server certificates.</p>
+</div>
+</div>
+</div>
+<span id="document-config_ref_client"></span><div class="section" id="fg-client-conf-configuration-file">
+<span id="sec-fg-client-conf"></span><h5><tt class="docutils literal"><span class="pre">fg-client.conf</span></tt> configuration file<a class="headerlink" href="#fg-client-conf-configuration-file" title="Permalink to this headline">¶</a></h5>
+<div class="section" id="section-rainmove">
+<span id="fg-client-move"></span><h6>Section <tt class="docutils literal"><span class="pre">[RainMove]</span></tt><a class="headerlink" href="#section-rainmove" title="Permalink to this headline">¶</a></h6>
+<p>This section is used to configure FG Move.</p>
+<div class="section" id="option-port">
+<h7>Option <tt class="docutils literal"><span class="pre">port</span></tt><a class="headerlink" href="#option-port" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> Integer</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Port where the FG Move server will be listening.</p>
+</div>
+<div class="section" id="option-serveraddr">
+<h7>Option <tt class="docutils literal"><span class="pre">serveraddr</span></tt><a class="headerlink" href="#option-serveraddr" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Address of the machine where the FG Move server is running.</p>
+</div>
+<div class="section" id="option-log">
+<h7>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#option-log" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> log-file</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the file where the logs will be stored.</p>
+</div>
+<div class="section" id="option-log-level">
+<h7>Option <tt class="docutils literal"><span class="pre">log_level</span></tt><a class="headerlink" href="#option-log-level" title="Permalink to this headline">¶</a></h7>
+<p><strong>Valid values:</strong> <tt class="docutils literal"><span class="pre">debug</span></tt>,``error``,``warning``,``info``</p>
+<p><strong>Required:</strong> No</p>
+<p>Desired log level. The default option is <tt class="docutils literal"><span class="pre">debug</span></tt>.</p>
+</div>
+<div class="section" id="option-ca-cert">
+<h7>Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt><a class="headerlink" href="#option-ca-cert" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> ca-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of CA certificate (PEM-encoded) used to generate user and service certificates.</p>
+</div>
+<div class="section" id="option-certfile">
+<h7>Option <tt class="docutils literal"><span class="pre">certfile</span></tt><a class="headerlink" href="#option-certfile" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> service-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the certificate (PEM-encoded) used by the FG Move client.</p>
+</div>
+<div class="section" id="option-keyfile">
+<h7>Option <tt class="docutils literal"><span class="pre">keyfile</span></tt><a class="headerlink" href="#option-keyfile" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> key-cert</p>
+<p><strong>Required:</strong> Yes</p>
+<p>Location of the private key (PEM-encoded) of the certificate specified in <tt class="docutils literal"><span class="pre">certfile</span></tt>.</p>
+<hr class="docutils" />
+</div>
+</div>
+</div>
+</div>
+</div>
+<span id="document-modules_india"></span><div class="section" id="configuring-a-module-for-futuregrid-software">
+<span id="modules-india"></span><h4>Configuring a Module for FutureGrid Software<a class="headerlink" href="#configuring-a-module-for-futuregrid-software" title="Permalink to this headline">¶</a></h4>
+<p>The software packages on the FutureGrid machines is manage using the <a class="reference external" href="http://modules.sourceforge.net/">Environment Modules</a>.
+The Environment Modules package provides for the dynamic modification of a user&#8217;s environment via modulefiles.</p>
+<p>In this section, we explain how to create a module for our software.</p>
+<ol class="arabic">
+<li><p class="first">Create a directory to place the software <tt class="docutils literal"><span class="pre">/N/soft/futuregrid-1.0/</span></tt>.</p>
+</li>
+<li><p class="first">Locate the directory where Modules is installed. In the case of India, this is installed in <tt class="docutils literal"><span class="pre">/opt/Modules/</span></tt>. From now on
+we will refer to this location as <tt class="docutils literal"><span class="pre">$MODULES_PATH</span></tt>.</p>
+</li>
+<li><p class="first">Create a directory in <tt class="docutils literal"><span class="pre">$MODULES_PATH/default/modulefiles/tools/futuregrid</span></tt></p>
+</li>
+<li><p class="first">In this directory we need to create a file with the version number. In this example the file is named 1.0. The content of this file
+is some information about the software location and the list of modules that need to be loaded as requirements.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="c">#%Module1.0#########################################################</span>
+
+<span class="nb">set </span>ver 1.0
+<span class="nb">set </span>path /N/soft/futuregrid-<span class="nv">$ver</span>
+
+proc ModulesHelp <span class="o">{</span> <span class="o">}</span> <span class="o">{</span>
+puts stderr <span class="s2">&quot;This module adds the FutureGrid toolkit to your environment&quot;</span>
+<span class="o">}</span>
+
+module-whatis <span class="s2">&quot;Configures your environment for the FutureGrid toolkit&quot;</span>
+
+prepend-path PATH <span class="nv">$path</span>
+prepend-path PATH <span class="nv">$path</span>/bin/
+
+<span class="k">if</span> <span class="o">[</span> module-info mode load <span class="o">]</span> <span class="o">{</span>
+puts stderr <span class="s2">&quot;futuregrid version $ver loaded&quot;</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">[</span> module-info mode switch2 <span class="o">]</span> <span class="o">{</span>
+puts stderr <span class="s2">&quot;futuregrid version $ver loaded&quot;</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">[</span> module-info mode remove <span class="o">]</span> <span class="o">{</span>
+puts stderr <span class="s2">&quot;futuregrid version $ver unloaded&quot;</span>
+<span class="o">}</span>
+
+module load euca2ools
+module load python_w-cmd2
+module load moab
+module load torque
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the python is not the one installed in the system, the binaries may be inside your python directory.</p>
+</div>
+<ol class="arabic simple">
+<li>In case the software binaries were copied into <tt class="docutils literal"><span class="pre">/usr/bin</span></tt> or <tt class="docutils literal"><span class="pre">/usr/local/bin</span></tt>. We need to move them to the directory
+<tt class="docutils literal"><span class="pre">/N/soft/futuregrid-1.0/bin/</span></tt></li>
+</ol>
+</div>
+<span id="document-build_doc"></span><div class="section" id="building-the-fg-move-documentation">
+<span id="build-doc"></span><h4>Building the FG Move Documentation<a class="headerlink" href="#building-the-fg-move-documentation" title="Permalink to this headline">¶</a></h4>
+<p>The documentation has been created using <a class="reference external" href="http://sphinx.pocoo.org/">Sphinx</a> and therefore you have to build it before you can see the final html files. The source
+files of the documentation can be found under the <tt class="docutils literal"><span class="pre">doc</span></tt> directory of our software package. Next, we define the needed steps to build the documentation.</p>
+<ol class="arabic">
+<li><p class="first">Install the documentation <a class="reference internal" href="index.html#source-tarball"><em>Using a source tarball</em></a> or <a class="reference internal" href="index.html#github-install"><em>Downloading the latest code from GitHub</em></a>.</p>
+</li>
+<li><p class="first">Change your current directory to the <tt class="docutils literal"><span class="pre">doc</span></tt> one.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd </span>doc
+</pre></div>
+</div>
+</li>
+<li><p class="first">Build the documentation using the Makefile.</p>
+<div class="highlight-bash"><div class="highlight"><pre>make website
+</pre></div>
+</div>
+</li>
+<li><p class="first">The documentation should be in the directory <tt class="docutils literal"><span class="pre">build/web-&lt;version&gt;/</span></tt>. This basically contains html files that can be copied to a regular http server.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="others">
+<h3>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<span id="document-changelog"></span><div class="section" id="changelog-and-release-notes">
+<span id="changelogs"></span><h4>Changelog and Release Notes<a class="headerlink" href="#changelog-and-release-notes" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id1">
+<h5>0.1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h5>
+<p>Summary of the main functionality provided for this version:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Security</dt>
+<dd><ul class="first last simple">
+<li>Authentication is performed using the FutureGrid LDAP server</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Move</dt>
+<dd><ul class="first last simple">
+<li>Manage Clusters, Nodes and Services via command line interface</li>
+<li>Move resources from/to HPC, Eucalytpus and OpenStack</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<span id="document-download"></span><span class="target" id="downloads"></span><div class="section" id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<p>The latest version of the FutureGrid Move is 0.1</p>
+<p>The recommended way of installing Move is using <tt class="docutils literal"><span class="pre">easy_install</span></tt>. You can find instructions on how to do this in the
+<a class="reference internal" href="index.html#chap-install-futuregrid"><em>Installation</em></a> chapter of the documentation.</p>
+<p>If you do need to download FG Move as an installable Python Egg or as a source
+tarball, both are available for download in the Python Package Index: <a class="reference external" href="http://pypi.python.org/pypi/futuregrid_move">http://pypi.python.org/pypi/futuregrid_move</a></p>
+<div class="section" id="sample-files">
+<h3>Sample files<a class="headerlink" href="#sample-files" title="Permalink to this headline">¶</a></h3>
+<p>The sample configuration files shown in the documentation are available for download as a
+<a class="reference external" href="futuregrid-docs-configsamples_0.1.tar.gz">tarball</a> or a <a class="reference external" href="futuregrid-docs-configsamples_0.1.zip">ZIP file</a>.</p>
+</div>
+<div class="section" id="development-version">
+<h3>Development version<a class="headerlink" href="#development-version" title="Permalink to this headline">¶</a></h3>
+<p>If you want to use the latest development version of FG Move, you can
+track our <a class="reference external" href="https://github.com/futuregrid/rain-move">GitHub repository</a>.</p>
+<p>The <a class="reference internal" href="index.html#chap-install-futuregrid"><em>Installation</em></a> chapter of the documentation provides
+instructions on how to check out our code from GitHub.</p>
+</div>
+</div>
+<span id="document-support"></span><div class="section" id="support">
+<span id="id1"></span><h2>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h2>
+<p>If you run into problems when using FutureGrid Move, please use our
+help form at <a class="reference external" href="https://portal.futuregrid.org/help">https://portal.futuregrid.org/help</a></p>
+</div>
+<div class="section" id="known-problems">
+<h2>Known problems<a class="headerlink" href="#known-problems" title="Permalink to this headline">¶</a></h2>
+<p>Depending of the configuration of your machines, you may have problems installing some python modules. In particular, we have notice problems
+with the ldap modules, which is required for the installation of our software.</p>
+<ul>
+<li><p class="first">Installing python-ldap</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>Ldap api
+sudo apt-get install python-ldap
+or
+sudo yum install python-ldap
+or
+sudo yum install python26-ldap  <span class="c">#(when the default python is the 2.4 version)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33833781-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="index.html#document-index">Home</a>|&nbsp;</li>
+        <li><a href="index.html#document-whatis">What is it?</a>|&nbsp;</li>
+        <li><a href="index.html#document-quickstart">Quickstart</a>|&nbsp;</li>
+        <li><a href="index.html#document-documentation">Documentation</a>|&nbsp;</li>
+        <li><a href="index.html#document-download">Download</a>|&nbsp;</li>
+        <li><a href="index.html#document-support">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Javier Diaz, Fugang Wang, Gregor von Laszewski.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

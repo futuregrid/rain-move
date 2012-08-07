@@ -1,0 +1,286 @@
+
+<!-- This layout has been taken from http://globus.org/provision/ -->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FG Move QuickStart &mdash; FutureGrid 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
+    <link rel="next" title="FG Move Documentation" href="documentation.html" />
+    <link rel="prev" title="What is FutureGrid Move?" href="whatis.html" /> 
+  </head>
+  <body>
+<style>
+.header {
+        background-image: url(_static/move_header_bg.png);
+        background-color: #122A75;
+        text-align: left;
+}
+body {
+        background-image: url(_static/move_body_bg.png);
+        background-color: #E5D5AF;
+}
+</style>
+<div class="header">
+<table>
+  <tr>
+    <td>
+      <a href="index.html"><img src="_static/logo_grid_y.png" border="0" alt="FutureGrid Move"/></a>
+    </td>
+    <td>
+      <font size="6" color="white"><b><i>FutureGrid</i></b></font><br><br>
+      <font size="10" color="white" face="Comic Sans MS"><b><i>Move: Cloud/HPC Resource Re-allocation</i></b></font><br>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="documentation.html" title="FG Move Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="whatis.html" title="What is FutureGrid Move?"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="#">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FG Move QuickStart</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#using-fg-move">Using FG Move</a><ul>
+<li><a class="reference internal" href="#operating-with-clusters">Operating with Clusters</a></li>
+<li><a class="reference internal" href="#operating-with-nodes">Operating with Nodes</a></li>
+<li><a class="reference internal" href="#operating-with-services">Operating with Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="whatis.html"
+                        title="previous chapter">What is FutureGrid Move?</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="documentation.html"
+                        title="next chapter">FG Move Documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/quickstart.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+<body></body>
+
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fg-move-quickstart">
+<span id="quickstart"></span><h1>FG Move QuickStart<a class="headerlink" href="#fg-move-quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>At this moment, our software only provides command line interfaces. Thus, users need access to the machine where the client part of the
+software is installed. Currently, this is installed and configured in the India cluster (<tt class="docutils literal"><span class="pre">india.futuregrid.org</span></tt>).</p>
+<p>Login on India and use the module functionality to load the environment variables:</p>
+<blockquote>
+<div><div class="highlight-python"><pre>$ ssh &lt;username&gt;@india.futuregrid.org
+$ module load futuregrid</pre>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">At this point, FG Move is only available for administrators.</p>
+</div>
+<p>The authentication is done via FutureGrid Ldap server. Thus, in each command we need to specify our FutureGrid username and we
+will be asked for our portal password</p>
+<blockquote>
+<div><div class="highlight-python"><pre>$ fg-move -u &lt;username&gt; ...</pre>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Users need to use their FutureGrid username and portal password.</p>
+</div>
+</div>
+<div class="section" id="using-fg-move">
+<h2>Using FG Move<a class="headerlink" href="#using-fg-move" title="Permalink to this headline">¶</a></h2>
+<p>The command line of this service is organized in three specialized subparsers.</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">node</span></tt>. A node is the representation of a physical machine. This subparses exposes the functionality to operate with them.</li>
+<li><tt class="docutils literal"><span class="pre">cluster</span></tt>. A cluster is a set of nodes identified by a name. This subparser exposes the functionality to operate with them.</li>
+<li><tt class="docutils literal"><span class="pre">service</span></tt>. A service is the representation of an infrastructure, which is composed by nodes. It exposes the functionality to operate with them (move, add, delete, list nodes)</li>
+</ul>
+<div class="section" id="operating-with-clusters">
+<h3>Operating with Clusters<a class="headerlink" href="#operating-with-clusters" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Create a cluster named Indiana</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --create Indiana</pre>
+</div>
+</li>
+<li><p class="first">List available clusters</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --list</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular cluster</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --list Indiana</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="operating-with-nodes">
+<h3>Operating with Nodes<a class="headerlink" href="#operating-with-nodes" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node. They are identified of the node, hostname, IP and the cluster.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz node --add i90.india i90 10.0.1.2 Indiana</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular node.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --info i90.india</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="operating-with-services">
+<h3>Operating with Services<a class="headerlink" href="#operating-with-services" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Create a service named IndianaOpenStack.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --create IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">List available services.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --list</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular service.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --list IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">List nodes that are not assigned to any service.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --listfreenodes</pre>
+</div>
+</li>
+<li><p class="first">Add nodes to the service. The nodes cannot be assigned to another service, that is they must be free.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --add i90.india i20.india IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">Remove a node from a service. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --remove i20.india IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --move i90.india IndianaOpenStack IndianaEucalyptus</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33833781-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="documentation.html" title="FG Move Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="whatis.html" title="What is FutureGrid Move?"
+             >previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="#">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Javier Diaz, Fugang Wang, Gregor von Laszewski.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

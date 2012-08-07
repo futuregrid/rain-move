@@ -1,0 +1,253 @@
+
+<!-- This layout has been taken from http://globus.org/provision/ -->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FG Move Documentation &mdash; FutureGrid 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
+    <link rel="next" title="Move (fg-move)" href="man-move.html" />
+    <link rel="prev" title="FG Move QuickStart" href="quickstart.html" /> 
+  </head>
+  <body>
+<style>
+.header {
+        background-image: url(_static/move_header_bg.png);
+        background-color: #122A75;
+        text-align: left;
+}
+body {
+        background-image: url(_static/move_body_bg.png);
+        background-color: #E5D5AF;
+}
+</style>
+<div class="header">
+<table>
+  <tr>
+    <td>
+      <a href="index.html"><img src="_static/logo_grid_y.png" border="0" alt="FutureGrid Move"/></a>
+    </td>
+    <td>
+      <font size="6" color="white"><b><i>FutureGrid</i></b></font><br><br>
+      <font size="10" color="white" face="Comic Sans MS"><b><i>Move: Cloud/HPC Resource Re-allocation</i></b></font><br>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="man-move.html" title="Move (fg-move)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="FG Move QuickStart"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="#">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FG Move Documentation</a><ul>
+<li><a class="reference internal" href="#user-documentation">User Documentation</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#administrator-documentation">Administrator Documentation</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#others">Others</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="previous chapter">FG Move QuickStart</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="man-move.html"
+                        title="next chapter">Move (fg-move)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/documentation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+<body></body>
+
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fg-move-documentation">
+<span id="documentation"></span><h1>FG Move Documentation<a class="headerlink" href="#fg-move-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The documentation is also available as:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li><a class="reference external" href="singlehtml/index.html">Single HTML</a></li>
+<li><a class="reference external" href="futuregrid-docs-pdf_0.1.pdf">PDF</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="user-documentation">
+<h2>User Documentation<a class="headerlink" href="#user-documentation" title="Permalink to this headline">¶</a></h2>
+<p>In this section you will find information on how to use the command line interfaces of our tools.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="man-move.html">Move (fg-move)</a></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These tools require users to authenticate using their FG usernames and FG portal passwords.</p>
+</div>
+</div>
+<div class="section" id="administrator-documentation">
+<h2>Administrator Documentation<a class="headerlink" href="#administrator-documentation" title="Permalink to this headline">¶</a></h2>
+<p>In this section you will find information on software deployment details.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing FutureGrid Move</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#using-easy-install">Using <tt class="docutils literal"><span class="pre">easy_install</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#using-a-source-tarball">Using a source tarball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#tracking-latest-code-from-github">Tracking latest code from GitHub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configure_futuregrid.html">Setting up the FutureGrid Software for FG Move</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configure_futuregrid.html#configuration-files">Configuration Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure_futuregrid.html#setting-up-ldap">Setting up LDAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure_futuregrid.html#setting-up-fg-move">Setting up FG Move</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure_futuregrid.html#setting-up-fg-move-site-controller">Setting up FG Move Site Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config_ref_index.html">Configuration file reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config_ref_server.html"><tt class="docutils literal"><span class="pre">fg-server.conf</span></tt> configuration file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_ref_client.html"><tt class="docutils literal"><span class="pre">fg-client.conf</span></tt> configuration file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules_india.html">Configuring a Module for FutureGrid Software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build_doc.html">Building the FG Move Documentation</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="others">
+<h2>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog and Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">0.1</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33833781-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="man-move.html" title="Move (fg-move)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="FG Move QuickStart"
+             >previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="#">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Javier Diaz, Fugang Wang, Gregor von Laszewski.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

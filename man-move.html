@@ -1,0 +1,395 @@
+
+<!-- This layout has been taken from http://globus.org/provision/ -->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Move (fg-move) &mdash; FutureGrid 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
+    <link rel="up" title="FG Move Documentation" href="documentation.html" />
+    <link rel="next" title="Installing FutureGrid Move" href="install.html" />
+    <link rel="prev" title="FG Move Documentation" href="documentation.html" /> 
+  </head>
+  <body>
+<style>
+.header {
+        background-image: url(_static/move_header_bg.png);
+        background-color: #122A75;
+        text-align: left;
+}
+body {
+        background-image: url(_static/move_body_bg.png);
+        background-color: #E5D5AF;
+}
+</style>
+<div class="header">
+<table>
+  <tr>
+    <td>
+      <a href="index.html"><img src="_static/logo_grid_y.png" border="0" alt="FutureGrid Move"/></a>
+    </td>
+    <td>
+      <font size="6" color="white"><b><i>FutureGrid</i></b></font><br><br>
+      <font size="10" color="white" face="Comic Sans MS"><b><i>Move: Cloud/HPC Resource Re-allocation</i></b></font><br>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Installing FutureGrid Move"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="documentation.html" title="FG Move Documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+
+          <li><a href="documentation.html" accesskey="U">FG Move Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Move (fg-move)</a><ul>
+<li><a class="reference internal" href="#general-usage">General Usage</a></li>
+<li><a class="reference internal" href="#node-subparser">Node subparser</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#cluster-subparser">Cluster subparser</a></li>
+<li><a class="reference internal" href="#id1">Examples</a></li>
+<li><a class="reference internal" href="#service-subparser">Service subparser</a></li>
+<li><a class="reference internal" href="#id2">Examples</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="documentation.html"
+                        title="previous chapter">FG Move Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Installing FutureGrid Move</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/man-move.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+<body></body>
+
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="move-fg-move">
+<span id="man-move"></span><h1>Move (fg-move)<a class="headerlink" href="#move-fg-move" title="Permalink to this headline">¶</a></h1>
+<p>FG Move is a service to re-allocate resources among infrastructures.</p>
+<div class="section" id="general-usage">
+<h2>General Usage<a class="headerlink" href="#general-usage" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>usage: fg-move [-h] -u user {node,cluster,service} ...
+
+
+positional arguments:
+          {node,cluster,service}  Positional arguments group different options
+                                  that can be displayed by specifying &lt;positional_argument&gt; -h</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Option</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-h/--help</span></tt></td>
+<td>Shows help information and exit.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-u/--user</span> <span class="pre">&lt;userName&gt;</span></tt></td>
+<td>FutureGrid HPC user name, that is, the one used to login into the FG resources.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="node-subparser">
+<h2>Node subparser<a class="headerlink" href="#node-subparser" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>usage: fg-move node [-h] (-a nodeId hostname ip cluster | -r nodeId cluster | -i nodeId ) [-f]
+
+Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Option</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-h/--help</span></tt></td>
+<td>Shows help information and exit.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-a</span> <span class="pre">&lt;nodeId&gt;</span> <span class="pre">&lt;hostname&gt;</span> <span class="pre">&lt;ip&gt;</span> <span class="pre">&lt;clusterId&gt;,</span> <span class="pre">--add</span> <span class="pre">&lt;nodeId&gt;</span> <span class="pre">&lt;hostname&gt;</span> <span class="pre">&lt;ip&gt;</span> <span class="pre">&lt;clusterId&gt;</span></tt></td>
+<td>Add new node to a cluster.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">&lt;nodeId&gt;</span> <span class="pre">&lt;clusterId&gt;,</span> <span class="pre">--remove</span> <span class="pre">&lt;nodeId&gt;</span> <span class="pre">&lt;clusterId&gt;</span></tt></td>
+<td>Remove node. It is also removed from cluster and service. (not supported yet)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-i</span> <span class="pre">&lt;nodeId&gt;,</span> <span class="pre">--info</span> <span class="pre">&lt;nodeId&gt;</span></tt></td>
+<td>Information of a node.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-f,</span> <span class="pre">--force</span></tt></td>
+<td>Force operation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node. They are identified of the node, hostname, IP and the cluster.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz node --add i90.india i90 10.0.1.2 Indiana</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular node.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --info i90.india</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="cluster-subparser">
+<h2>Cluster subparser<a class="headerlink" href="#cluster-subparser" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>usage: fg-move cluster [-h] (-c clusterId | -r clusterId | -l [clusterId]) [-f]
+
+
+Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Option</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-h/--help</span></tt></td>
+<td>Shows help information and exit.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-c</span> <span class="pre">&lt;clusterId&gt;,</span> <span class="pre">--create</span> <span class="pre">&lt;clusterId&gt;</span></tt></td>
+<td>Create a new cluster.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">&lt;clusterId&gt;,</span> <span class="pre">--remove</span> <span class="pre">&lt;clusterId&gt;</span></tt></td>
+<td>Remove cluster (not supported yet)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-l</span> <span class="pre">[clusterId],</span> <span class="pre">--list</span> <span class="pre">[clusterId]</span></tt></td>
+<td>List available clusters or the information about a particular one if a clusterId is provided.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-f,</span> <span class="pre">--force</span></tt></td>
+<td>Force operation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id1">
+<h2>Examples<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Create a cluster named Indiana</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --create Indiana</pre>
+</div>
+</li>
+<li><p class="first">List available clusters</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --list</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular cluster</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz cluster --list Indiana</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="service-subparser">
+<h2>Service subparser<a class="headerlink" href="#service-subparser" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>usage: fg-move service [-h] (-c serviceId type | -a nodeId/s... [nodeId/s...] serviceId | -r nodeId/s... [nodeId/s...] serviceId
+                           | -m nodeId/s... [nodeId/s...] serviceIdorigin serviceIddestination | -l [serviceId] | -s [clusterId])
+                       [-f]
+
+
+Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="44%" />
+<col width="56%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>Option</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-h/--help</span></tt></td>
+<td>Shows help information and exit.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-c/--create</span> <span class="pre">&lt;serviceId&gt;</span></tt></td>
+<td>Create a new service.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-a/--add</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceId&gt;</span></tt></td>
+<td>Add a node or list of nodes to a service.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-r/--remove</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceId&gt;</span></tt></td>
+<td>Remove a node or list of nodes from a service.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-m/--move</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceIdorigin&gt;</span> <span class="pre">&lt;serviceIddestination&gt;</span></tt></td>
+<td>Move a node or list of nodes from a service to another.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-l/--list</span> <span class="pre">[serviceId]</span></tt></td>
+<td>List available services or the information about a particular one if a clusterId is provided.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-s/--listfreenodes</span> <span class="pre">[clusterId]</span></tt></td>
+<td>List of nodes that are not assigned to any service. The list can be restricted to a particular cluster</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-f/--force</span></tt></td>
+<td>Force operation.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id2">
+<h2>Examples<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Create a service named IndianaOpenStack.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --create IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">List available services.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --list</pre>
+</div>
+</li>
+<li><p class="first">List information of a particular service.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --list IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">List nodes that are not assigned to any service.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --listfreenodes</pre>
+</div>
+</li>
+<li><p class="first">Add nodes to the service. The nodes cannot be assigned to another service, that is they must be free.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --add i90.india i20.india IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">Remove a node from a service. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --remove i20.india IndianaOpenStack</pre>
+</div>
+</li>
+<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<div class="highlight-python"><pre>fg-move -u jdiaz service --move i90.india IndianaOpenStack IndianaEucalyptus</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33833781-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Installing FutureGrid Move"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="documentation.html" title="FG Move Documentation"
+             >previous</a> |</li>
+        <li><a href="index.html">Home</a>|&nbsp;</li>
+        <li><a href="whatis.html">What is it?</a>|&nbsp;</li>
+        <li><a href="quickstart.html">Quickstart</a>|&nbsp;</li>
+        <li><a href="documentation.html">Documentation</a>|&nbsp;</li>
+        <li><a href="download.html">Download</a>|&nbsp;</li>
+        <li><a href="support.html">Support</a>|&nbsp;</li>
+        <li><a href="http://futuregrid.github.com/doc/">Dev</a>|&nbsp;</li>
+        <li><a href="https://portal.futuregrid.org/">Portal</a>|&nbsp;</li>
+
+          <li><a href="documentation.html" >FG Move Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Javier Diaz, Fugang Wang, Gregor von Laszewski.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
