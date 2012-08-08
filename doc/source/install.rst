@@ -72,7 +72,17 @@ under your regular user account::
 
       easy_install -U futuregrid_move  --user -s ~/bin/
    
-   
+
+Using ``pip``
+=============
+
+``pip`` is an alternative to ``easy_install``. More information can be found in `pip documentation <http://www.pip-installer.org/en/latest/index.html#>`_.
+
+   ::
+     
+     pip install futuregrid_move
+
+ 
 .. _source_tarball:
 
 Using a source tarball
