@@ -132,15 +132,35 @@ body {
 <div class="section" id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 <p>FutureGrid Move is a service that enables physical resources re-allocation among infrastructures. By using a simple command line interface,
-this service is able to de-register a machine from a particular infrastructure and register it in a new one. Internally, this service
+this service is able to de-register a machine from a particular infrastructure and register it in another one. Internally, this service
 makes use of <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> to dynamically provision the selected machine with the OS and software
 needed for a successful registration in the new infrastructure. FG Move also maintains a database with information about the machines
-composing each one of the different infrastructures, which can be queried to consult the current status or detailed information about
-a particular infrastructure.</p>
-<p>This service will create an scheduler to integrate the <a class="reference external" href="https://portal.futuregrid.org/metrics/html/index.html">FutureGrid Metrics</a>. In this
+composing each one of the different infrastructures. The database can be consulted to obtain detailed information
+about a particular infrastructure.</p>
+<p>An scheduler will be created to integrate FG Move with our metric <a class="reference external" href="https://portal.futuregrid.org/metrics/html/index.html">FutureGrid Metrics</a>. In this
 way, it will allow us to make reservations or analyze the historical usage to automatically move resources according to user demand.</p>
 <p>The following picture represents the architecture of FG Move.</p>
 <img alt="_images/fg-move_all.png" class="align-center" src="_images/fg-move_all.png" style="width: 600px; height: 350px;" />
+<p>The workflow that &#8220;moves&#8221; a machine from one infrastructure to another is the following:</p>
+<ul>
+<li><p class="first">The client requests to move a resource.</p>
+</li>
+<li><dl class="first docutils">
+<dt>FG Move Server contacts with the FG Move Controller of the original infrastructure to de-register the machine.</dt>
+<dd><ul class="first last simple">
+<li>If the machine is idle, it is de-registered.</li>
+<li>If the machine is not idle, it waits for the machine to became idle (for a certain amount of time) or it terminates all its tasks/VMs.
+Then, the machine is de-registered.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">FG Move Server calls Teefaa to provision the machine with the appropriated OS. Teefaa will repartition the disk of the machine and place the
+required OS.</p>
+</li>
+<li><p class="first">FG Move Server contacts with the FG Move Controller of the destination infrastructure to register the machine.</p>
+</li>
+</ul>
 <p>Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on <a class="reference external" href="http://open.eucalyptus.com/">Eucalyptus</a>
 and <a class="reference external" href="http://www.openstack.org">OpenStack</a> frameworks. Additionally, we are working to provide support to other cloud infrastructures based
 on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> and <a class="reference external" href="http://www.opennebula.org">OpenNebula</a> frameworks.</p>
@@ -148,10 +168,10 @@ on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> 
 <div class="section" id="use-cases">
 <h2>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Re-assign machines based on user demands. This can be initiated manually, by creating a reservation or by predicting future needs (learning
-for historical information).</li>
+<li>Re-allocate machines based on user demands. This can be initiated by creating a reservation, by predicting future needs (learning
+for historical information), or manually.</li>
 <li>Conduct tests on the same machines with different frameworks.</li>
-<li>Re-use images created for experiments</li>
+<li>Re-use images created for experiments.</li>
 </ul>
 </div>
 </div>

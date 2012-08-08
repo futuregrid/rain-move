@@ -83,8 +83,7 @@ First, we are going to configure the main server. We need to configure the ``[Ra
 
 .. _move_sites_sections:
 
-Next we need to create sections for each one of the FG Move controllers. This sections are read on execution time, so we can 
-modify them any time without restarting the FG Move server (see :ref:`Move Remote Site Controllers<fg-server_move_remote_sites_example>`.
+Next we need to create sections for each one of the FG Move controllers (see :ref:`Move Remote Site Controllers<fg-server_move_remote_sites_example>`).
 
 
    .. highlight:: bash
@@ -109,7 +108,7 @@ modify them any time without restarting the FG Move server (see :ref:`Move Remot
 
 .. note::
 
-   Make sure that ``port`` and ``address`` matches with those used by the Move controllers :ref:`Move Site Server <move_sites_server>`.
+   Make sure that ``port`` and ``address`` matches with those used by the Move controllers (see :ref:`Move Site Server <move_sites_server>`).
 
 We also have to create an inventory file that will describe the nodes, clusters and services. This file will be read by the RainMoveServer
 during its initialization. The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the 
@@ -149,15 +148,13 @@ label **CLUSTER:** followed by the name of the cluster.
 
 
 
-This server requires to have `Teefaa <http://futuregrid.github.com/teefaa/>`_ installed in the same machine (see 
+This server requires to have `Teefaa <http://futuregrid.github.com/teefaa/>`_ installed in the same 
+machine (see `Teefaa Documentation <http://futuregrid.github.com/teefaa/documentation.html>`_).
 
-.. warning:: link?? how to install and configure Teefaa)
-
-
-Once everything is set up (including Teefaa), you can start the server by execution ``RainMoveServer.py -l <inventoryfile>`` as ``imageman`` user.
+Once everything is set up (including Teefaa), you can start the server executing ``RainMoveServer.py -l <inventoryfile>`` as ``imageman`` user.
 
 .. note::
-   We recommend to have a system user that run all the servers. In this way it will be easier to manage the sudoers file when necessary. 
+   We recommend to have a system user that run all the servers (i.e. imageman). In this way, it will be easier to manage the sudoers file when necessary. 
 
 .. _move_client_conf:
 
@@ -184,7 +181,7 @@ about this section of the client configuration file can be found in :ref:`Move s
       keyfile=/etc/futuregrid/imdserver/privkey.pem
      
 Once you have everything set up, any user that is in the ``authorizedusers`` field of the section ``[RainMoveServer]`` will be able to
-use this service. Of course, the user has to authenticate against LDAP too. 
+use this service (see :ref:`Rain Move Server <move_config>`). Of course, the user has to authenticate against LDAP too. 
 
 The executable file of this client is ``fg-move``. More information about how to use FG Move can be found in the :ref:`FG Move Manual <man-move>`.
 
@@ -241,7 +238,7 @@ In the Server side we need to configure the ``[RainMoveSiteServer]`` Section (se
    Make sure that the ``port`` specified here matches with the one specified in the sections defined when configuring the main :ref:`FG Move server <move_sites_sections>`. 
 
 Next, we need to do specific configurations depending on the infrastructure we are targeting. Typically, you only need to do one of the following
-subsections per  
+subsections per management machine.
 
 * **HPC infrastructure**
 

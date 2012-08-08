@@ -109,11 +109,11 @@ body {
   <div class="section" id="welcome-to-futurgrid-move">
 <h1>Welcome to FuturGrid Move<a class="headerlink" href="#welcome-to-futurgrid-move" title="Permalink to this headline">¶</a></h1>
 <p>FutureGrid Move is a service that enables physical resources re-allocation among infrastructures. By using a simple command line interface,
-this service is able to de-register a machine from a particular infrastructure and register it in a new one. Internally, this service
+this service is able to de-register a machine from a particular infrastructure and register it in another one. Internally, this service
 makes use of <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> to dynamically provision the selected machine with the OS and software
 needed for a successful registration in the new infrastructure. FG Move also maintains a database with information about the machines
-composing each one of the different infrastructures, which can be queried to consult the current status or detailed information about
-a particular infrastructure.</p>
+composing each one of the different infrastructures. The database can be consulted to obtain detailed information
+about a particular infrastructure.</p>
 <p>Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on <a class="reference external" href="http://open.eucalyptus.com/">Eucalyptus</a>
 and <a class="reference external" href="http://www.openstack.org">OpenStack</a> frameworks. Additionally, we are working to provide support to other cloud infrastructures based
 on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> and <a class="reference external" href="http://www.opennebula.org">OpenNebula</a> frameworks.</p>
@@ -123,15 +123,35 @@ on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> 
 <div class="section" id="summary">
 <h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
 <p>FutureGrid Move is a service that enables physical resources re-allocation among infrastructures. By using a simple command line interface,
-this service is able to de-register a machine from a particular infrastructure and register it in a new one. Internally, this service
+this service is able to de-register a machine from a particular infrastructure and register it in another one. Internally, this service
 makes use of <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> to dynamically provision the selected machine with the OS and software
 needed for a successful registration in the new infrastructure. FG Move also maintains a database with information about the machines
-composing each one of the different infrastructures, which can be queried to consult the current status or detailed information about
-a particular infrastructure.</p>
-<p>This service will create an scheduler to integrate the <a class="reference external" href="https://portal.futuregrid.org/metrics/html/index.html">FutureGrid Metrics</a>. In this
+composing each one of the different infrastructures. The database can be consulted to obtain detailed information
+about a particular infrastructure.</p>
+<p>An scheduler will be created to integrate FG Move with our metric <a class="reference external" href="https://portal.futuregrid.org/metrics/html/index.html">FutureGrid Metrics</a>. In this
 way, it will allow us to make reservations or analyze the historical usage to automatically move resources according to user demand.</p>
 <p>The following picture represents the architecture of FG Move.</p>
 <img alt="_images/fg-move_all.png" class="align-center" src="_images/fg-move_all.png" style="width: 600px; height: 350px;" />
+<p>The workflow that &#8220;moves&#8221; a machine from one infrastructure to another is the following:</p>
+<ul>
+<li><p class="first">The client requests to move a resource.</p>
+</li>
+<li><dl class="first docutils">
+<dt>FG Move Server contacts with the FG Move Controller of the original infrastructure to de-register the machine.</dt>
+<dd><ul class="first last simple">
+<li>If the machine is idle, it is de-registered.</li>
+<li>If the machine is not idle, it waits for the machine to became idle (for a certain amount of time) or it terminates all its tasks/VMs.
+Then, the machine is de-registered.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">FG Move Server calls Teefaa to provision the machine with the appropriated OS. Teefaa will repartition the disk of the machine and place the
+required OS.</p>
+</li>
+<li><p class="first">FG Move Server contacts with the FG Move Controller of the destination infrastructure to register the machine.</p>
+</li>
+</ul>
 <p>Currently, we support HPC infrastructures (Torque-based) and cloud infrastructures based on <a class="reference external" href="http://open.eucalyptus.com/">Eucalyptus</a>
 and <a class="reference external" href="http://www.openstack.org">OpenStack</a> frameworks. Additionally, we are working to provide support to other cloud infrastructures based
 on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> and <a class="reference external" href="http://www.opennebula.org">OpenNebula</a> frameworks.</p>
@@ -139,10 +159,10 @@ on <a class="reference external" href="http://www.nimbusproject.org">Nimbus</a> 
 <div class="section" id="use-cases">
 <h3>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Re-assign machines based on user demands. This can be initiated manually, by creating a reservation or by predicting future needs (learning
-for historical information).</li>
+<li>Re-allocate machines based on user demands. This can be initiated by creating a reservation, by predicting future needs (learning
+for historical information), or manually.</li>
 <li>Conduct tests on the same machines with different frameworks.</li>
-<li>Re-use images created for experiments</li>
+<li>Re-use images created for experiments.</li>
 </ul>
 </div>
 </div>
@@ -150,8 +170,8 @@ for historical information).</li>
 <span id="quickstart"></span><h2>FG Move QuickStart<a class="headerlink" href="#fg-move-quickstart" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="requirements">
 <h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h3>
-<p>At this moment, our software only provides command line interfaces. Thus, users need access to the machine where the client part of the
-software is installed. Currently, this is installed and configured in the India cluster (<tt class="docutils literal"><span class="pre">india.futuregrid.org</span></tt>).</p>
+<p>At this moment, our software only provides a command line interface. Thus, users need access to the machine where the FG Move client
+is installed. Currently, this is installed and configured in the FutureGrid India cluster (<tt class="docutils literal"><span class="pre">india.futuregrid.org</span></tt>).</p>
 <p>Login on India and use the module functionality to load the environment variables:</p>
 <blockquote>
 <div><div class="highlight-python"><pre>$ ssh &lt;username&gt;@india.futuregrid.org
@@ -160,10 +180,11 @@ $ module load futuregrid</pre>
 </div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">At this point, FG Move is only available for administrators.</p>
+<p class="last">FG Move is only available for administrators.</p>
 </div>
 <p>The authentication is done via FutureGrid Ldap server. Thus, in each command we need to specify our FutureGrid username and we
-will be asked for our portal password</p>
+will be asked for our portal password. After the user is successfully authenticated against the Ldap server, it is verified if that user
+is authorized to use the FG Move service.</p>
 <blockquote>
 <div><div class="highlight-python"><pre>$ fg-move -u &lt;username&gt; ...</pre>
 </div>
@@ -177,9 +198,11 @@ will be asked for our portal password</p>
 <h3>Using FG Move<a class="headerlink" href="#using-fg-move" title="Permalink to this headline">¶</a></h3>
 <p>The command line of this service is organized in three specialized subparsers.</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">node</span></tt>. A node is the representation of a physical machine. This subparses exposes the functionality to operate with them.</li>
-<li><tt class="docutils literal"><span class="pre">cluster</span></tt>. A cluster is a set of nodes identified by a name. This subparser exposes the functionality to operate with them.</li>
-<li><tt class="docutils literal"><span class="pre">service</span></tt>. A service is the representation of an infrastructure, which is composed by nodes. It exposes the functionality to operate with them (move, add, delete, list nodes)</li>
+<li><strong>node</strong>. A node is the representation of a physical machine. This subparses exposes the functionality to operate with them.</li>
+<li><strong>cluster</strong>. A cluster is a set of nodes identified by a name (representation of a physical cluster). This subparser exposes the
+functionality to operate with them.</li>
+<li><strong>service</strong>. A service is the representation of an infrastructure, which is composed by nodes. It exposes the functionality to move
+physical machines from one infrastructure to another.</li>
 </ul>
 <div class="section" id="operating-with-clusters">
 <h4>Operating with Clusters<a class="headerlink" href="#operating-with-clusters" title="Permalink to this headline">¶</a></h4>
@@ -201,7 +224,8 @@ will be asked for our portal password</p>
 <div class="section" id="operating-with-nodes">
 <h4>Operating with Nodes<a class="headerlink" href="#operating-with-nodes" title="Permalink to this headline">¶</a></h4>
 <ul>
-<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node. They are identified of the node, hostname, IP and the cluster.</p>
+<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node, which are a node ID, hostname,
+IP and cluster ID.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz node --add i90.india i90 10.0.1.2 Indiana</pre>
 </div>
 </li>
@@ -226,19 +250,19 @@ will be asked for our portal password</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --list IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">List nodes that are not assigned to any service.</p>
+<li><p class="first">List nodes that are not allocated into any service.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --listfreenodes</pre>
 </div>
 </li>
-<li><p class="first">Add nodes to the service. The nodes cannot be assigned to another service, that is they must be free.</p>
+<li><p class="first">Add nodes to the service IndianaOpenStack. The nodes must be free, that is they cannot be allocated to another service.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --add i90.india i20.india IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">Remove a node from a service. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<li><p class="first">Remove a node from a service. The node must be idle to perform this operation or you have to force the opration by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --remove i20.india IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation or you have to force the opration by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --move i90.india IndianaOpenStack IndianaEucalyptus</pre>
 </div>
 </li>
@@ -284,7 +308,7 @@ positional arguments:
 </div>
 <div class="section" id="node-subparser">
 <h5>Node subparser<a class="headerlink" href="#node-subparser" title="Permalink to this headline">¶</a></h5>
-<div class="highlight-python"><pre>usage: fg-move node [-h] (-a nodeId hostname ip cluster | -r nodeId cluster | -i nodeId ) [-f]
+<div class="highlight-python"><pre>usage: fg-move -u user node [-h] (-a nodeId hostname ip cluster | -r nodeId cluster | -i nodeId ) [-f]
 
 Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
 </div>
@@ -318,7 +342,8 @@ Options between brackets are not required. Parenthesis means that you need to sp
 <div class="section" id="examples">
 <h5>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h5>
 <ul>
-<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node. They are identified of the node, hostname, IP and the cluster.</p>
+<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node, which are a node ID, hostname,
+IP and cluster ID.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz node --add i90.india i90 10.0.1.2 Indiana</pre>
 </div>
 </li>
@@ -330,7 +355,7 @@ Options between brackets are not required. Parenthesis means that you need to sp
 </div>
 <div class="section" id="cluster-subparser">
 <h5>Cluster subparser<a class="headerlink" href="#cluster-subparser" title="Permalink to this headline">¶</a></h5>
-<div class="highlight-python"><pre>usage: fg-move cluster [-h] (-c clusterId | -r clusterId | -l [clusterId]) [-f]
+<div class="highlight-python"><pre>usage: fg-move -u user cluster [-h] (-c clusterId | -r clusterId | -l [clusterId]) [-f]
 
 
 Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
@@ -381,7 +406,7 @@ Options between brackets are not required. Parenthesis means that you need to sp
 </div>
 <div class="section" id="service-subparser">
 <h5>Service subparser<a class="headerlink" href="#service-subparser" title="Permalink to this headline">¶</a></h5>
-<div class="highlight-python"><pre>usage: fg-move service [-h] (-c serviceId type | -a nodeId/s... [nodeId/s...] serviceId | -r nodeId/s... [nodeId/s...] serviceId
+<div class="highlight-python"><pre>usage: fg-move -u user service [-h] (-c serviceId type | -a nodeId/s... [nodeId/s...] serviceId | -r nodeId/s... [nodeId/s...] serviceId
                            | -m nodeId/s... [nodeId/s...] serviceIdorigin serviceIddestination | -l [serviceId] | -s [clusterId])
                        [-f]
 
@@ -439,19 +464,19 @@ Options between brackets are not required. Parenthesis means that you need to sp
 <div class="highlight-python"><pre>fg-move -u jdiaz service --list IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">List nodes that are not assigned to any service.</p>
+<li><p class="first">List nodes that are not allocated into any service.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --listfreenodes</pre>
 </div>
 </li>
-<li><p class="first">Add nodes to the service. The nodes cannot be assigned to another service, that is they must be free.</p>
+<li><p class="first">Add nodes to the service IndianaOpenStack. The nodes must be free, that is they cannot be allocated to another service.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --add i90.india i20.india IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">Remove a node from a service. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<li><p class="first">Remove a node from a service. The node must be idle to perform this operation or you have to force the opration by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --remove i20.india IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation or you have to force the opration by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --move i90.india IndianaOpenStack IndianaEucalyptus</pre>
 </div>
 </li>
@@ -531,6 +556,15 @@ automatically include that directory in your PATH.</p>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="using-pip">
+<h5>Using <tt class="docutils literal"><span class="pre">pip</span></tt><a class="headerlink" href="#using-pip" title="Permalink to this headline">¶</a></h5>
+<p><tt class="docutils literal"><span class="pre">pip</span></tt> is an alternative to <tt class="docutils literal"><span class="pre">easy_install</span></tt>. More information can be found in <a class="reference external" href="http://www.pip-installer.org/en/latest/index.html#">pip documentation</a>.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>pip install futuregrid_move
+</pre></div>
+</div>
+</div></blockquote>
 </div>
 <div class="section" id="using-a-source-tarball">
 <span id="source-tarball"></span><h5>Using a source tarball<a class="headerlink" href="#using-a-source-tarball" title="Permalink to this headline">¶</a></h5>
@@ -660,8 +694,7 @@ from the infrastructure.</p>
 </pre></div>
 </div>
 </div></blockquote>
-<p id="move-sites-sections">Next we need to create sections for each one of the FG Move controllers. This sections are read on execution time, so we can
-modify them any time without restarting the FG Move server (see <a class="reference internal" href="index.html#fg-server-move-remote-sites-example"><em>Move Remote Site Controllers</em></a>.</p>
+<p id="move-sites-sections">Next we need to create sections for each one of the FG Move controllers (see <a class="reference internal" href="index.html#fg-server-move-remote-sites-example"><em>Move Remote Site Controllers</em></a>).</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>Move-eucalyptus-indiaeuca<span class="o">]</span>
 <span class="nv">address</span><span class="o">=</span>129.79.49.12
@@ -683,7 +716,7 @@ modify them any time without restarting the FG Move server (see <a class="refere
 </div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Make sure that <tt class="docutils literal"><span class="pre">port</span></tt> and <tt class="docutils literal"><span class="pre">address</span></tt> matches with those used by the Move controllers <a class="reference internal" href="index.html#move-sites-server"><em>Move Site Server</em></a>.</p>
+<p class="last">Make sure that <tt class="docutils literal"><span class="pre">port</span></tt> and <tt class="docutils literal"><span class="pre">address</span></tt> matches with those used by the Move controllers (see <a class="reference internal" href="index.html#move-sites-server"><em>Move Site Server</em></a>).</p>
 </div>
 <p>We also have to create an inventory file that will describe the nodes, clusters and services. This file will be read by the RainMoveServer
 during its initialization. The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the
@@ -720,15 +753,12 @@ i02.india
 </div>
 </div></blockquote>
 </div></blockquote>
-<p>This server requires to have <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> installed in the same machine (see</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">link?? how to install and configure Teefaa)</p>
-</div>
-<p>Once everything is set up (including Teefaa), you can start the server by execution <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
+<p>This server requires to have <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> installed in the same
+machine (see <a class="reference external" href="http://futuregrid.github.com/teefaa/documentation.html">Teefaa Documentation</a>).</p>
+<p>Once everything is set up (including Teefaa), you can start the server executing <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">We recommend to have a system user that run all the servers. In this way it will be easier to manage the sudoers file when necessary.</p>
+<p class="last">We recommend to have a system user that run all the servers (i.e. imageman). In this way, it will be easier to manage the sudoers file when necessary.</p>
 </div>
 </div>
 <div class="section" id="client-side">
@@ -751,7 +781,7 @@ about this section of the client configuration file can be found in <a class="re
 </div>
 </div></blockquote>
 <p>Once you have everything set up, any user that is in the <tt class="docutils literal"><span class="pre">authorizedusers</span></tt> field of the section <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt> will be able to
-use this service. Of course, the user has to authenticate against LDAP too.</p>
+use this service (see <a class="reference internal" href="index.html#move-config"><em>Rain Move Server</em></a>). Of course, the user has to authenticate against LDAP too.</p>
 <p>The executable file of this client is <tt class="docutils literal"><span class="pre">fg-move</span></tt>. More information about how to use FG Move can be found in the <a class="reference internal" href="index.html#man-move"><em>FG Move Manual</em></a>.</p>
 </div>
 <div class="section" id="fg-move-check-list">
@@ -831,7 +861,7 @@ every supported infrastructure, we only need to tune it up properly.</p>
 <p class="last">Make sure that the <tt class="docutils literal"><span class="pre">port</span></tt> specified here matches with the one specified in the sections defined when configuring the main <a class="reference internal" href="index.html#move-sites-sections"><em>FG Move server</em></a>.</p>
 </div>
 <p>Next, we need to do specific configurations depending on the infrastructure we are targeting. Typically, you only need to do one of the following
-subsections per</p>
+subsections per management machine.</p>
 <ul class="simple">
 <li><strong>HPC infrastructure</strong></li>
 </ul>

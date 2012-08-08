@@ -166,7 +166,7 @@ positional arguments:
 </div>
 <div class="section" id="node-subparser">
 <h2>Node subparser<a class="headerlink" href="#node-subparser" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><pre>usage: fg-move node [-h] (-a nodeId hostname ip cluster | -r nodeId cluster | -i nodeId ) [-f]
+<div class="highlight-python"><pre>usage: fg-move -u user node [-h] (-a nodeId hostname ip cluster | -r nodeId cluster | -i nodeId ) [-f]
 
 Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
 </div>
@@ -200,7 +200,8 @@ Options between brackets are not required. Parenthesis means that you need to sp
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node. They are identified of the node, hostname, IP and the cluster.</p>
+<li><p class="first">Add a node to a particular cluster. We need to indicate the properties of the node, which are a node ID, hostname,
+IP and cluster ID.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz node --add i90.india i90 10.0.1.2 Indiana</pre>
 </div>
 </li>
@@ -212,7 +213,7 @@ Options between brackets are not required. Parenthesis means that you need to sp
 </div>
 <div class="section" id="cluster-subparser">
 <h2>Cluster subparser<a class="headerlink" href="#cluster-subparser" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><pre>usage: fg-move cluster [-h] (-c clusterId | -r clusterId | -l [clusterId]) [-f]
+<div class="highlight-python"><pre>usage: fg-move -u user cluster [-h] (-c clusterId | -r clusterId | -l [clusterId]) [-f]
 
 
 Options between brackets are not required. Parenthesis means that you need to specify one of the options.</pre>
@@ -263,7 +264,7 @@ Options between brackets are not required. Parenthesis means that you need to sp
 </div>
 <div class="section" id="service-subparser">
 <h2>Service subparser<a class="headerlink" href="#service-subparser" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><pre>usage: fg-move service [-h] (-c serviceId type | -a nodeId/s... [nodeId/s...] serviceId | -r nodeId/s... [nodeId/s...] serviceId
+<div class="highlight-python"><pre>usage: fg-move -u user service [-h] (-c serviceId type | -a nodeId/s... [nodeId/s...] serviceId | -r nodeId/s... [nodeId/s...] serviceId
                            | -m nodeId/s... [nodeId/s...] serviceIdorigin serviceIddestination | -l [serviceId] | -s [clusterId])
                        [-f]
 
@@ -321,19 +322,19 @@ Options between brackets are not required. Parenthesis means that you need to sp
 <div class="highlight-python"><pre>fg-move -u jdiaz service --list IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">List nodes that are not assigned to any service.</p>
+<li><p class="first">List nodes that are not allocated into any service.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --listfreenodes</pre>
 </div>
 </li>
-<li><p class="first">Add nodes to the service. The nodes cannot be assigned to another service, that is they must be free.</p>
+<li><p class="first">Add nodes to the service IndianaOpenStack. The nodes must be free, that is they cannot be allocated to another service.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --add i90.india i20.india IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">Remove a node from a service. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<li><p class="first">Remove a node from a service. The node must be idle to perform this operation or you have to force the opration by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --remove i20.india IndianaOpenStack</pre>
 </div>
 </li>
-<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation. You can force by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
+<li><p class="first">Move a node from a service to another. The node must be idle to perform this operation or you have to force the opration by adding <tt class="docutils literal"><span class="pre">--force</span></tt>.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --move i90.india IndianaOpenStack IndianaEucalyptus</pre>
 </div>
 </li>

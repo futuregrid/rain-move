@@ -31,7 +31,7 @@ Node subparser
 
 ::
 
-   usage: fg-move node [-h] (-a nodeId hostname ip cluster | -r nodeId cluster | -i nodeId ) [-f]
+   usage: fg-move -u user node [-h] (-a nodeId hostname ip cluster | -r nodeId cluster | -i nodeId ) [-f]
    
    Options between brackets are not required. Parenthesis means that you need to specify one of the options.   
 
@@ -53,7 +53,8 @@ Node subparser
 Examples
 --------
 
-* Add a node to a particular cluster. We need to indicate the properties of the node. They are identified of the node, hostname, IP and the cluster.
+* Add a node to a particular cluster. We need to indicate the properties of the node, which are a node ID, hostname, 
+  IP and cluster ID.
 
   ::
 
@@ -71,7 +72,7 @@ Cluster subparser
 
 ::
 
-   usage: fg-move cluster [-h] (-c clusterId | -r clusterId | -l [clusterId]) [-f]
+   usage: fg-move -u user cluster [-h] (-c clusterId | -r clusterId | -l [clusterId]) [-f]
 
    
    Options between brackets are not required. Parenthesis means that you need to specify one of the options.   
@@ -118,7 +119,7 @@ Service subparser
 
 ::
 
-   usage: fg-move service [-h] (-c serviceId type | -a nodeId/s... [nodeId/s...] serviceId | -r nodeId/s... [nodeId/s...] serviceId 
+   usage: fg-move -u user service [-h] (-c serviceId type | -a nodeId/s... [nodeId/s...] serviceId | -r nodeId/s... [nodeId/s...] serviceId 
                               | -m nodeId/s... [nodeId/s...] serviceIdorigin serviceIddestination | -l [serviceId] | -s [clusterId])
                           [-f]
 
@@ -167,27 +168,28 @@ Examples
 
     fg-move -u jdiaz service --list IndianaOpenStack
 
-* List nodes that are not assigned to any service.
+* List nodes that are not allocated into any service.
 
   ::
 
     fg-move -u jdiaz service --listfreenodes
 
 
-* Add nodes to the service. The nodes cannot be assigned to another service, that is they must be free.
+* Add nodes to the service IndianaOpenStack. The nodes must be free, that is they cannot be allocated to another service.
 
   ::
 
     fg-move -u jdiaz service --add i90.india i20.india IndianaOpenStack
      
-* Remove a node from a service. The node must be idle to perform this operation. You can force by adding ``--force``.
+* Remove a node from a service. The node must be idle to perform this operation or you have to force the opration by adding ``--force``.
 
   ::
 
     fg-move -u jdiaz service --remove i20.india IndianaOpenStack
    
-* Move a node from a service to another. The node must be idle to perform this operation. You can force by adding ``--force``. 
+* Move a node from a service to another. The node must be idle to perform this operation or you have to force the opration by adding ``--force``.
 
   ::
 
     fg-move -u jdiaz service --move i90.india IndianaOpenStack IndianaEucalyptus
+

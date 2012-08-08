@@ -209,8 +209,7 @@ from the infrastructure.</p>
 </pre></div>
 </div>
 </div></blockquote>
-<p id="move-sites-sections">Next we need to create sections for each one of the FG Move controllers. This sections are read on execution time, so we can
-modify them any time without restarting the FG Move server (see <a class="reference internal" href="config_ref_server.html#fg-server-move-remote-sites-example"><em>Move Remote Site Controllers</em></a>.</p>
+<p id="move-sites-sections">Next we need to create sections for each one of the FG Move controllers (see <a class="reference internal" href="config_ref_server.html#fg-server-move-remote-sites-example"><em>Move Remote Site Controllers</em></a>).</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>Move-eucalyptus-indiaeuca<span class="o">]</span>
 <span class="nv">address</span><span class="o">=</span>129.79.49.12
@@ -232,7 +231,7 @@ modify them any time without restarting the FG Move server (see <a class="refere
 </div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Make sure that <tt class="docutils literal"><span class="pre">port</span></tt> and <tt class="docutils literal"><span class="pre">address</span></tt> matches with those used by the Move controllers <a class="reference internal" href="#move-sites-server"><em>Move Site Server</em></a>.</p>
+<p class="last">Make sure that <tt class="docutils literal"><span class="pre">port</span></tt> and <tt class="docutils literal"><span class="pre">address</span></tt> matches with those used by the Move controllers (see <a class="reference internal" href="#move-sites-server"><em>Move Site Server</em></a>).</p>
 </div>
 <p>We also have to create an inventory file that will describe the nodes, clusters and services. This file will be read by the RainMoveServer
 during its initialization. The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the
@@ -269,15 +268,12 @@ i02.india
 </div>
 </div></blockquote>
 </div></blockquote>
-<p>This server requires to have <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> installed in the same machine (see</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">link?? how to install and configure Teefaa)</p>
-</div>
-<p>Once everything is set up (including Teefaa), you can start the server by execution <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
+<p>This server requires to have <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> installed in the same
+machine (see <a class="reference external" href="http://futuregrid.github.com/teefaa/documentation.html">Teefaa Documentation</a>).</p>
+<p>Once everything is set up (including Teefaa), you can start the server executing <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">We recommend to have a system user that run all the servers. In this way it will be easier to manage the sudoers file when necessary.</p>
+<p class="last">We recommend to have a system user that run all the servers (i.e. imageman). In this way, it will be easier to manage the sudoers file when necessary.</p>
 </div>
 </div>
 <div class="section" id="client-side">
@@ -300,7 +296,7 @@ about this section of the client configuration file can be found in <a class="re
 </div>
 </div></blockquote>
 <p>Once you have everything set up, any user that is in the <tt class="docutils literal"><span class="pre">authorizedusers</span></tt> field of the section <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt> will be able to
-use this service. Of course, the user has to authenticate against LDAP too.</p>
+use this service (see <a class="reference internal" href="#move-config"><em>Rain Move Server</em></a>). Of course, the user has to authenticate against LDAP too.</p>
 <p>The executable file of this client is <tt class="docutils literal"><span class="pre">fg-move</span></tt>. More information about how to use FG Move can be found in the <a class="reference internal" href="man-move.html#man-move"><em>FG Move Manual</em></a>.</p>
 </div>
 <div class="section" id="fg-move-check-list">
@@ -380,7 +376,7 @@ every supported infrastructure, we only need to tune it up properly.</p>
 <p class="last">Make sure that the <tt class="docutils literal"><span class="pre">port</span></tt> specified here matches with the one specified in the sections defined when configuring the main <a class="reference internal" href="#move-sites-sections"><em>FG Move server</em></a>.</p>
 </div>
 <p>Next, we need to do specific configurations depending on the infrastructure we are targeting. Typically, you only need to do one of the following
-subsections per</p>
+subsections per management machine.</p>
 <ul class="simple">
 <li><strong>HPC infrastructure</strong></li>
 </ul>
