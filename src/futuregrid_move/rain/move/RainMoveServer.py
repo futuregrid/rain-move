@@ -384,7 +384,7 @@ class RainMoveServer(object):
                     if not success:
                         status = "ERROR: adding the node " + arguments[0] + " to the service " + arguments[1] + ". " + str(restatus)
                     else:
-                        status = "The node " + arguments[0] + " have been successfully integrated into the Cloud. " + str(restatus)
+                        status = "The node " + arguments[0] + " have been successfully integrated into the service. " + arguments[1] + ". " + str(restatus)
                     self.lock.acquire()
                     try:      
                         self.fgfabric.store()
@@ -416,7 +416,7 @@ class RainMoveServer(object):
                 if not success:
                     status = "ERROR: removing the node " + arguments[0] + " from the service " + arguments[1] + ". " + str(restatus)
                 else:
-                    status = "The node " + arguments[0] + " have been successfully deleted from the Cloud. " + str(restatus)
+                    status = "The node " + arguments[0] + " have been successfully deleted from the service " + arguments[1] + ". " + str(restatus)
                 self.lock.acquire()
                 try:      
                     self.fgfabric.store()
