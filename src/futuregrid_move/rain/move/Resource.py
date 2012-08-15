@@ -469,7 +469,7 @@ class Service(object):
         if self.verbose:
             print msg
             
-        status = self.teefaaobj.provision(ares.name, self._type, ares.cluster)        
+        status = self.teefaaobj.provision(ares.name, self._id, ares.cluster)        
         
         if status != 'OK':
             self.logger.error(status)
