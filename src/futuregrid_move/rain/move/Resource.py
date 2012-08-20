@@ -13,6 +13,7 @@ import socket, ssl
 import logging
 import logging.handlers
 import sys
+import re
 
 from futuregrid_move.rain.move.RainMoveServerConf import RainMoveServerConf
 
@@ -501,13 +502,13 @@ class Service(object):
             status = connection.read(1024)
             msg = status
             self.socketCloseConnection(connection)
-            if status == "OK":
-                success = True
-            else:
+            if re.search("^ERROR",status):
                 success = False
                 self.logger.error(status)
                 if self.verbose:
-                    print status                
+                    print status          
+            else:
+                success = True      
         else:
             msg = "ERROR: Connecting with the remote site. It was not possible to check the status of the node."
             self.logger.error(msg)

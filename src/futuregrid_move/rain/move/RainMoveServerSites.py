@@ -196,7 +196,7 @@ class RainMoveServerSites(object):
         
         if success:  
             self.logger.debug(status)
-            connstream.write("OK")
+            connstream.write(status)
         else:
             self.logger.error(status)
             connstream.write(status)
@@ -293,7 +293,7 @@ class RainMoveServerSites(object):
             if p.returncode == 0:
                 status = 'OK'
             else:
-                status = 'Problems recycling Moab scheduler'
+                status = 'ERROR: Problems recycling Moab scheduler'
                
         return success, status   
 
@@ -324,6 +324,7 @@ class RainMoveServerSites(object):
                             self.logger.debug("Node " + hostname + " is active and enabled")
                             exitloop = True
                             success = True
+                            status = 'OK'
                         elif output[3].strip() == "disabled":
                             self.logger.debug("Node " + hostname + " is active and disabled")
                             self.logger.debug("Enabling None")
@@ -336,6 +337,8 @@ class RainMoveServerSites(object):
                                 self.logger.error(status)                        
                                 exitloop = True
                                 success = False
+                            else:
+                                status = 'OK'
                     else:
                         self.logger.debug("The Node " + hostname + " is not active. We will keep trying.")                        
                         if wait < max_wait:
@@ -426,7 +429,7 @@ class RainMoveServerSites(object):
                     found = False
                     for entry in output:
                         if '\t' + hostname + '\t' in entry:
-                            status = "The node " + hostname + " appears on the list"
+                            status = 'OK'
                             self.logger.debug(status)
                             exitloop = True
                             found = True
@@ -582,6 +585,7 @@ class RainMoveServerSites(object):
                     else:
                         exitloop = True
                         success = True
+                        status = 'OK'
                 elif forcemove:
                     self.logger.debug("Killing jobs")
                     joblist = std[0].split('\n')[5].split('=')[1].split(',')   
@@ -657,6 +661,7 @@ class RainMoveServerSites(object):
                             else:
                                 exitloop = True
                                 success = True
+                                status = 'OK'
                         elif(forcemove):
                             for i in range(3, len(parts)):
                                 listvms.append(parts[i])
@@ -724,6 +729,7 @@ class RainMoveServerSites(object):
                     else:
                         exitloop = True
                         success = True
+                        status = 'OK'
                 elif forcemove:
                     self.logger.debug("Killing instances")
                     status = self.terminate_instances(hostname, "openstack", None)
