@@ -203,7 +203,7 @@ class RainMoveServer(object):
 
         #load protected machines just in case it changed
         self.protectedMachines = self._rainConf.load_moveServerConfigCheckProtected()
-        print self.protectedMachines
+        #print self.protectedMachines
         if self.resource == 'service' and (self.operation == "add" or self.operation == "remove" or self.operation == "move"
                                            or self.operation == "info"):
 
@@ -236,8 +236,9 @@ class RainMoveServer(object):
                     proc_list.append(Thread(target=eval("self.wrap_" + self.operation), args=(joinstatus,new_arguments)))            
                     proc_list[len(proc_list) - 1].start()
                 except:
-                    msg = "ERROR: in FG Move server process " + str(sys.exc_info())
-                    self.errormsg(connstream, msg)
+                    status = "ERROR: Node with "+node+" in FG Move server process. " + str(sys.exc_info())
+                    #self.errormsg(connstream, msg)
+                    
             for i in proc_list:
                 i.join()
             
@@ -246,6 +247,7 @@ class RainMoveServer(object):
                 status += i + "\n"
                 if re.search("^ERROR", i):
                     self.logger.error(i)
+                    
             self.okmsg(connstream, status)
             
             #Put in the logs the current status of the services
