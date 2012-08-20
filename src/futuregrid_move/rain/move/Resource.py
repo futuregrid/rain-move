@@ -490,7 +490,7 @@ class Service(object):
         if self.verbose:
             print msg
         
-        msg = "Calling RainMoveSite to ensure the node is active in the service"
+        msg = "Calling RainMoveSite to check the node status"
         self.logger.debug(msg)
         if self.verbose:
             print msg

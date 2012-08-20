@@ -186,11 +186,11 @@ class RainMoveServerSites(object):
         elif operation == 'info':
             self.logger.debug("Info machine " + argument + " from the service " + service)
             if service == "openstack":
-                success, status = self.info_openstack(argument, forcemove)
+                success, status = self.info_openstack(argument)
             elif service == "eucalyptus":
-                success, status = self.info_euca(argument, forcemove)
+                success, status = self.info_euca(argument)
             elif service == "hpc":
-                success, status = self.info_hpc(argument, forcemove)
+                success, status = self.info_hpc(argument)
         else:
             self.logger.debug("Operation " + operation + " Service " + service + " Argument " + argument)           
         
