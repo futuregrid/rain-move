@@ -422,7 +422,7 @@ class RainMoveServer(object):
     
     def wrap_info(self,joinstatus, arguments):
         
-        joinstatus.append(self.remove(arguments))
+        joinstatus.append(self.info(arguments))
     
     def info(self, arguments):
         if self.resource == 'node':
