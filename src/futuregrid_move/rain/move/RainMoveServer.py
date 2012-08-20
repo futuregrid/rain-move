@@ -418,6 +418,10 @@ class RainMoveServer(object):
                         
         return status
     
+    def wrap_info(self,joinstatus, arguments):
+        
+        joinstatus.append(self.remove(arguments))
+    
     def info(self, arguments):
         if self.resource == 'node':
             if arguments[0] in self.fgfabric.getNode().keys():
