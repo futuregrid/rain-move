@@ -139,6 +139,8 @@ Service subparser
 +---------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------+
 | ``-m/--move <nodeId/s> [nodeId/s...] <serviceIdorigin> <serviceIddestination>`` | Move a node or list of nodes from a service to another.                                                |
 +---------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------+
+| ``-i/--info <nodeId/s> [nodeId/s...] <serviceId>``                              | Information about the status of node/s from a service (idle, busy, does not exists).                   |
++---------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------+
 | ``-l/--list [serviceId]``                                                       | List available services or the information about a particular one if a clusterId is provided.          |
 +---------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------+
 | ``-s/--listfreenodes [clusterId]``                                              | List of nodes that are not assigned to any service. The list can be restricted to a particular cluster |

@@ -250,8 +250,9 @@ class RainMoveServer(object):
                     
             self.okmsg(connstream, status)
             
-            #Put in the logs the current status of the services
-            self.printCurrentStatus()
+            if self.operation != "info":
+                #Put in the logs the current status of the services
+                self.printCurrentStatus()
             
         else:
             
