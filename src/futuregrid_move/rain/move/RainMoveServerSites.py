@@ -158,9 +158,6 @@ class RainMoveServerSites(object):
             forcemove = eval(params[3].strip())
         except:
             forcemove = False
-        #MORE PARAMETERS ARE NEEDED
-        #operation site, infrastructure origin, infrastructure destination, number machines,
-        #reinstall?, image source, partitions,
                 
         if len(params) != self.numparams and len(params) != self.numparams - 1:
             msg = "ERROR: incorrect message"
@@ -186,6 +183,14 @@ class RainMoveServerSites(object):
                 success, status = self.remove_euca(argument, forcemove)
             elif service == "hpc":
                 success, status = self.remove_hpc(argument, forcemove)
+        elif operation == 'info':
+            self.logger.debug("Info machine " + argument + " from the service " + service)
+            if service == "openstack":
+                success, status = self.info_openstack(argument, forcemove)
+            elif service == "eucalyptus":
+                success, status = self.info_euca(argument, forcemove)
+            elif service == "hpc":
+                success, status = self.info_hpc(argument, forcemove)
         else:
             self.logger.debug("Operation " + operation + " Service " + service + " Argument " + argument)           
         
@@ -201,6 +206,7 @@ class RainMoveServerSites(object):
             connstream.close()
         except:
             self.logger.error("ERROR: " + str(sys.exc_info()))
+
 
     def add_hpc(self, hostname):
         exitloop = False
@@ -438,6 +444,99 @@ class RainMoveServerSites(object):
                         
         return success, status
 
+    def info_hpc(self, hostname):
+        success = False
+        status = "default msg"
+
+        self.logger.debug("Checking if the node is free")
+        cmd = "pbsnodes " + hostname
+        self.logger.debug(cmd)
+        p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+        std = p.communicate()
+        if p.returncode != 0:
+            status = "ERROR: describing resources node. " + str(std[1])
+            self.logger.error(status)                        
+            success = False
+        else:
+            success = True
+            if re.search('^jobs', std[0].split('\n')[5].strip()):
+                status = "Busy (there are jobs running)"
+            else:
+                status = "Idle"
+
+        return success, status
+
+    def info_euca(self, hostname):
+        success = False
+        status = "default msg"
+        exitloop = False
+        
+        self.logger.debug("Checking if the node is free")
+        cmd = "sudo euca_conf --list-nodes"
+        self.logger.debug(cmd)
+        p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+        std = p.communicate()
+        if p.returncode != 0:
+            status = "ERROR: describing resources node. " + str(std[1])
+            self.logger.error(status)                        
+            success = False
+        else:
+            num_notfounds = 0
+            while not exitloop:
+                found = False
+                #print std[0]
+                output = std[0].split('\n')
+                #print output
+                for entry in output:
+                    if '\t' + hostname + '\t' in entry:
+                        num_notfounds = 0
+                        found = True
+                        exitloop = True
+                        success = True
+                        parts = entry.split('\t')
+                        if len(parts) < 4:
+                            status = "Idle"
+                        else:
+                            status = "Busy (VMs running)"
+                            
+                        break
+                       
+                if not found and not success:
+                    if num_notfounds == 20: #this is because euca_conf --list-nodes does not return the whole list sometimes
+                        exitloop = True
+                        success = True
+                        status = "ERROR: Node " + hostname + " is not found in the host list."
+                    else:
+                        num_notfounds += 1 
+                        time.sleep(2)
+
+        return success, status
+
+    def info_openstack(self, hostname):
+        success = False
+        status = "default msg"
+
+        self.logger.debug("Checking if the node is free")
+        cmd = "sudo nova-manage service describe_resource " + hostname
+        self.logger.debug(cmd)
+        p = Popen(cmd.split(), stdout=PIPE, stderr=PIPE)
+        std = p.communicate()
+        if p.returncode != 0:
+            status = "ERROR: describing resources node. " + str(std[1])
+            self.logger.error(status)                 
+            success = False
+        else:
+            success = True
+            output = std[0].split()
+            output = output[5:]
+            n_instances = int(output[12]) #get value from use_max because use_now takes longer to be updated
+            if n_instances == 0:
+                status = "Idle"
+            else:
+                status = "Busy (VMs running)"         
+
+        return success, status
+
     def remove_hpc(self, hostname, forcemove):
         status = "default msg"
         exitloop = False
@@ -522,9 +621,9 @@ class RainMoveServerSites(object):
         success = False
         wait = 0
         max_wait = self.service_max_wait / 10
-        found = False
         num_notfounds = 0
         while not exitloop:
+            found = False
             self.logger.debug("Checking if the node is free")
             cmd = "sudo euca_conf --list-nodes"
             self.logger.debug(cmd)
@@ -587,10 +686,9 @@ class RainMoveServerSites(object):
                     else:
                         num_notfounds += 1 
                         time.sleep(2)
-                        status = "ERROR: Timeout. The node " + hostname + " is busy. Try to use force move"
                         
         return success, status
-                        
+                  
     def remove_openstack(self, hostname, forcemove):
         status = "default msg"
         exitloop = False

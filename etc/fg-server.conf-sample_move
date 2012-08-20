@@ -44,6 +44,11 @@ test=False
 #
 #  authorizedusers: list of users (separated by commas) that can use the service
 #
+#  protectedmachines: List of machines protected against re-installation. You
+#  can specify the hostname or the IP 
+#  (this option can be modified any time without need for restarting the server)
+#
+#
 #  log: file where logs are stored. You should include
 #  the full path, otherwise it will use the current directory. 
 #
@@ -69,6 +74,7 @@ port = 56795
 proc_max = 5
 refresh = 20
 authorizedusers = jdiaz, fuwang
+protectedmachines = im1, 172.29.22.1, i50, 172.29.20.50, i135, 172.29.20.135, i136, 172.29.20.136, th1, i130, 172.29.20.130
 log = moveserver.log
 log_level = debug
 ca_cert=/etc/futuregrid/imdserver/cacert.pem

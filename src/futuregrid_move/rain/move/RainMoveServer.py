@@ -66,6 +66,8 @@ class RainMoveServer(object):
         self.log_filename = self._rainConf.getMoveLog()
         self.logLevel = self._rainConf.getMoveLogLevel()
         
+        self.protectedMachines=self._rainConf.getMovesProtectedMachines()
+        
         self.proc_max = self._rainConf.getMoveProcMax()
         self.refresh_status = self._rainConf.getMoveRefreshStatus()
         
@@ -199,50 +201,16 @@ class RainMoveServer(object):
                 self.errormsg(connstream, msg)
                 return
 
-        if self.resource == 'service' and (self.operation == "add" or self.operation == "remove" or self.operation == "move"):
-            
+        #load protected machines just in case it changed
+        self.protectedMachines = self._rainConf.load_moveServerConfigCheckProtected()
+        print self.protectedMachines
+        if self.resource == 'service' and (self.operation == "add" or self.operation == "remove" or self.operation == "move"
+                                           or self.operation == "info"):
+
             nodelist = self.arguments[:len(self.arguments)-1]
             if self.operation == "move":
                 nodelist = self.arguments[:len(self.arguments)-2]
-            """
-            full=False
-            proc_list = []
-            queue=Queue()
-            for node in nodelist:         
-                if len(proc_list) == self.proc_max:
-                    full = True
-                    while full:
-                        for i in range(len(proc_list) - 1, -1, -1):
-                            #self.logger.debug(str(proc_list[i]))
-                            if not proc_list[i].is_alive():
-                                #print "dead"                      
-                                proc_list.pop(i)
-                                full = False
-                        if full:
-                            time.sleep(self.refresh_status)
-                #try:
-                if self.operation == "move":
-                    new_arguments=[node,self.arguments[len(self.arguments)-2],self.arguments[len(self.arguments)-1]]
-                else:                    
-                    new_arguments=[node,self.arguments[len(self.arguments)-1]]
-                
-                    
-                proc_list.append(Process(target=eval("self.wrap_" + self.operation), args=(queue,new_arguments)))            
-                proc_list[len(proc_list) - 1].start()
-                #except:
-                #    msg = "ERROR: creating process " + str(sys.exc_info())
-                #    self.errormsg(connstream, msg)
-            for i in proc_list:
-                i.join()
-            
-            status = ""
-            while not queue.empty():
-                tempstat=str(queue.get())
-                status += tempstat + "\n"
-                if re.search("^ERROR", tempstat):
-                    self.logger.error(tempstat)
-            """
-            
+                          
             full=False
             proc_list = []
             joinstatus = []            
@@ -258,27 +226,21 @@ class RainMoveServer(object):
                                 full = False
                         if full:
                             time.sleep(self.refresh_status)
-                #try:
-                if self.operation == "move":
-                    new_arguments=[node,self.arguments[len(self.arguments)-2],self.arguments[len(self.arguments)-1]]
-                else:                    
-                    new_arguments=[node,self.arguments[len(self.arguments)-1]]
-                
+                try:
+                    if self.operation == "move":
+                        new_arguments=[node,self.arguments[len(self.arguments)-2],self.arguments[len(self.arguments)-1]]
+                    else:                    
+                        new_arguments=[node,self.arguments[len(self.arguments)-1]]
                     
-                proc_list.append(Thread(target=eval("self.wrap_" + self.operation), args=(joinstatus,new_arguments)))            
-                proc_list[len(proc_list) - 1].start()
-                #except:
-                #    msg = "ERROR: creating process " + str(sys.exc_info())
-                #    self.errormsg(connstream, msg)
+                        
+                    proc_list.append(Thread(target=eval("self.wrap_" + self.operation), args=(joinstatus,new_arguments)))            
+                    proc_list[len(proc_list) - 1].start()
+                except:
+                    msg = "ERROR: in FG Move server process " + str(sys.exc_info())
+                    self.errormsg(connstream, msg)
             for i in proc_list:
                 i.join()
             
-            #status = ""
-            #while not queue.empty():
-            #    tempstat=str(queue.get())
-            #    status += tempstat + "\n"
-            #    if re.search("^ERROR", tempstat):
-            #        self.logger.error(tempstat)
             status = ""
             for i in joinstatus:
                 status += i + "\n"
@@ -291,14 +253,14 @@ class RainMoveServer(object):
             
         else:
             
-            #try:
+            try:
                 
-            status = eval("self." + self.operation + "("+str(self.arguments)+")")
+                status = eval("self." + self.operation + "("+str(self.arguments)+")")
                 
-            #except:
-            #    msg = "ERROR: incorrect operation " + str(sys.exc_info())
-            #    self.errormsg(connstream, msg)
-            #    return
+            except:
+                msg = "ERROR: incorrect operation " + str(sys.exc_info())
+                self.errormsg(connstream, msg)
+                return
             
             
             if re.search("^ERROR", status):
@@ -357,43 +319,50 @@ class RainMoveServer(object):
         status = 'OK'
         # add a new node
         if self.resource == 'node':
-            #construcing a node from args
-            #accepting format of: id,name,ip,cluster
-            newnode = Node(arguments[0], arguments[1], arguments[2], arguments[3])
-
-            #ADD node to the node list
-            if self.fgfabric.getNode(arguments[0]) == None:
-                cluster = self.fgfabric.getCluster(arguments[3])
-                if cluster != None:
-                    self.fgfabric.addNode(newnode)
-                    if not cluster.add(newnode):
-                        status = 'ERROR: adding the cluster'
-                    self.fgfabric.store()
-                else:
-                    status = "ERROR: the Node cannot be added because the Cluster does not exists"
+            
+            if arguments[0] in self.protectedMachines or arguments[1] in self.protectedMachines or arguments[2] in self.protectedMachines:
+                status = "ERROR: the machine is protected"
             else:
-                status = "ERROR: the Node already exists"    
+                #construcing a node from args
+                #accepting format of: id,name,ip,cluster
+                newnode = Node(arguments[0], arguments[1], arguments[2], arguments[3])
+    
+                #ADD node to the node list
+                if self.fgfabric.getNode(arguments[0]) == None:
+                    cluster = self.fgfabric.getCluster(arguments[3])
+                    if cluster != None:
+                        self.fgfabric.addNode(newnode)
+                        if not cluster.add(newnode):
+                            status = 'ERROR: adding the cluster'
+                        self.fgfabric.store()
+                    else:
+                        status = "ERROR: the Node cannot be added because the Cluster does not exists"
+                else:
+                    status = "ERROR: the Node already exists"    
              
         # add a node to a service. This internally invokes the implementations for specific service types.    
         elif self.resource == 'service':
             existingnode = self.fgfabric.getNode(arguments[0])
             if existingnode != None:
-                service = self.fgfabric.getService(arguments[1])
-                if service != None:
-                    success, restatus = service.add(existingnode)
-                    if not success:
-                        status = "ERROR: adding the node " + arguments[0] + " to the service " + arguments[1] + ". " + str(restatus)
+                if arguments[0] in self.protectedMachines or existingnode.ip in self.protectedMachines or existingnode.name in self.protectedMachines:
+                    status = "ERROR: the machine is protected"
+                else:                    
+                    service = self.fgfabric.getService(arguments[1])
+                    if service != None:
+                        success, restatus = service.add(existingnode)
+                        if not success:
+                            status = "ERROR: adding the node " + arguments[0] + " to the service " + arguments[1] + ". " + str(restatus)
+                        else:
+                            status = "The node " + arguments[0] + " have been successfully integrated into the service. " + arguments[1] + ". " + str(restatus)
+                        self.lock.acquire()
+                        try:      
+                            self.fgfabric.store()
+                        except:
+                            status = "ERROR: adding the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
+                        finally:
+                            self.lock.release()                        
                     else:
-                        status = "The node " + arguments[0] + " have been successfully integrated into the service. " + arguments[1] + ". " + str(restatus)
-                    self.lock.acquire()
-                    try:      
-                        self.fgfabric.store()
-                    except:
-                        status = "ERROR: adding the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
-                    finally:
-                        self.lock.release()                        
-                else:
-                    status = "ERROR: the Node " + arguments[0] + " cannot be added because the Service does not exists"
+                        status = "ERROR: the Node " + arguments[0] + " cannot be added because the Service does not exists"
             else:
                 status = "ERROR: the Node " + arguments[0] + " does not exists"
 
@@ -406,26 +375,32 @@ class RainMoveServer(object):
     def remove(self, arguments):
         status = 'OK'
         if self.resource == 'node':
+            #if arguments[0] in self.protectedMachines or arguments[1] in self.protectedMachines or arguments[2] in self.protectedMachines:
+            #    status = "ERROR: the machine is protected"
+            #else:
             status = "ERROR: Not supported yet"
         elif self.resource == 'cluster':
             status = "ERROR: Not supported yet"
         elif self.resource == 'service':  #Remove a node from a service
-            service = self.fgfabric.getService(arguments[1])
-            if service != None:
-                success, restatus = service.remove(arguments[0], self.forcemove)
-                if not success:
-                    status = "ERROR: removing the node " + arguments[0] + " from the service " + arguments[1] + ". " + str(restatus)
-                else:
-                    status = "The node " + arguments[0] + " have been successfully deleted from the service " + arguments[1] + ". " + str(restatus)
-                self.lock.acquire()
-                try:      
-                    self.fgfabric.store()
-                except:
-                    status = "ERROR: removing the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
-                finally:
-                    self.lock.release()
+            if arguments[0] in self.protectedMachines:
+                status = "ERROR: the machine is protected"
             else:
-                status = "ERROR: the Node " + arguments[0] + " cannot be deleted because the Service does not exists"
+                service = self.fgfabric.getService(arguments[1])
+                if service != None:
+                    success, restatus = service.remove(arguments[0], self.forcemove)
+                    if not success:
+                        status = "ERROR: removing the node " + arguments[0] + " from the service " + arguments[1] + ". " + str(restatus)
+                    else:
+                        status = "The node " + arguments[0] + " have been successfully deleted from the service " + arguments[1] + ". " + str(restatus)
+                    self.lock.acquire()
+                    try:      
+                        self.fgfabric.store()
+                    except:
+                        status = "ERROR: removing the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
+                    finally:
+                        self.lock.release()
+                else:
+                    status = "ERROR: the Node " + arguments[0] + " cannot be deleted because the Service does not exists"
                         
         return status
     
@@ -444,11 +419,28 @@ class RainMoveServer(object):
         return status
     
     def info(self, arguments):
-        if arguments[0] in self.fgfabric.getNode().keys():
-            return str(self.fgfabric.getNode()[arguments[0]])
-        else:
-            return "ERROR: The node does not exists."
+        if self.resource == 'node':
+            if arguments[0] in self.fgfabric.getNode().keys():
+                status = str(self.fgfabric.getNode()[arguments[0]])
+            else:
+                status = "ERROR: The node " + arguments[0] + " does not exists."
             
+        elif self.resource == 'service':
+            existingnode = self.fgfabric.getNode(arguments[0])
+            if existingnode != None:
+                service = self.fgfabric.getService(arguments[1])
+                if service != None:
+                    success, restatus = service.info(existingnode)
+                    if not success:
+                        status = "ERROR: Getting information of the node " + arguments[0] + " from the service " + arguments[1] + ". " + str(restatus)
+                    else:
+                        status = "Status of the node " + arguments[0] + ": " + str(restatus)
+                else:
+                    status = "ERROR: the Service " + arguments[1] + " does not exists"
+            else:
+                status = "ERROR: the Node " + arguments[0] + " does not exists"
+                
+        return status
     
     def lists(self, arguments):
         status = 'ERROR: Wrong resource.'

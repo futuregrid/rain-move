@@ -104,6 +104,15 @@ Option ``authorizedusers``
 
 List of users (separated by commas) that can use this service.
 
+Option ``protectedmachines``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Type:** String-list (comma separated)
+
+**Required:** No
+
+List of machines names, identifiers or IPs (separated by commas) that are protected and cannot be reinstalled.
+
 .. Option ``nopasswdusers``
 .. ~~~~~~~~~~~~~~~~~~~~~~~~
 

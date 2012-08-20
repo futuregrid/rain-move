@@ -64,6 +64,7 @@ class RainMoveServerConf(object):
         
         self._Moveport = 0
         self._MoveauthorizedUsers = []
+        self._Moveprotectedmachines = []
         self._Movelog = ""
         self._MovelogLevel = ""   
         self._MoveServerca_certs = ""
@@ -117,6 +118,8 @@ class RainMoveServerConf(object):
 
     def getMoveAuthorizedUsers(self):
         return self._MoveauthorizedUsers
+    def getMovesProtectedMachines(self):
+        return self._Moveprotectedmachines
     def getMoveLog(self):
         return self._Movelog
     def getMoveLogLevel(self):
@@ -202,6 +205,15 @@ class RainMoveServerConf(object):
             print "No authorizedusers option found in section " + section + " file " + self._configfile
             sys.exit(1)
         try:
+            aux = self._config.get(section, 'protectedmachines', 0)
+            aux1 = aux.split(",")
+            for i in aux1:
+                if (i.strip() != ""):
+                    self._Moveprotectedmachines.append(i.strip())
+        except ConfigParser.NoOptionError:
+            print "Warning: No protectedmachines option found in section " + section + " file " + self._configfile
+            
+        try:
             self._Movelog = os.path.expanduser(self._config.get(section, 'log', 0))
         except ConfigParser.NoOptionError:
             print "Error: No log option found in section " + section + " file " + self._configfile
@@ -263,6 +275,22 @@ class RainMoveServerConf(object):
         if not os.path.isfile(self._MoveClientkeyfile):
             print "Error: Clientkeyfile file not found in "  + self._MoveClientkeyfile 
             sys.exit(1)
+
+    def load_moveServerConfigCheckProtected(self):        
+        section = "RainMoveServer"
+        self._config.read(self._configfile)
+        proctected = []
+        try:
+            aux = self._config.get(section, 'protectedmachines', 0)
+            aux1 = aux.split(",")
+            for i in aux1:
+                if (i.strip() != ""):
+                    proctected.append(i.strip())
+        except ConfigParser.NoOptionError:
+            pass
+
+        return proctected
+
         
     def loadMoveRemoteSiteConfig(self, service, site):
         '''

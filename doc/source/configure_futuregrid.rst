@@ -72,6 +72,7 @@ First, we are going to configure the main server. We need to configure the ``[Ra
       proc_max=5
       refresh=20
       authorizedusers = adminuser1, adminuser2
+      protectedmachines = im1, 172.29.22.1, i50, 172.29.20.50, i135, 172.29.20.135, i136, 172.29.20.136, th1, i130, 172.29.20.130
       log = moveserver.log
       log_level = debug
       ca_cert=/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
@@ -169,16 +170,13 @@ about this section of the client configuration file can be found in :ref:`Move s
    ::
      
       [RainMove]
-      port = 56796
-      proc_max = 5
-      refresh = 20
-      log = movesiteserver.log
-      log_level = debug
-      max_wait = 1000
-      ec2varfile = ~/eucarc
-      ca_cert=/etc/futuregrid/imdserver/cacert.pem
-      certfile=/etc/futuregrid/imdserver/imdscert.pem
-      keyfile=/etc/futuregrid/imdserver/privkey.pem
+      port = 56795
+      serveraddr=localhost
+      log=~/clientrainmove.log
+      log_level=debug
+      ca_cert=/etc/futuregrid/imdclient/cacert.pem
+      certfile=/etc/futuregrid/imdclient/imdccert.pem
+      keyfile=/etc/futuregrid/imdclient/privkey.pem
      
 Once you have everything set up, any user that is in the ``authorizedusers`` field of the section ``[RainMoveServer]`` will be able to
 use this service (see :ref:`Rain Move Server <move_config>`). Of course, the user has to authenticate against LDAP too. 

@@ -379,10 +379,36 @@ class Service(object):
         if aresid in self._res:
             ret = self._res[aresid]
         return ret
-        
+    
+    def info(self, ares):
+        '''
+        obtain status information of the node (idle, busy, does not exist)
+        ares is a Node object
+        '''
+        ret = False
+        msg = ""
+        if isinstance(ares, Resource):
+            if(ares.allocated == 'FREE'):
+                msg="Not allocated to any resource."
+            else:
+                success, retstatus = self.doinfo(ares)
+                if success:
+                    msg = retstatus                   
+                    ret = True
+                else:
+                    msg = "ERROR: info operation failed. " + str(retstatus)
+                    if self.verbose:
+                        print msg
+                    self.logger.error(msg)
+        else:
+            msg = "Object is not instance of Resource. It looks like a bug."
+                
+        return ret, msg
+    
     def add(self, ares):
         '''
         add a resource to the service.
+        ares is a Node object
         This should be the one to call from outside. It deals with precondition check,
         e.g. asserting the resource to be added is 'Free'. It will call the actual doadd()
         implementation method for processing and cbadd() method for clean up
@@ -395,7 +421,6 @@ class Service(object):
         if isinstance(ares, Resource):
             # has to be a free node
             if(ares.allocated == 'FREE'):
-##AKIIIIIIIIIIIII
                 success, retstatus = self.doadd(ares)
                 #success = True
                 #retstatus =""
@@ -415,6 +440,8 @@ class Service(object):
                 if self.verbose:
                     print msg
                 self.logger.error(msg)
+        else:
+            msg = "Object is not instance of Resource. It looks like a bug."
                 
         return ret, msg
 
@@ -433,7 +460,6 @@ class Service(object):
         ares = self.get(aresid)
         # has to be being allocated in THE service
         if ares is not None:
-#AKIIIII
             success, retstatus = self.doremove(ares, force)
             #success = True
             #retstatus =""
@@ -456,6 +482,41 @@ class Service(object):
             
         return ret, msg
 
+    def doinfo(self, ares):
+        success = False
+        
+        msg = "INSIDE " + self._type + "Service:doinfo: check status of a node into " + self._type + " service"
+        self.logger.debug(msg)
+        if self.verbose:
+            print msg
+        
+        msg = "Calling RainMoveSite to ensure the node is active in the service"
+        self.logger.debug(msg)
+        if self.verbose:
+            print msg
+        
+        connection=self.socketConnection()
+        if connection != None:
+            connection.write(self._type + ", info, " + ares.name)
+            status = connection.read(1024)
+            msg = status
+            self.socketCloseConnection(connection)
+            if status == "OK":
+                success = True
+            else:
+                success = False
+                self.logger.error(status)
+                if self.verbose:
+                    print status                
+        else:
+            msg = "ERROR: Connecting with the remote site. It was not possible to check the status of the node."
+            self.logger.error(msg)
+            if self.verbose:
+                print msg        
+    
+        return success, msg
+        
+        
     def doadd(self, ares): #This is the same in all the sub classes
         success = False
         
