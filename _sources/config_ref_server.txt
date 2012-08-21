@@ -104,6 +104,15 @@ Option ``authorizedusers``
 
 List of users (separated by commas) that can use this service.
 
+Option ``protectedmachines``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Type:** String-list (comma separated)
+
+**Required:** No
+
+List of machines names, identifiers or IPs (separated by commas) that are protected and cannot be reinstalled.
+
 .. Option ``nopasswdusers``
 .. ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -288,6 +297,15 @@ Option ``ec2varfile``
 **Required:** (Only for Cloud infrastructures)
 
 Location of the EC2 environment variable file, which typically is eucarc or novarc.  
+
+Option ``hpcproperties``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Type:** String
+
+**Required:** (Only for HPC infrastructures)
+
+Properties of the machines that are added to the HPC infrastructure. It can be several properties separated by commas. 
 
 Option ``ca_cert``
 ~~~~~~~~~~~~~~~~~~

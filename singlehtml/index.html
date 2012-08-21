@@ -437,13 +437,16 @@ Options between brackets are not required. Parenthesis means that you need to sp
 <tr class="row-even"><td><tt class="docutils literal"><span class="pre">-m/--move</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceIdorigin&gt;</span> <span class="pre">&lt;serviceIddestination&gt;</span></tt></td>
 <td>Move a node or list of nodes from a service to another.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-l/--list</span> <span class="pre">[serviceId]</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-i/--info</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceId&gt;</span></tt></td>
+<td>Information about the status of node/s from a service (idle, busy, does not exists).</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-l/--list</span> <span class="pre">[serviceId]</span></tt></td>
 <td>List available services or the information about a particular one if a clusterId is provided.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-s/--listfreenodes</span> <span class="pre">[clusterId]</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-s/--listfreenodes</span> <span class="pre">[clusterId]</span></tt></td>
 <td>List of nodes that are not assigned to any service. The list can be restricted to a particular cluster</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-f/--force</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-f/--force</span></tt></td>
 <td>Force operation.</td>
 </tr>
 </tbody>
@@ -683,6 +686,7 @@ from the infrastructure.</p>
 <span class="nv">proc_max</span><span class="o">=</span>5
 <span class="nv">refresh</span><span class="o">=</span>20
 <span class="nv">authorizedusers</span> <span class="o">=</span> adminuser1, adminuser2
+<span class="nv">protectedmachines</span> <span class="o">=</span> im1, 172.29.22.1, i50, 172.29.20.50, i135, 172.29.20.135, i136, 172.29.20.136, th1, i130, 172.29.20.130
 <span class="nv">log</span> <span class="o">=</span> moveserver.log
 <span class="nv">log_level</span> <span class="o">=</span> debug
 <span class="nv">ca_cert</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
@@ -767,16 +771,13 @@ machine (see <a class="reference external" href="http://futuregrid.github.com/te
 about this section of the client configuration file can be found in <a class="reference internal" href="index.html#fg-client-move"><em>Move section</em></a>.</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMove<span class="o">]</span>
-<span class="nv">port</span> <span class="o">=</span> 56796
-<span class="nv">proc_max</span> <span class="o">=</span> 5
-<span class="nv">refresh</span> <span class="o">=</span> 20
-<span class="nv">log</span> <span class="o">=</span> movesiteserver.log
-<span class="nv">log_level</span> <span class="o">=</span> debug
-<span class="nv">max_wait</span> <span class="o">=</span> 1000
-<span class="nv">ec2varfile</span> <span class="o">=</span> ~/eucarc
-<span class="nv">ca_cert</span><span class="o">=</span>/etc/futuregrid/imdserver/cacert.pem
-<span class="nv">certfile</span><span class="o">=</span>/etc/futuregrid/imdserver/imdscert.pem
-<span class="nv">keyfile</span><span class="o">=</span>/etc/futuregrid/imdserver/privkey.pem
+<span class="nv">port</span> <span class="o">=</span> 56795
+<span class="nv">serveraddr</span><span class="o">=</span>localhost
+<span class="nv">log</span><span class="o">=</span>~/clientrainmove.log
+<span class="nv">log_level</span><span class="o">=</span>debug
+<span class="nv">ca_cert</span><span class="o">=</span>/etc/futuregrid/imdclient/cacert.pem
+<span class="nv">certfile</span><span class="o">=</span>/etc/futuregrid/imdclient/imdccert.pem
+<span class="nv">keyfile</span><span class="o">=</span>/etc/futuregrid/imdclient/privkey.pem
 </pre></div>
 </div>
 </div></blockquote>
@@ -840,7 +841,9 @@ are properly added or removed from the infrastructure. Therefore, it has to run 
 every supported infrastructure, we only need to tune it up properly.</p>
 <div class="section" id="id2">
 <h6>Server Side<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h6>
-<p>In the Server side we need to configure the <tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt> Section (see <a class="reference internal" href="index.html#fg-server-rainmoveserver"><em>RainMoveSiteServer section</em></a>).</p>
+<p>In the Server side we need to configure the <tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt> Section (see <a class="reference internal" href="index.html#fg-server-rainmoveserver"><em>RainMoveSiteServer section</em></a>).
+Here, we have an example for a Cloud service (we have defined the <tt class="docutils literal"><span class="pre">ec2varfile</span></tt> option). In the case of HPC, we need to define the
+option <tt class="docutils literal"><span class="pre">hpcproperties</span></tt> instead (i.e. <tt class="docutils literal"><span class="pre">hpcproperties</span> <span class="pre">=</span> <span class="pre">compute</span></tt>).</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMoveSiteServer<span class="o">]</span>
 <span class="nv">port</span> <span class="o">=</span> 56796
@@ -1027,6 +1030,12 @@ Therefore, we need this option to go test our services before we deploy them on 
 <p><strong>Required:</strong> No</p>
 <p>List of users (separated by commas) that can use this service.</p>
 </div>
+<div class="section" id="option-protectedmachines">
+<h7>Option <tt class="docutils literal"><span class="pre">protectedmachines</span></tt><a class="headerlink" href="#option-protectedmachines" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> String-list (comma separated)</p>
+<p><strong>Required:</strong> No</p>
+<p>List of machines names, identifiers or IPs (separated by commas) that are protected and cannot be reinstalled.</p>
+</div>
 <div class="section" id="id1">
 <h7>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h7>
 <p><strong>Type:</strong> log-file</p>
@@ -1142,6 +1151,12 @@ keyfile=/etc/futuregrid/imdserver/privkey.pem</p>
 <p><strong>Type:</strong> EC2-file</p>
 <p><strong>Required:</strong> (Only for Cloud infrastructures)</p>
 <p>Location of the EC2 environment variable file, which typically is eucarc or novarc.</p>
+</div>
+<div class="section" id="option-hpcproperties">
+<h7>Option <tt class="docutils literal"><span class="pre">hpcproperties</span></tt><a class="headerlink" href="#option-hpcproperties" title="Permalink to this headline">¶</a></h7>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> (Only for HPC infrastructures)</p>
+<p>Properties of the machines that are added to the HPC infrastructure. It can be several properties separated by commas.</p>
 </div>
 <div class="section" id="id8">
 <h7>Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h7>

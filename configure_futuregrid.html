@@ -198,6 +198,7 @@ from the infrastructure.</p>
 <span class="nv">proc_max</span><span class="o">=</span>5
 <span class="nv">refresh</span><span class="o">=</span>20
 <span class="nv">authorizedusers</span> <span class="o">=</span> adminuser1, adminuser2
+<span class="nv">protectedmachines</span> <span class="o">=</span> im1, 172.29.22.1, i50, 172.29.20.50, i135, 172.29.20.135, i136, 172.29.20.136, th1, i130, 172.29.20.130
 <span class="nv">log</span> <span class="o">=</span> moveserver.log
 <span class="nv">log_level</span> <span class="o">=</span> debug
 <span class="nv">ca_cert</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdserver/cacert.pem
@@ -282,16 +283,13 @@ machine (see <a class="reference external" href="http://futuregrid.github.com/te
 about this section of the client configuration file can be found in <a class="reference internal" href="config_ref_client.html#fg-client-move"><em>Move section</em></a>.</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMove<span class="o">]</span>
-<span class="nv">port</span> <span class="o">=</span> 56796
-<span class="nv">proc_max</span> <span class="o">=</span> 5
-<span class="nv">refresh</span> <span class="o">=</span> 20
-<span class="nv">log</span> <span class="o">=</span> movesiteserver.log
-<span class="nv">log_level</span> <span class="o">=</span> debug
-<span class="nv">max_wait</span> <span class="o">=</span> 1000
-<span class="nv">ec2varfile</span> <span class="o">=</span> ~/eucarc
-<span class="nv">ca_cert</span><span class="o">=</span>/etc/futuregrid/imdserver/cacert.pem
-<span class="nv">certfile</span><span class="o">=</span>/etc/futuregrid/imdserver/imdscert.pem
-<span class="nv">keyfile</span><span class="o">=</span>/etc/futuregrid/imdserver/privkey.pem
+<span class="nv">port</span> <span class="o">=</span> 56795
+<span class="nv">serveraddr</span><span class="o">=</span>localhost
+<span class="nv">log</span><span class="o">=</span>~/clientrainmove.log
+<span class="nv">log_level</span><span class="o">=</span>debug
+<span class="nv">ca_cert</span><span class="o">=</span>/etc/futuregrid/imdclient/cacert.pem
+<span class="nv">certfile</span><span class="o">=</span>/etc/futuregrid/imdclient/imdccert.pem
+<span class="nv">keyfile</span><span class="o">=</span>/etc/futuregrid/imdclient/privkey.pem
 </pre></div>
 </div>
 </div></blockquote>
@@ -355,7 +353,9 @@ are properly added or removed from the infrastructure. Therefore, it has to run 
 every supported infrastructure, we only need to tune it up properly.</p>
 <div class="section" id="id2">
 <h3>Server Side<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p>In the Server side we need to configure the <tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt> Section (see <a class="reference internal" href="config_ref_server.html#fg-server-rainmoveserver"><em>RainMoveSiteServer section</em></a>).</p>
+<p>In the Server side we need to configure the <tt class="docutils literal"><span class="pre">[RainMoveSiteServer]</span></tt> Section (see <a class="reference internal" href="config_ref_server.html#fg-server-rainmoveserver"><em>RainMoveSiteServer section</em></a>).
+Here, we have an example for a Cloud service (we have defined the <tt class="docutils literal"><span class="pre">ec2varfile</span></tt> option). In the case of HPC, we need to define the
+option <tt class="docutils literal"><span class="pre">hpcproperties</span></tt> instead (i.e. <tt class="docutils literal"><span class="pre">hpcproperties</span> <span class="pre">=</span> <span class="pre">compute</span></tt>).</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMoveSiteServer<span class="o">]</span>
 <span class="nv">port</span> <span class="o">=</span> 56796

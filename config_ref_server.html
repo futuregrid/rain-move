@@ -103,6 +103,7 @@ body {
 <li><a class="reference internal" href="#option-proc-max">Option <tt class="docutils literal"><span class="pre">proc_max</span></tt></a></li>
 <li><a class="reference internal" href="#option-refresh">Option <tt class="docutils literal"><span class="pre">refresh</span></tt></a></li>
 <li><a class="reference internal" href="#option-authorizedusers">Option <tt class="docutils literal"><span class="pre">authorizedusers</span></tt></a></li>
+<li><a class="reference internal" href="#option-protectedmachines">Option <tt class="docutils literal"><span class="pre">protectedmachines</span></tt></a></li>
 <li><a class="reference internal" href="#id1">Option <tt class="docutils literal"><span class="pre">log</span></tt></a></li>
 <li><a class="reference internal" href="#option-log-level">Option <tt class="docutils literal"><span class="pre">log_level</span></tt></a></li>
 <li><a class="reference internal" href="#option-ca-cert">Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt></a></li>
@@ -125,6 +126,7 @@ body {
 <li><a class="reference internal" href="#id6">Option <tt class="docutils literal"><span class="pre">log</span></tt></a></li>
 <li><a class="reference internal" href="#id7">Option <tt class="docutils literal"><span class="pre">log_level</span></tt></a></li>
 <li><a class="reference internal" href="#option-ec2varfile">Option <tt class="docutils literal"><span class="pre">ec2varfile</span></tt></a></li>
+<li><a class="reference internal" href="#option-hpcproperties">Option <tt class="docutils literal"><span class="pre">hpcproperties</span></tt></a></li>
 <li><a class="reference internal" href="#id8">Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt></a></li>
 <li><a class="reference internal" href="#id9">Option <tt class="docutils literal"><span class="pre">certfile</span></tt></a></li>
 <li><a class="reference internal" href="#id10">Option <tt class="docutils literal"><span class="pre">keyfile</span></tt></a></li>
@@ -234,6 +236,12 @@ Therefore, we need this option to go test our services before we deploy them on 
 <p><strong>Type:</strong> String-list (comma separated)</p>
 <p><strong>Required:</strong> No</p>
 <p>List of users (separated by commas) that can use this service.</p>
+</div>
+<div class="section" id="option-protectedmachines">
+<h3>Option <tt class="docutils literal"><span class="pre">protectedmachines</span></tt><a class="headerlink" href="#option-protectedmachines" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> String-list (comma separated)</p>
+<p><strong>Required:</strong> No</p>
+<p>List of machines names, identifiers or IPs (separated by commas) that are protected and cannot be reinstalled.</p>
 </div>
 <div class="section" id="id1">
 <h3>Option <tt class="docutils literal"><span class="pre">log</span></tt><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
@@ -350,6 +358,12 @@ keyfile=/etc/futuregrid/imdserver/privkey.pem</p>
 <p><strong>Type:</strong> EC2-file</p>
 <p><strong>Required:</strong> (Only for Cloud infrastructures)</p>
 <p>Location of the EC2 environment variable file, which typically is eucarc or novarc.</p>
+</div>
+<div class="section" id="option-hpcproperties">
+<h3>Option <tt class="docutils literal"><span class="pre">hpcproperties</span></tt><a class="headerlink" href="#option-hpcproperties" title="Permalink to this headline">¶</a></h3>
+<p><strong>Type:</strong> String</p>
+<p><strong>Required:</strong> (Only for HPC infrastructures)</p>
+<p>Properties of the machines that are added to the HPC infrastructure. It can be several properties separated by commas.</p>
 </div>
 <div class="section" id="id8">
 <h3>Option <tt class="docutils literal"><span class="pre">ca_cert</span></tt><a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>

@@ -295,13 +295,16 @@ Options between brackets are not required. Parenthesis means that you need to sp
 <tr class="row-even"><td><tt class="docutils literal"><span class="pre">-m/--move</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceIdorigin&gt;</span> <span class="pre">&lt;serviceIddestination&gt;</span></tt></td>
 <td>Move a node or list of nodes from a service to another.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-l/--list</span> <span class="pre">[serviceId]</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-i/--info</span> <span class="pre">&lt;nodeId/s&gt;</span> <span class="pre">[nodeId/s...]</span> <span class="pre">&lt;serviceId&gt;</span></tt></td>
+<td>Information about the status of node/s from a service (idle, busy, does not exists).</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-l/--list</span> <span class="pre">[serviceId]</span></tt></td>
 <td>List available services or the information about a particular one if a clusterId is provided.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-s/--listfreenodes</span> <span class="pre">[clusterId]</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-s/--listfreenodes</span> <span class="pre">[clusterId]</span></tt></td>
 <td>List of nodes that are not assigned to any service. The list can be restricted to a particular cluster</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">-f/--force</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-f/--force</span></tt></td>
 <td>Force operation.</td>
 </tr>
 </tbody>
