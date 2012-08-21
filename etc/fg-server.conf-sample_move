@@ -140,7 +140,8 @@ port=56803
 #  Only required for Cloud.
 #
 #  hpcproperties: Define the properties of the machines. This allows the integration in
-#  the queue system. Only required for HPC.
+#  the queue system. It can be a simple string or several ones separated with commas. 
+#  Only required for HPC.
 #
 #  ca_cert: authority that sign the certificate
 #

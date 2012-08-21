@@ -213,7 +213,9 @@ every supported infrastructure, we only need to tune it up properly.
 Server Side
 ***********
 
-In the Server side we need to configure the ``[RainMoveSiteServer]`` Section (see :ref:`RainMoveSiteServer section <fg-server_rainmoveserver>`). 
+In the Server side we need to configure the ``[RainMoveSiteServer]`` Section (see :ref:`RainMoveSiteServer section <fg-server_rainmoveserver>`).
+Here, we have an example for a Cloud service (we have defined the ``ec2varfile`` option). In the case of HPC, we need to define the 
+option ``hpcproperties`` instead (i.e. ``hpcproperties = compute``). 
 
    .. highlight:: bash
 

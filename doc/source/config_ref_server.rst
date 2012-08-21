@@ -298,6 +298,15 @@ Option ``ec2varfile``
 
 Location of the EC2 environment variable file, which typically is eucarc or novarc.  
 
+Option ``hpcproperties``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Type:** String
+
+**Required:** (Only for HPC infrastructures)
+
+Properties of the machines that are added to the HPC infrastructure. It can be several properties separated by commas. 
+
 Option ``ca_cert``
 ~~~~~~~~~~~~~~~~~~
 
