@@ -56,6 +56,7 @@ class RainMoveServerSites(object):
         self.logLevel = self._rainSitesConf.getMoveSiteLogLevel()
         self.service_max_wait = self._rainSitesConf.getMovesiteMaxWait()
         self.ec2varfile = self._rainSitesConf.getMoveSiteEc2varfile()
+        self.hpcproperties = self._rainSitesConf.getMoveSiteHpcProperties()
         
         self._ca_certs = self._rainSitesConf.getMoveSiteServerCaCerts()
         self._certfile = self._rainSitesConf.getMoveSiteServerCertFile()
@@ -250,7 +251,7 @@ class RainMoveServerSites(object):
                 success = True
         if success:
             self.logger.debug("changing properties of the node")
-            cmd1 = ["sudo", "qmgr", "-c", "set node " + hostname + " properties = compute"]
+            cmd1 = ["sudo", "qmgr", "-c", "set node " + hostname + " properties = "+ self.hpcproperties]
             #cmd1="sudo qmgr -c 'set node " + hostname + " properties = compute' "
             self.logger.debug(cmd1)
             p1 = Popen(cmd1, stdout=PIPE, stderr=PIPE)
@@ -570,43 +571,50 @@ class RainMoveServerSites(object):
                 exitloop = True
                 success = False
             else:
-                if not re.search('^jobs', std[0].split('\n')[5].strip()):                    
-                    self.logger.debug("Node " + hostname + " is free. Deleting")
-                    cmd = ["sudo", "qmgr", "-c", "delete node " + hostname]
-                    #cmd="sudo qmgr -c 'delete node " + hostname + "'"
-                    self.logger.debug(cmd)
-                    p = Popen(cmd, stdout=PIPE, stderr=PIPE)
-                    std = p.communicate()
-                    if p.returncode != 0:
-                        status = "ERROR: Deleting node. " + str(std[1])
-                        self.logger.error(status)                        
-                        exitloop = True
-                        success = False
+                try:
+                    jobslist=std[0].split('\n')[5].strip()
+                    if not re.search('^jobs', jobslist):                    
+                        self.logger.debug("Node " + hostname + " is free. Deleting")
+                        cmd = ["sudo", "qmgr", "-c", "delete node " + hostname]
+                        #cmd="sudo qmgr -c 'delete node " + hostname + "'"
+                        self.logger.debug(cmd)
+                        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+                        std = p.communicate()
+                        if p.returncode != 0:
+                            status = "ERROR: Deleting node. " + str(std[1])
+                            self.logger.error(status)                        
+                            exitloop = True
+                            success = False
+                        else:
+                            exitloop = True
+                            success = True
+                            status = 'OK'
+                    elif forcemove:
+                        self.logger.debug("Killing jobs")
+                        joblist = std[0].split('\n')[5].split('=')[1].split(',')   
+                        for i in joblist:
+                            job = i.split('/')
+                            if len(job) == 2:
+                                jobid = job[1].strip()
+                                stat = os.system('sudo qdel ' + jobid)
+                                if stat != 0:
+                                    os.system('sudo qdel -p ' + jobid)
+                        self.logger.debug("After jobs terminated")
+                        time.sleep(5) #allow them some time to change the status   
                     else:
-                        exitloop = True
-                        success = True
-                        status = 'OK'
-                elif forcemove:
-                    self.logger.debug("Killing jobs")
-                    joblist = std[0].split('\n')[5].split('=')[1].split(',')   
-                    for i in joblist:
-                        job = i.split('/')
-                        if len(job) == 2:
-                            jobid = job[1].strip()
-                            stat = os.system('sudo qdel ' + jobid)
-                            if stat != 0:
-                                os.system('sudo qdel -p ' + jobid)
-                    self.logger.debug("After jobs terminated")
-                    time.sleep(5) #allow them some time to change the status   
-                else:
-                    self.logger.debug("Waiting until free")
-                    if wait < max_wait:
-                        wait += 1
-                        time.sleep(10)
-                    else:
-                        exitloop = True
-                        success = False
-                        status = "ERROR: Timeout. The node " + hostname + " is busy. Try to use force move"
+                        self.logger.debug("Waiting until free")
+                        if wait < max_wait:
+                            wait += 1
+                            time.sleep(10)
+                        else:
+                            exitloop = True
+                            success = False
+                            status = "ERROR: Timeout. The node " + hostname + " is busy. Try to use force move"
+                            
+                except IndexError:
+                    exitloop = True
+                    success = False
+                    status = "ERROR: The node " + hostname + " may not exist on Torque."
 
         if not success:
             self.logger.debug("Making node online")

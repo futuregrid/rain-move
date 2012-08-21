@@ -136,7 +136,11 @@ port=56803
 #  max_wait: Maximum time the service wait until a machine becames free or for
 #  a new machine to appear
 #
-#  ec2varfile: EC2 variables' file (eucarc or novarc). Used to terminate instances
+#  ec2varfile: EC2 variables' file (eucarc or novarc). Used to terminate instances.
+#  Only required for Cloud.
+#
+#  hpcproperties: Define the properties of the machines. This allows the integration in
+#  the queue system. Only required for HPC.
 #
 #  ca_cert: authority that sign the certificate
 #
@@ -153,6 +157,7 @@ log = movesiteserver.log
 log_level = debug
 max_wait = 1000
 ec2varfile = ~/eucarc
+hpcproperties = compute
 ca_cert=/etc/futuregrid/imdserver/cacert.pem
 certfile=/etc/futuregrid/imdserver/imdscert.pem
 keyfile=/etc/futuregrid/imdserver/privkey.pem

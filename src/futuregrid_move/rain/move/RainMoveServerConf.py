@@ -89,6 +89,7 @@ class RainMoveServerConf(object):
         self._MoveSitelogLevel = ""
         self._MoveSitemax_wait = 0 
         self._MoveSiteEc2varfile = ""
+        self._MoveSiteHpcProperties = ""
         self._MoveSiteServerca_certs = ""
         self._MoveSiteServercertfile = ""
         self._MoveSiteServerkeyfile = ""
@@ -163,6 +164,8 @@ class RainMoveServerConf(object):
         return self._MoveSitemax_wait
     def getMoveSiteEc2varfile(self):
         return self._MoveSiteEc2varfile
+    def getMoveSiteHpcProperties(self):
+        return self._MoveSiteHpcProperties
     def getMoveSiteServerCaCerts(self):
         return self._MoveSiteServerca_certs
     def getMoveSiteServerCertFile(self): 
@@ -378,9 +381,13 @@ class RainMoveServerConf(object):
         try:
             self._MoveSiteEc2varfile = os.path.expanduser(self._config.get(section, 'ec2varfile', 0))
         except ConfigParser.NoOptionError:
-            print "Warning: No ec2varfile option found in section " + section + " file " + self._configfile
+            print "Warning: No ec2varfile option found in section " + section + " file " + self._configfile +". This is needed for Clouds."
         if not os.path.isfile(self._MoveSiteEc2varfile):
-            print "Warning: ec2varfile file not found in "  + self._MoveSiteEc2varfile      
+            print "Warning: ec2varfile file not found in "  + self._MoveSiteEc2varfile
+        try:
+            self._MoveSiteHpcProperties = self._config.get(section, 'hpcproperties', 0)
+        except ConfigParser.NoOptionError:
+            print "Warning: No hpcproperties option found in section " + section + " file " + self._configfile +". This is needed for HPC."
         try:
             self._MoveSiteServerca_certs = os.path.expanduser(self._config.get(section, 'ca_cert', 0))
         except ConfigParser.NoOptionError:
