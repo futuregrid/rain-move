@@ -61,7 +61,7 @@ Server Side
 ***********
 
 First, we are going to configure the main server. We need to configure the ``[RainMoveServer]`` Section 
-(see :ref:`MoveServer section <fg-server_rainmoveserver>`). 
+(see :ref:`MoveServer section <fg-server_rainmoveserver>`) in the ``fg-server.conf`` configuration file. 
 
    .. highlight:: bash
 
@@ -81,6 +81,9 @@ First, we are going to configure the main server. We need to configure the ``[Ra
       Clientca_cert=/opt/futuregrid/futuregrid/etc/imdclient/cacert.pem
       Clientcertfile=/opt/futuregrid/futuregrid/etc/imdclient/imdccert.pem
       Clientkeyfile=/opt/futuregrid/futuregrid/etc/imdclient/privkey.pem
+      dbaddress = localhost
+      dbport = 23000
+      dbname = fg_move
 
 .. _move_sites_sections:
 
@@ -112,8 +115,10 @@ Next we need to create sections for each one of the FG Move controllers (see :re
    Make sure that ``port`` and ``address`` matches with those used by the Move controllers (see :ref:`Move Site Server <move_sites_server>`).
 
 We also have to create an inventory file that will describe the nodes, clusters and services. This file will be read by the RainMoveServer
-during its initialization. The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the 
-label **CLUSTER:** followed by the name of the cluster. 
+during its initialization. The inventory will be automatically stored in a MongoDB database and this file will not be needed anymore. 
+The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the **CLUSTER:** label followed 
+by the name of the cluster. We also have services that contain the Id of the nodes that are allocated to each service. Services are defined
+with the **SERVICE** label, the type of service (**OPENSTACK**, **NIMBUS**, **EUCALYPTUS**, **HPC**).
 
  This file looks like:
 
@@ -155,19 +160,22 @@ label **CLUSTER:** followed by the name of the cluster.
    
 * Install MongoDB (see :ref:`Mongo <mongodb>`) and pymongo on the machine (see :ref:`MongoDB Deployment <pymongo>`).
 
-Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the server executing ``RainMoveServer.py -l <inventoryfile>`` as ``imageman`` user.
+Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the fg-move server as ``imageman`` user.
+
+* The first time you start your service you need to provide the inventory file to initialize the database. Thus, you execute the service
+  using ``RainMoveServer.py -l <inventoryfile>``. This will delete the database defined in the parameter ``dbname`` defined in the 
+  ``fg-server.conf`` configuration file under the section ``[RainMoveServer]``, if it exists.
+* The following times, you need to start the fg-move service by executing ``RainMoveServer.py``.
 
 .. note::
    We recommend to have a system user that run all the servers (i.e. imageman). In this way, it will be easier to manage the sudoers file when necessary. 
 
 .. _move_client_conf:
 
-
-
 Client Side
 ***********
 
-In the client side, we need to configure the ``[RainMove]`` section. More information 
+In the client side, we need to configure the ``[RainMove]`` section in the ``fg-client.conf`` configuration file. More information 
 about this section of the client configuration file can be found in :ref:`Move section <fg-client_move>`.
 
    .. highlight:: bash

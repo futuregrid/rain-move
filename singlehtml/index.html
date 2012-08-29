@@ -679,7 +679,7 @@ from the infrastructure.</p>
 <div class="section" id="move-config">
 <span id="id1"></span><h6>Server Side<a class="headerlink" href="#move-config" title="Permalink to this headline">¶</a></h6>
 <p>First, we are going to configure the main server. We need to configure the <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt> Section
-(see <a class="reference internal" href="index.html#fg-server-rainmoveserver"><em>MoveServer section</em></a>).</p>
+(see <a class="reference internal" href="index.html#fg-server-rainmoveserver"><em>MoveServer section</em></a>) in the <tt class="docutils literal"><span class="pre">fg-server.conf</span></tt> configuration file.</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMoveServer<span class="o">]</span>
 <span class="nv">port</span> <span class="o">=</span> 56795
@@ -695,6 +695,9 @@ from the infrastructure.</p>
 <span class="nv">Clientca_cert</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdclient/cacert.pem
 <span class="nv">Clientcertfile</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdclient/imdccert.pem
 <span class="nv">Clientkeyfile</span><span class="o">=</span>/opt/futuregrid/futuregrid/etc/imdclient/privkey.pem
+<span class="nv">dbaddress</span> <span class="o">=</span> localhost
+<span class="nv">dbport</span> <span class="o">=</span> 23000
+<span class="nv">dbname</span> <span class="o">=</span> fg_move
 </pre></div>
 </div>
 </div></blockquote>
@@ -723,8 +726,10 @@ from the infrastructure.</p>
 <p class="last">Make sure that <tt class="docutils literal"><span class="pre">port</span></tt> and <tt class="docutils literal"><span class="pre">address</span></tt> matches with those used by the Move controllers (see <a class="reference internal" href="index.html#move-sites-server"><em>Move Site Server</em></a>).</p>
 </div>
 <p>We also have to create an inventory file that will describe the nodes, clusters and services. This file will be read by the RainMoveServer
-during its initialization. The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the
-label <strong>CLUSTER:</strong> followed by the name of the cluster.</p>
+during its initialization. The inventory will be automatically stored in a MongoDB database and this file will not be needed anymore.
+The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the <strong>CLUSTER:</strong> label followed
+by the name of the cluster. We also have services that contain the Id of the nodes that are allocated to each service. Services are defined
+with the <strong>SERVICE</strong> label, the type of service (<strong>OPENSTACK</strong>, <strong>NIMBUS</strong>, <strong>EUCALYPTUS</strong>, <strong>HPC</strong>).</p>
 <blockquote>
 <div><p>This file looks like:</p>
 <blockquote>
@@ -763,7 +768,13 @@ i02.india
 machine (see <a class="reference external" href="http://futuregrid.github.com/teefaa/documentation.html">Teefaa Documentation</a>).</li>
 <li>Install MongoDB (see <em class="xref std std-ref">Mongo</em>) and pymongo on the machine (see <a class="reference internal" href="index.html#pymongo"><em>MongoDB Deployment</em></a>).</li>
 </ul>
-<p>Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the server executing <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
+<p>Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the fg-move server as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
+<ul class="simple">
+<li>The first time you start your service you need to provide the inventory file to initialize the database. Thus, you execute the service
+using <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt>. This will delete the database defined in the parameter <tt class="docutils literal"><span class="pre">dbname</span></tt> defined in the
+<tt class="docutils literal"><span class="pre">fg-server.conf</span></tt> configuration file under the section <tt class="docutils literal"><span class="pre">[RainMoveServer]</span></tt>, if it exists.</li>
+<li>The following times, you need to start the fg-move service by executing <tt class="docutils literal"><span class="pre">RainMoveServer.py</span></tt>.</li>
+</ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">We recommend to have a system user that run all the servers (i.e. imageman). In this way, it will be easier to manage the sudoers file when necessary.</p>
@@ -771,7 +782,7 @@ machine (see <a class="reference external" href="http://futuregrid.github.com/te
 </div>
 <div class="section" id="client-side">
 <span id="move-client-conf"></span><h6>Client Side<a class="headerlink" href="#client-side" title="Permalink to this headline">¶</a></h6>
-<p>In the client side, we need to configure the <tt class="docutils literal"><span class="pre">[RainMove]</span></tt> section. More information
+<p>In the client side, we need to configure the <tt class="docutils literal"><span class="pre">[RainMove]</span></tt> section in the <tt class="docutils literal"><span class="pre">fg-client.conf</span></tt> configuration file. More information
 about this section of the client configuration file can be found in <a class="reference internal" href="index.html#fg-client-move"><em>Move section</em></a>.</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>RainMove<span class="o">]</span>
