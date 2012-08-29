@@ -36,7 +36,7 @@ from futuregrid_move.rain.move.EucaService import EucaService
 from futuregrid_move.rain.move.OpenStackService import OpenStackService
 from futuregrid_move.rain.move.OpenNebulaService import OpenNebulaService
 from futuregrid_move.rain.move.NimbusService import NimbusService
-from futuregrid_move.rain.move.Fabric import Fabric, Inventory, InventoryFile, InventoryDB
+from futuregrid_move.rain.move.Fabric import Fabric, Inventory, InventoryMongoDB, InventoryFile, InventoryDB
 
 from futuregrid_move.rain.move.RainMoveServerConf import RainMoveServerConf
 from futuregrid_move.utils import FGAuth
@@ -44,7 +44,7 @@ from futuregrid_move.utils.FGTypes import FGCredential
 
 class RainMoveServer(object):
 
-    def __init__(self, inventoryfile):
+    def __init__(self, inventoryFile):
         super(RainMoveServer, self).__init__()
         
         self.numparams = 7   
@@ -55,7 +55,6 @@ class RainMoveServer(object):
         self.arguments = None
         self.forcemove = False
         
-        self.lock = Lock() # to ensure that only one thread access to the fabric DB at a time
         
         #load from config file
         self._rainConf = RainMoveServerConf()
@@ -75,19 +74,39 @@ class RainMoveServer(object):
         self._certfile = self._rainConf.getMoveServerCertFile()
         self._keyfile = self._rainConf.getMoveServerKeyFile()
         
+        self.dbaddress = self._rainConf.getMoveDbAddress() 
+        self.dbport = self._rainConf.getMoveDbPort()
+        self.dbname = self._rainConf.getMoveDbName()
+        
         print "\nReading Configuration file from " + self._rainConf.getConfigFile() + "\n"
         
         self.logger = self.setup_logger()
         
         self.fgfabric = Fabric(self._rainConf, self.logger, False)  #Fabric object
+        
+        if inventoryFile != None:
+            fginventoryFile = InventoryFile(inventoryFile)
+            nodesFile, servicesFile = self.fgfabric.loadGetNodesServices(fginventoryFile)
+
+        fginventory = InventoryMongoDB(self.dbaddress, self.dbport, self.dbname)
+        if fginventory.mongoConnection():
+            if inventoryFile != None: #if we have this file we write it on DB
+                fginventory.fromMemory2DB(nodesFile, servicesFile)
+            self.fgfabric.load(fginventory)
+        else:
+            print "ERROR: connection with the database failed"
+            sys.exit(-1)
+        
+        """
         if inventoryfile != None:
             fginventory = InventoryFile(inventoryfile)
             self.fgfabric.load(fginventory)
-                
+        """
+    """       
     def load(self, inventoryfile):
         fginventory = InventoryFile(inventoryfile)
         self.fgfabric.load(fginventory)
-    
+    """
     def setup_logger(self):
         #Setup logging
         logger = logging.getLogger("RainMoveServer")
@@ -285,7 +304,6 @@ class RainMoveServer(object):
         if self.resource == 'cluster':
             if self.fgfabric.getCluster(self.arguments[0]) == None:
                 self.fgfabric.addCluster(Cluster(self.arguments[0]))
-                self.fgfabric.store()
                 status = "The cluster has been successfully created."
             else:
                 status = "ERROR: the Cluster already exists"
@@ -302,7 +320,6 @@ class RainMoveServer(object):
                 elif self.arguments[1].lower() == 'opennebula':
                     success, msg = self.fgfabric.addService(OpenNebulaService(self.arguments[0]))
                 if success:
-                    self.fgfabric.store()
                     status = "The service has been successfully created."
                 else:
                     status = "ERROR: " + msg
@@ -337,7 +354,6 @@ class RainMoveServer(object):
                         self.fgfabric.addNode(newnode)
                         if not cluster.add(newnode):
                             status = 'ERROR: adding the cluster'
-                        self.fgfabric.store()
                     else:
                         status = "ERROR: the Node cannot be added because the Cluster does not exists"
                 else:
@@ -357,13 +373,11 @@ class RainMoveServer(object):
                             status = "ERROR: adding the node " + arguments[0] + " to the service " + arguments[1] + ". " + str(restatus)
                         else:
                             status = "The node " + arguments[0] + " have been successfully integrated into the service. " + arguments[1] + ". " + str(restatus)
-                        self.lock.acquire()
-                        try:      
-                            self.fgfabric.store()
-                        except:
-                            status = "ERROR: adding the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
-                        finally:
-                            self.lock.release()                        
+                            try:      
+                                self.fgfabric.addNode2Service(arguments[0],service)
+                            except:
+                                status = "ERROR: adding the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
+                                                
                     else:
                         status = "ERROR: the Node " + arguments[0] + " cannot be added because the Service does not exists"
             else:
@@ -395,13 +409,11 @@ class RainMoveServer(object):
                         status = "ERROR: removing the node " + arguments[0] + " from the service " + arguments[1] + ". " + str(restatus)
                     else:
                         status = "The node " + arguments[0] + " have been successfully deleted from the service " + arguments[1] + ". " + str(restatus)
-                    self.lock.acquire()
-                    try:      
-                        self.fgfabric.store()
-                    except:
-                        status = "ERROR: removing the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
-                    finally:
-                        self.lock.release()
+                        try:
+                            self.fgfabric.removeNodeFromService(arguments[0],service)
+                        except:
+                            status = "ERROR: removing the node " + arguments[0] + ". Storing information in the persistent data in the Fabric. " + str(sys.exc_info())
+                    
                 else:
                     status = "ERROR: the Node " + arguments[0] + " cannot be deleted because the Service does not exists"
                         
@@ -530,14 +542,49 @@ def main():
     
     parser = argparse.ArgumentParser(prog="RainMoveServer", formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description="FutureGrid Rain Move Server Help ")    
-    parser.add_argument('-l', '--load', dest='inventoryFile', metavar='inventoryFile', required=True,
+    parser.add_argument('-l', '--load', dest='inventoryFile', metavar='inventoryFile',
                         help='File that contains the machines/services inventory')
-    
-        
+
     args = parser.parse_args()
+    
+    if args.inventoryFile != None:
+        if not query_yes_no("You selected a file that contains the inventory. This will delete the MongoDB database specified in fg-server.conf (dbname). Do you want to continue?"):
+            sys.exit()
     
     server = RainMoveServer(args.inventoryFile)
     server.start()
+
+def query_yes_no(question, default="no"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is one of "yes" or "no".
+    """
+    valid = {"yes":True,   "y":True,  "ye":True,
+             "no":False,     "n":False}
+    if default == None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "\
+                             "(or 'y' or 'n').\n")
 
 if __name__ == "__main__":
     main()

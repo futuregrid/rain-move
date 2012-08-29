@@ -33,6 +33,7 @@ test=False
 #******************************************************************************
 # Rain Move Server configuration
 #------------------------------------------------------------------------------
+#
 #  port: is the port where this server will be listening
 #
 #  proc_max: number of concurrent nodes that can be reallocated. Make sure that
@@ -68,6 +69,13 @@ test=False
 #
 #  Clientkeyfile: key of the certificate. This is to contact with
 #  RainMoveServerSites.py
+#
+#  dbaddress: IP Addess where the database is running
+#
+#  dbport: Port where the database is listening
+#  
+#  dbname: Name of the database.
+#
 #******************************************************************************
 [RainMoveServer]
 port = 56795
@@ -83,6 +91,9 @@ keyfile=/etc/futuregrid/imdserver/privkey.pem
 Clientca_cert=/etc/futuregrid/imdclient/cacert.pem
 Clientcertfile=/etc/futuregrid/imdclient/imdccert.pem
 Clientkeyfile=/etc/futuregrid/imdclient/privkey.pem
+dbaddress = localhost
+dbport = 23000
+dbname = fg_move
 
 #******************************************************************************
 # Configuration Sites configuration

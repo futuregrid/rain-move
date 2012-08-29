@@ -225,23 +225,23 @@ class Service(object):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self):
-        self._MoveClientca_certs=None
-        self._MoveClientcertfile=None
-        self._MoveClientkeyfile=None
-        self._address=None
-        self._port=None
+        self._MoveClientca_certs = None
+        self._MoveClientcertfile = None
+        self._MoveClientkeyfile = None
+        self._address = None
+        self._port = None
         self.logger = None
         self.verbose = True
         self.teefaaobj = None
     
     def setTeefaa(self, teefaaobj):
-        self.teefaaobj=teefaaobj
+        self.teefaaobj = teefaaobj
         
     def setLogger(self, log):
-        self.logger=log
+        self.logger = log
         
     def setVerbose(self, verbose):
-        self.verbose=verbose
+        self.verbose = verbose
         
     def load_config(self, moveConf):
         self._MoveClientca_certs = moveConf.getMoveClientCaCerts()
@@ -249,8 +249,8 @@ class Service(object):
         self._MoveClientkeyfile = moveConf.getMoveClientKeyFile()
         
         if moveConf.loadMoveRemoteSiteConfig(self._type, self._id):
-            self._address=moveConf.getMoveRemoteSiteAddress()
-            self._port= moveConf.getMoveRemoteSitePort()
+            self._address = moveConf.getMoveRemoteSiteAddress()
+            self._port = moveConf.getMoveRemoteSitePort()
             success = True
         else:
             success = False
@@ -337,7 +337,7 @@ class Service(object):
                                         cert_reqs=ssl.CERT_REQUIRED,
                                         ssl_version=ssl.PROTOCOL_TLSv1)
             
-            msg="Connecting server: " + self._address + ":" + str(self._port)
+            msg = "Connecting server: " + self._address + ":" + str(self._port)
             if self.verbose:
                 print msg    
             self.logger.debug(msg)
@@ -390,7 +390,7 @@ class Service(object):
         msg = ""
         if isinstance(ares, Resource):
             if(ares.allocated == 'FREE'):
-                msg="Not allocated to any resource."
+                msg = "Not allocated to any resource."
             else:
                 success, retstatus = self.doinfo(ares)
                 if success:
@@ -496,13 +496,13 @@ class Service(object):
         if self.verbose:
             print msg
         
-        connection=self.socketConnection()
+        connection = self.socketConnection()
         if connection != None:
             connection.write(self._type + ", info, " + ares.name)
             status = connection.read(1024)
             msg = status
             self.socketCloseConnection(connection)
-            if re.search("^ERROR",status):
+            if re.search("^ERROR", status):
                 success = False
                 self.logger.error(status)
                 if self.verbose:
@@ -550,7 +550,7 @@ class Service(object):
             if self.verbose:
                 print msg
             
-            connection=self.socketConnection()
+            connection = self.socketConnection()
             if connection != None:
                 connection.write(self._type + ", add, " + ares.name)
                 status = connection.read(1024)
@@ -579,12 +579,12 @@ class Service(object):
         if self.verbose:
             print msg
         
-        connection=self.socketConnection()
+        connection = self.socketConnection()
         if connection != None:
-            connection.write(self._type + ",remove," + ares.name + ","+ str(force))
+            connection.write(self._type + ",remove," + ares.name + "," + str(force))
             status = connection.read(1024)
             self.socketCloseConnection(connection)
-            msg=status
+            msg = status
             if status == "OK":
                 success = True
             else:

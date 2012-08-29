@@ -3,15 +3,20 @@ The Fabric module
 
 """
 
-__author__ = 'Fugang Wang'
+__author__ = 'Fugang Wang, Javier Diaz'
 __version__ = '0.1'
 
+
+import pymongo
+from pymongo import Connection
+from pymongo.objectid import ObjectId
+  
 import abc
 import json
 import re
 import logging
 import logging.handlers
-
+import sys
 
 from futuregrid_move.rain.move.Resource import Resource, Node, Cluster, Service
 from futuregrid_move.rain.move.EucaService import EucaService
@@ -44,12 +49,128 @@ class Inventory(object):
         '''
         return
 
+class InventoryMongoDB(Inventory):
+    def __init__(self, DBaddress, DBport, DBname):
+        success = False
+        self._res = dict()        
+        self._dbConnection=None
+        self._mongoAddress = DBaddress
+        self._mongoDBName = DBname
+        self._mongoPort = DBport
+    
+    ############################################################
+    # mongoConnection
+    ############################################################
+    def mongoConnection(self):
+        """connect with the mongos available
+        
+        return: Connection object if succeed or False in other case
+        
+        """
+        #TODO: change to a global connection??                
+        connected = False
+        try:
+            self._dbConnection = Connection(self._mongoAddress, self._mongoPort)
+            connected = True
+
+        except pymongo.errors.ConnectionFailure as detail:
+            print "ERROR: Connection failed for " + self._mongoAddress
+        except TypeError:
+            print "ERROR: TypeError in InventoryMongoDB - mongoConnection"
+
+        return connected
+
+    def read(self):
+        nodes = []
+        clusters = dict()
+        services = dict()
+        
+        dbLink = self._dbConnection[self._mongoDBName]
+        
+        for i in dbLink.collection_names():
+            
+            if re.search("^cluster",i):
+                clustername = i.split("_")[1].lower().encode('ascii','ignore')
+                clusters[clustername] = []
+                for j in dbLink[i].find():
+                    nodes.append([j['id'].encode('ascii','ignore'),j['name'].encode('ascii','ignore'),
+                                  j['ip'].encode('ascii','ignore'),j['cluster'].encode('ascii','ignore')])
+                    clusters[clustername].append([j['id'].encode('ascii','ignore'),j['name'].encode('ascii','ignore'),
+                                                  j['ip'].encode('ascii','ignore'),j['cluster'].encode('ascii','ignore')])                        
+            elif re.search("^service",i):
+                servicetype = i.split("_")[1].lower().encode('ascii','ignore')
+                servicename = i.split("_")[2].lower().encode('ascii','ignore')
+                services[servicename] = dict()
+                services[servicename]['type'] = servicetype
+                services[servicename]['nodes'] = []
+                for j in dbLink[i].find():
+                    services[servicename]['nodes'].append(j['nodeid'].encode('ascii','ignore'))
+
+        ret = {"nodes":nodes, "clusters":clusters, "services":services}
+        return ret     
+      
+    def createCluster(self, clusterName):
+        dbLink = self._dbConnection[self._mongoDBName]
+        dbLink.create_collection("cluster_"+clusterName)
+        
+    def addNode2Cluster(self, node):
+        '''node is a Node object, cluster is the id'''
+        dbLink = self._dbConnection[self._mongoDBName]
+        collection = dbLink["cluster_"+node.cluster]
+        
+        meta = {"id": node.identifier,
+                "name": node.name,
+                "ip" : node.ip,
+                "cluster" : node.cluster,
+                }
+                
+        collection.insert(meta, safe=True)
+
+    def createService(self, serviceName, type):
+        dbLink = self._dbConnection[self._mongoDBName]
+        dbLink.create_collection("service_"+type.lower()+"_"+serviceName)
+   
+    def addNode2Service(self, nodeId, serviceName, serviceType):
+        dbLink = self._dbConnection[self._mongoDBName]
+        collection = dbLink["service_"+serviceType.lower()+"_"+serviceName]
+        meta = {"nodeid": nodeId }                
+        collection.insert(meta, safe=True)
+    
+    def removeNodeFromService(self, nodeId, serviceName, serviceType):
+        dbLink = self._dbConnection[self._mongoDBName]
+        collection = dbLink["service_"+serviceType.lower()+"_"+serviceName]
+        
+        collection.remove({"nodeid": nodeId}, safe=True)
+    
+    def fromMemory2DB(self, nodes, services):
+        """res: resource dictionary that contains nodes, clusters and services"""
+
+        #drop database        
+        self._dbConnection.drop_database(self._mongoDBName)
+        
+        for i in nodes:
+            self.addNode2Cluster(i)
+
+        for i in services:
+            self.createService(i.identifier, i.type)
+            for j in i.list().keys():
+                self.addNode2Service(j, i.identifier, i.type)
+    
+    def write(self, data):
+        #it should not be needed as we update the db in every operation
+        print "Store function Not needed"
+
 class InventoryFile(Inventory):
-    '''file based implementation for the inventory class'''
+    '''
+    Deprecated:
+    file based implementation for the inventory class'''
     def __init__(self, fname):
         self._cfgfile = fname
         self._res = dict()
         return
+    
+    def getResources(self):
+        return self._res
     
     def read(self):
         '''reading from file'''
@@ -176,7 +297,57 @@ class Fabric(object):
         self.teefaaobj=Teefaa() #default config file (fg-server.conf) and no verbose
         
         self.update(nodes, clusters, services)
-       
+    
+    def loadGetNodesServices(self, inventory):
+        '''load data from inventory to bootstrap the fabric'''
+        #print inventory.__class__.__name__
+        self._inventory = inventory
+        data = self._inventory.read()
+        if self.verbose:
+            print data
+        else:
+            self.logger.debug(str(data))
+        _nodes = []
+        _clusters = []
+        _services = []
+        nodesdata = data['nodes']
+        clustersdata = data['clusters']
+        servicesdata = data['services']
+        for node in nodesdata:
+            _nodes.append(Node(node[0],node[1],node[2],node[3]))
+        self.updateNodes(_nodes)
+        for clustername in clustersdata.keys():
+            acluster = Cluster(clustername)
+            clusterdata = clustersdata[clustername]
+            for nodedata in clusterdata:
+                acluster.add(self.getNode(nodedata[0]))
+            _clusters.append(acluster)
+        for servicename in servicesdata.keys():
+            atype = servicesdata[servicename]['type']
+            nodeids = servicesdata[servicename]['nodes']
+            #nodes = [self.getNode(id) for id in nodeids]
+            nodes = {}
+            for resId in nodeids:
+                anode = self.getNode(resId)
+                anode.allocated = servicename
+                nodes[resId] = anode
+            classname = Fabric.svctype[atype] + 'Service'
+            
+            aservice = eval(classname)(servicename, nodes)
+            if aservice.load_config(self._moveConf):  # Load configuration to contact remote sites
+                aservice.setLogger(self.logger)  # include log descriptor
+                aservice.setVerbose(self.verbose)  # enable print on the screen
+                aservice.setTeefaa(self.teefaaobj)
+            else:
+                msg = "Loading configuration of the Service " + str(aservice.identifier) + ". The service will not be included. " + \
+                                  " Please add service configuration in the fg-server.conf file under a section called Move-<service>-<site> (i.e. Move-eucalyptus-sierra)"
+                self.logger.error(msg)
+                print "ERROR: " + msg
+            
+            _services.append(aservice)
+        
+        return _nodes, _services
+      
     def load(self, inventory):
         '''load data from inventory to bootstrap the fabric'''
         #print inventory.__class__.__name__
@@ -269,12 +440,20 @@ class Fabric(object):
         return ret
     
     def addNode(self, node):
-        '''Add a Node to the node dict'''
+        '''Add a Node to the node dict
+           cluster is the id of the cluster where the node is'''
         self._nodes[node.identifier]=node
+        
+        #store in the DB
+        self._inventory.addNode2Cluster(node)
         
     def addCluster(self, cluster):
         '''Add a Cluster to the cluster dict'''
         self._clusters[cluster.identifier]=cluster
+        
+        #store in the DB
+        self._inventory.createCluster(cluster.identifier)   #this is not needed in MongoDB, but I put it just in case we decide 
+                                                            # to use another DB later.
         
     def addService(self, service):
         '''Add a Service to the service dict'''
@@ -285,13 +464,29 @@ class Fabric(object):
             service.setVerbose(self.verbose)  # enable print on the screen
             service.setTeefaa(self.teefaaobj)
             self._services[service.identifier]=service
+            
+            try:
+                self._inventory.createService(service.identifier, service.type) #this is not needed in MongoDB, but I put it just in case we decide 
+                                                                            # to use another DB later.
+            except:
+                msg = "ERROR: Storing Service in the Database. " + str(sys.exc_info())
+                self.logger.error(msg)
+                success=False
+            
         else:            
             msg = "Loading configuration of the Service " + str(service.identifier) + ". The service will not be included. " + \
                               " Please add service configuration in the fg-server.conf file under a section called Move-<service>-<site> (i.e. Move-eucalyptus-sierra)"
             self.logger.error(msg)
             success=False
-        return success, msg
         
+        return success, msg
+    
+    def addNode2Service(self, nodeId,service):
+        self._inventory.addNode2Service(nodeId, service.identifier, service.type)
+        
+    def removeNodeFromService(self, nodeId, service):
+        self._inventory.removeNodeFromService(nodeId, service.identifier, service.type)
+       
     def update(self, nodes=(), clusters=(), services=()):
         '''update the nodes, clusters, and services data'''
         self.updateNodes(nodes)
@@ -303,8 +498,8 @@ class Fabric(object):
             print "just printed the inventory of the fabric"
         else:
             self.logger.debug("updating inventory....")
-        if self._inventory is not None:
-            self.store()
+        #if self._inventory is not None:
+        #    self.store()
            
     def updateNodes(self, nodes=()):
         '''update the nodes list'''

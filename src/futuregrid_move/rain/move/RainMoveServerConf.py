@@ -72,10 +72,14 @@ class RainMoveServerConf(object):
         self._MoveServerkeyfile = ""
         self._Moveproc_max = 0
         self._Moverefresh_status = 0
-        
+
         self._MoveClientca_certs = ""
         self._MoveClientcertfile = ""
         self._MoveClientkeyfile = ""
+        self._Movedbaddress = ""
+        self._Movedbport = 0
+        self._Movedbname = ""
+        
         
         self._MoveRemoteSiteAddress=""
         self._MoveRemoteSitePort=0
@@ -138,6 +142,13 @@ class RainMoveServerConf(object):
         return self._MoveClientcertfile
     def getMoveClientKeyFile(self): 
         return self._MoveClientkeyfile
+    
+    def getMoveDbAddress(self):
+        return self._Movedbaddress
+    def getMoveDbPort(self):
+        return self._Movedbport
+    def getMoveDbName(self):
+        return self._Movedbname
     
     def getMoveRemoteSiteAddress(self):
         return self._MoveRemoteSiteAddress
@@ -278,6 +289,22 @@ class RainMoveServerConf(object):
         if not os.path.isfile(self._MoveClientkeyfile):
             print "Error: Clientkeyfile file not found in "  + self._MoveClientkeyfile 
             sys.exit(1)
+        try:
+            self._Movedbaddress = self._config.get(section, 'dbaddress', 0)
+        except ConfigParser.NoOptionError:
+            print "Error: No dbaddress option found in section " + section + " file " + self._configfile
+            sys.exit(1)            
+        try:
+            self._Movedbport = int(self._config.get(section, 'dbport', 0))
+        except ConfigParser.NoOptionError:
+            print "Error: No dbport option found in section " + section + " file " + self._configfile
+            sys.exit(1)
+        try:
+            self._Movedbname = self._config.get(section, 'dbname', 0)
+        except ConfigParser.NoOptionError:
+            print "Error: No dbname option found in section " + section + " file " + self._configfile
+            sys.exit(1)    
+        
 
     def load_moveServerConfigCheckProtected(self):        
         section = "RainMoveServer"

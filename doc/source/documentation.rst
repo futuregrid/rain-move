@@ -37,7 +37,8 @@ In this section you will find information on software deployment details.
     :maxdepth: 2
     
     install
-    configure_futuregrid   
+    configure_futuregrid
+    install_mongo  
     config_ref_index
     modules_india
     build_doc

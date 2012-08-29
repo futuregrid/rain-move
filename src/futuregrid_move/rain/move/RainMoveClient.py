@@ -294,16 +294,22 @@ def main():
         elif args.add != None:
             if len(args.add) < 2:
                 print "ERROR: you need to specify at least two arguments: nodeId and serviceId"
+            elif len(args.add)!=len(set(args.add)):
+                print "ERROR: There is duplicates in the list of nodes. Please, make sure that the list is unique"
             else:
                 print rainmoveclient.service(args.user, passwd, args.subparser_name, "add", args.add, args.force)            
         elif args.remove != None:
             if len(args.remove) < 2:
                 print "ERROR: you need to specify at least two arguments: nodeId and serviceId"
+            elif len(args.remove)!=len(set(args.remove)):
+                print "ERROR: There is duplicates in the list of nodes. Please, make sure that the list is unique"
             else:
                 print rainmoveclient.service(args.user, passwd, args.subparser_name, "remove", args.remove, args.force)
         elif args.move != None:
             if len(args.move) < 3:
                 print "ERROR: you need to specify at least three arguments: nodeId serviceIdorigin serviceIddestination"
+            elif len(args.move)!=len(set(args.move)):
+                print "ERROR: There is duplicates in the list of nodes. Please, make sure that the list is unique"
             else:
                 print rainmoveclient.service(args.user, passwd, args.subparser_name, "move", args.move, args.force)
         elif args.info != None:
