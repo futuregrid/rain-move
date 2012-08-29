@@ -29,7 +29,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FutureGrid 0.1 documentation" href="index.html" />
     <link rel="up" title="FG Move Documentation" href="documentation.html" />
-    <link rel="next" title="Configuration file reference" href="config_ref_index.html" />
+    <link rel="next" title="Deployment of MongoDB" href="install_mongo.html" />
     <link rel="prev" title="Installing FutureGrid Move" href="install.html" /> 
   </head>
   <body>
@@ -66,7 +66,7 @@ body {
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="config_ref_index.html" title="Configuration file reference"
+          <a href="install_mongo.html" title="Deployment of MongoDB"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="install.html" title="Installing FutureGrid Move"
@@ -113,8 +113,8 @@ body {
   <p class="topless"><a href="install.html"
                         title="previous chapter">Installing FutureGrid Move</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="config_ref_index.html"
-                        title="next chapter">Configuration file reference</a></p>
+  <p class="topless"><a href="install_mongo.html"
+                        title="next chapter">Deployment of MongoDB</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/configure_futuregrid.txt"
@@ -269,9 +269,13 @@ i02.india
 </div>
 </div></blockquote>
 </div></blockquote>
-<p>This server requires to have <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> installed in the same
-machine (see <a class="reference external" href="http://futuregrid.github.com/teefaa/documentation.html">Teefaa Documentation</a>).</p>
-<p>Once everything is set up (including Teefaa), you can start the server executing <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
+<p><strong>Requirements</strong></p>
+<ul class="simple">
+<li>Install <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a>  in the same
+machine (see <a class="reference external" href="http://futuregrid.github.com/teefaa/documentation.html">Teefaa Documentation</a>).</li>
+<li>Install MongoDB (see <em class="xref std std-ref">Mongo</em>) and pymongo on the machine (see <a class="reference internal" href="install_mongo.html#pymongo"><em>MongoDB Deployment</em></a>).</li>
+</ul>
+<p>Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the server executing <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">We recommend to have a system user that run all the servers (i.e. imageman). In this way, it will be easier to manage the sudoers file when necessary.</p>
@@ -301,8 +305,8 @@ use this service (see <a class="reference internal" href="#move-config"><em>Rain
 <h3>FG Move Check List<a class="headerlink" href="#fg-move-check-list" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
-<col width="15%" />
-<col width="56%" />
+<col width="14%" />
+<col width="57%" />
 <col width="29%" />
 </colgroup>
 <thead valign="bottom">
@@ -315,6 +319,7 @@ use this service (see <a class="reference internal" href="#move-config"><em>Rain
 <tr class="row-even"><td><strong>Requirement</strong></td>
 <td><ul class="first last simple">
 <li>Teefaa installed and configured in the same machine</li>
+<li>MongoDB and Pymongo installed and configured in the same machine</li>
 </ul>
 </td>
 <td>&nbsp;</td>
@@ -502,7 +507,7 @@ imageman <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="config_ref_index.html" title="Configuration file reference"
+          <a href="install_mongo.html" title="Deployment of MongoDB"
              >next</a> |</li>
         <li class="right" >
           <a href="install.html" title="Installing FutureGrid Move"

@@ -148,16 +148,21 @@ label **CLUSTER:** followed by the name of the cluster.
       i02.india
 
 
+**Requirements**
 
-This server requires to have `Teefaa <http://futuregrid.github.com/teefaa/>`_ installed in the same 
-machine (see `Teefaa Documentation <http://futuregrid.github.com/teefaa/documentation.html>`_).
+* Install `Teefaa <http://futuregrid.github.com/teefaa/>`_  in the same 
+  machine (see `Teefaa Documentation <http://futuregrid.github.com/teefaa/documentation.html>`_).
+   
+* Install MongoDB (see :ref:`Mongo <mongodb>`) and pymongo on the machine (see :ref:`MongoDB Deployment <pymongo>`).
 
-Once everything is set up (including Teefaa), you can start the server executing ``RainMoveServer.py -l <inventoryfile>`` as ``imageman`` user.
+Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the server executing ``RainMoveServer.py -l <inventoryfile>`` as ``imageman`` user.
 
 .. note::
    We recommend to have a system user that run all the servers (i.e. imageman). In this way, it will be easier to manage the sudoers file when necessary. 
 
 .. _move_client_conf:
+
+
 
 Client Side
 ***********
@@ -187,17 +192,18 @@ The executable file of this client is ``fg-move``. More information about how to
 FG Move Check List
 ******************
 
-+-----------------+-----------------------------------------------------------------+----------------------------------+
-|                 | Server Side (``fg-server.conf``)                                | Client Side (``fg-client.conf``) |
-+=================+=================================================================+==================================+
-| **Requirement** | - Teefaa installed and configured in the same machine           |                                  |
-+-----------------+-----------------------------------------------------------------+----------------------------------+
-| **Configure**   | - ``[RainMoveServer]`` section                                  | - ``[RainMove]`` section         |
-|                 | - ``[LDAP]`` section                                            |                                  |
-|                 | - Move Site controllers sections ``Move-<service>-<serviceID>`` |                                  |
-+-----------------+-----------------------------------------------------------------+----------------------------------+
-| **Executables** | - ``RainMoveServer.py``                                         | - ``fg-move``                    |
-+-----------------+-----------------------------------------------------------------+----------------------------------+
++-----------------+--------------------------------------------------------------------+----------------------------------+
+|                 | Server Side (``fg-server.conf``)                                   | Client Side (``fg-client.conf``) |
++=================+====================================================================+==================================+
+| **Requirement** | - Teefaa installed and configured in the same machine              |                                  |
+|                 | - MongoDB and Pymongo installed and configured in the same machine |                                  |
++-----------------+--------------------------------------------------------------------+----------------------------------+
+| **Configure**   | - ``[RainMoveServer]`` section                                     | - ``[RainMove]`` section         |
+|                 | - ``[LDAP]`` section                                               |                                  |
+|                 | - Move Site controllers sections ``Move-<service>-<serviceID>``    |                                  |
++-----------------+--------------------------------------------------------------------+----------------------------------+
+| **Executables** | - ``RainMoveServer.py``                                            | - ``fg-move``                    |
++-----------------+--------------------------------------------------------------------+----------------------------------+
 
 
 .. _move_sites_server:

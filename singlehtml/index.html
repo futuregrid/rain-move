@@ -757,9 +757,13 @@ i02.india
 </div>
 </div></blockquote>
 </div></blockquote>
-<p>This server requires to have <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a> installed in the same
-machine (see <a class="reference external" href="http://futuregrid.github.com/teefaa/documentation.html">Teefaa Documentation</a>).</p>
-<p>Once everything is set up (including Teefaa), you can start the server executing <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
+<p><strong>Requirements</strong></p>
+<ul class="simple">
+<li>Install <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a>  in the same
+machine (see <a class="reference external" href="http://futuregrid.github.com/teefaa/documentation.html">Teefaa Documentation</a>).</li>
+<li>Install MongoDB (see <em class="xref std std-ref">Mongo</em>) and pymongo on the machine (see <a class="reference internal" href="index.html#pymongo"><em>MongoDB Deployment</em></a>).</li>
+</ul>
+<p>Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the server executing <tt class="docutils literal"><span class="pre">RainMoveServer.py</span> <span class="pre">-l</span> <span class="pre">&lt;inventoryfile&gt;</span></tt> as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">We recommend to have a system user that run all the servers (i.e. imageman). In this way, it will be easier to manage the sudoers file when necessary.</p>
@@ -789,8 +793,8 @@ use this service (see <a class="reference internal" href="index.html#move-config
 <h6>FG Move Check List<a class="headerlink" href="#fg-move-check-list" title="Permalink to this headline">¶</a></h6>
 <table border="1" class="docutils">
 <colgroup>
-<col width="15%" />
-<col width="56%" />
+<col width="14%" />
+<col width="57%" />
 <col width="29%" />
 </colgroup>
 <thead valign="bottom">
@@ -803,6 +807,7 @@ use this service (see <a class="reference internal" href="index.html#move-config
 <tr class="row-even"><td><strong>Requirement</strong></td>
 <td><ul class="first last simple">
 <li>Teefaa installed and configured in the same machine</li>
+<li>MongoDB and Pymongo installed and configured in the same machine</li>
 </ul>
 </td>
 <td>&nbsp;</td>
@@ -958,6 +963,77 @@ imageman <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">
 </tbody>
 </table>
 </div>
+</div>
+</div>
+<span id="document-install_mongo"></span><div class="section" id="deployment-of-mongodb">
+<span id="chap-install-mongodb"></span><h4>Deployment of MongoDB<a class="headerlink" href="#deployment-of-mongodb" title="Permalink to this headline">¶</a></h4>
+<p>In this section we are going to explain how to install a single MongoDB service. More information can be found in <a class="reference external" href="http://www.mongodb.org/">MongoDB</a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In MongoDB the databases and tables are created automatically</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">MongoDB is case sensitive</p>
+</div>
+<div class="section" id="install-mongodb">
+<span id="id1"></span><h5>Install MongoDB<a class="headerlink" href="#install-mongodb" title="Permalink to this headline">¶</a></h5>
+<ul>
+<li><p class="first">Download the package file for you specific distribution. They can be found in <a class="reference external" href="http://www.mongodb.org/downloads">http://www.mongodb.org/downloads</a>.</p>
+</li>
+<li><p class="first">Uncompress the file.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>tar cvfz &lt;filename&gt;
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Create DB directory</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>sudo mkdir -p /data/db/
+sudo chown <span class="sb">`</span>id -u<span class="sb">`</span> /data/db     <span class="c">#The owner must be the user that is going to execute mongodb server</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Run MongoDB</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>mongod --port 23000 --dbpath /data/db/ --fork --logpath<span class="o">=</span>/data/db/mongo.log
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Test MongoDB using the client.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>mongo --port 23000
+
+&gt; db.foo.save <span class="o">(</span> <span class="o">{</span>a:1<span class="o">}</span> <span class="o">)</span>
+&gt; db.foo.find <span class="o">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="install-pymongo">
+<span id="pymongo"></span><h5>Install pymongo<a class="headerlink" href="#install-pymongo" title="Permalink to this headline">¶</a></h5>
+<p>The latest documentation can be found in <a class="reference external" href="http://api.mongodb.org/python/2.3rc1/installation.html">http://api.mongodb.org/python/2.3rc1/installation.html</a>.</p>
+<ul>
+<li><p class="first">Install with pip</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>pip install pymongo
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Install with easy_install</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>easy_install install pymongo
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
 </div>
 </div>
 <span id="document-config_ref_index"></span><div class="section" id="configuration-file-reference">
