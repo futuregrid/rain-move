@@ -114,9 +114,11 @@ Next we need to create sections for each one of the FG Move controllers (see :re
 
    Make sure that ``port`` and ``address`` matches with those used by the Move controllers (see :ref:`Move Site Server <move_sites_server>`).
 
-We also have to create an inventory file that will describe the nodes, clusters and services. This file will be read by the RainMoveServer
-during its initialization. The inventory will be automatically stored in a MongoDB database and this file will not be needed anymore. 
-The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the **CLUSTER:** label followed 
+We can also create an inventory file to initialize our database. This file will describe the nodes, clusters and services. This file will be 
+read by the RainMoveServer during its initialization (first time it is executed). The inventory information will be automatically stored in a 
+MongoDB database. Therefore, this inventory file will not be needed anymore. 
+
+In the inventory file, the nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the **CLUSTER:** label followed 
 by the name of the cluster. We also have services that contain the Id of the nodes that are allocated to each service. Services are defined
 with the **SERVICE** label, the type of service (**OPENSTACK**, **NIMBUS**, **EUCALYPTUS**, **HPC**).
 
@@ -158,7 +160,7 @@ with the **SERVICE** label, the type of service (**OPENSTACK**, **NIMBUS**, **EU
 * Install `Teefaa <http://futuregrid.github.com/teefaa/>`_  in the same 
   machine (see `Teefaa Documentation <http://futuregrid.github.com/teefaa/documentation.html>`_).
    
-* Install MongoDB (see :ref:`Mongo <mongodb>`) and pymongo on the machine (see :ref:`MongoDB Deployment <pymongo>`).
+* Install MongoDB and pymongo on the machine (see :ref:`MongoDB Deployment <pymongo>`).
 
 Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the fg-move server as ``imageman`` user.
 

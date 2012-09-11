@@ -17,7 +17,7 @@ Login on India and use the module functionality to load the environment variable
       $ module load futuregrid
 
 .. note::
-   FG Move is only available for administrators.
+   FG Move is only available for **administrators**.
 
 
 The authentication is done via FutureGrid Ldap server. Thus, in each command we need to specify our FutureGrid username and we 
@@ -36,7 +36,7 @@ Using FG Move
 
 The command line of this service is organized in three specialized subparsers.
 
-* **node**. A node is the representation of a physical machine. This subparses exposes the functionality to operate with them.
+* **node**. A node is the representation of a physical machine. This subparser exposes the functionality to operate with them.
 
 * **cluster**. A cluster is a set of nodes identified by a name (representation of a physical cluster). This subparser exposes the 
   functionality to operate with them.
@@ -59,7 +59,7 @@ Operating with Clusters
 
     fg-move -u jdiaz cluster --list
     
-* List information of a particular cluster
+* List information about a particular cluster
 
   ::
 
@@ -79,7 +79,7 @@ Operating with Nodes
 
   ::
 
-    fg-move -u jdiaz cluster --info i90.india
+    fg-move -u jdiaz node --info i90.india
 
 Operating with Services
 +++++++++++++++++++++++
@@ -96,7 +96,7 @@ Operating with Services
 
     fg-move -u jdiaz service --list
 
-* List information of a particular service.
+* List information about a particular service.
 
   ::
 

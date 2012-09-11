@@ -146,7 +146,7 @@ $ module load futuregrid</pre>
 </div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">FG Move is only available for administrators.</p>
+<p class="last">FG Move is only available for <strong>administrators</strong>.</p>
 </div>
 <p>The authentication is done via FutureGrid Ldap server. Thus, in each command we need to specify our FutureGrid username and we
 will be asked for our portal password. After the user is successfully authenticated against the Ldap server, it is verified if that user
@@ -164,7 +164,7 @@ is authorized to use the FG Move service.</p>
 <h2>Using FG Move<a class="headerlink" href="#using-fg-move" title="Permalink to this headline">¶</a></h2>
 <p>The command line of this service is organized in three specialized subparsers.</p>
 <ul class="simple">
-<li><strong>node</strong>. A node is the representation of a physical machine. This subparses exposes the functionality to operate with them.</li>
+<li><strong>node</strong>. A node is the representation of a physical machine. This subparser exposes the functionality to operate with them.</li>
 <li><strong>cluster</strong>. A cluster is a set of nodes identified by a name (representation of a physical cluster). This subparser exposes the
 functionality to operate with them.</li>
 <li><strong>service</strong>. A service is the representation of an infrastructure, which is composed by nodes. It exposes the functionality to move
@@ -181,7 +181,7 @@ physical machines from one infrastructure to another.</li>
 <div class="highlight-python"><pre>fg-move -u jdiaz cluster --list</pre>
 </div>
 </li>
-<li><p class="first">List information of a particular cluster</p>
+<li><p class="first">List information about a particular cluster</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz cluster --list Indiana</pre>
 </div>
 </li>
@@ -196,7 +196,7 @@ IP and cluster ID.</p>
 </div>
 </li>
 <li><p class="first">List information of a particular node.</p>
-<div class="highlight-python"><pre>fg-move -u jdiaz cluster --info i90.india</pre>
+<div class="highlight-python"><pre>fg-move -u jdiaz node --info i90.india</pre>
 </div>
 </li>
 </ul>
@@ -212,7 +212,7 @@ IP and cluster ID.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --list</pre>
 </div>
 </li>
-<li><p class="first">List information of a particular service.</p>
+<li><p class="first">List information about a particular service.</p>
 <div class="highlight-python"><pre>fg-move -u jdiaz service --list IndianaOpenStack</pre>
 </div>
 </li>

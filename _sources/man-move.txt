@@ -64,7 +64,7 @@ Examples
 
   ::
 
-    fg-move -u jdiaz cluster --info i90.india
+    fg-move -u jdiaz node --info i90.india
 
 
 Cluster subparser
@@ -107,7 +107,7 @@ Examples
 
     fg-move -u jdiaz cluster --list
     
-* List information of a particular cluster
+* List information about a particular cluster
 
   ::
 
@@ -164,7 +164,7 @@ Examples
 
     fg-move -u jdiaz service --list
 
-* List information of a particular service.
+* List information about a particular service.
 
   ::
 

@@ -7,10 +7,9 @@ Deployment of MongoDB
 In this section we are going to explain how to install a single MongoDB service. More information can be found in `MongoDB <http://www.mongodb.org/>`_
 
 .. note::
-      In MongoDB the databases and tables are created automatically
+      In MongoDB the databases and tables are created automatically.
       
-.. note::
-      MongoDB is case sensitive
+      Remember that MongoDB is case sensitive.
 
 .. _mongodb:
 

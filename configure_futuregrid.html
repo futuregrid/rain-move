@@ -237,9 +237,10 @@ from the infrastructure.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">Make sure that <tt class="docutils literal"><span class="pre">port</span></tt> and <tt class="docutils literal"><span class="pre">address</span></tt> matches with those used by the Move controllers (see <a class="reference internal" href="#move-sites-server"><em>Move Site Server</em></a>).</p>
 </div>
-<p>We also have to create an inventory file that will describe the nodes, clusters and services. This file will be read by the RainMoveServer
-during its initialization. The inventory will be automatically stored in a MongoDB database and this file will not be needed anymore.
-The nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the <strong>CLUSTER:</strong> label followed
+<p>We can also create an inventory file to initialize our database. This file will describe the nodes, clusters and services. This file will be
+read by the RainMoveServer during its initialization (first time it is executed). The inventory information will be automatically stored in a
+MongoDB database. Therefore, this inventory file will not be needed anymore.</p>
+<p>In the inventory file, the nodes are defined by its Id, hostname and IP. They have to be part of a cluster, which is defined by the <strong>CLUSTER:</strong> label followed
 by the name of the cluster. We also have services that contain the Id of the nodes that are allocated to each service. Services are defined
 with the <strong>SERVICE</strong> label, the type of service (<strong>OPENSTACK</strong>, <strong>NIMBUS</strong>, <strong>EUCALYPTUS</strong>, <strong>HPC</strong>).</p>
 <blockquote>
@@ -278,7 +279,7 @@ i02.india
 <ul class="simple">
 <li>Install <a class="reference external" href="http://futuregrid.github.com/teefaa/">Teefaa</a>  in the same
 machine (see <a class="reference external" href="http://futuregrid.github.com/teefaa/documentation.html">Teefaa Documentation</a>).</li>
-<li>Install MongoDB (see <em class="xref std std-ref">Mongo</em>) and pymongo on the machine (see <a class="reference internal" href="install_mongo.html#pymongo"><em>MongoDB Deployment</em></a>).</li>
+<li>Install MongoDB and pymongo on the machine (see <a class="reference internal" href="install_mongo.html#pymongo"><em>MongoDB Deployment</em></a>).</li>
 </ul>
 <p>Once everything is set up (including Teefaa, MongoDB and pymongo), you can start the fg-move server as <tt class="docutils literal"><span class="pre">imageman</span></tt> user.</p>
 <ul class="simple">
