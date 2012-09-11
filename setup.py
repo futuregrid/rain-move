@@ -51,7 +51,7 @@ setup(
         'src/futuregrid_move/rain/move/RainMoveServerSites.py',
         'src/futuregrid_move/rain/move/fg-move',
         ],
-    install_requires = ['setuptools','argparse', 'python-ldap'],
+    install_requires = ['setuptools','argparse', 'python-ldap', 'boto'],
     zip_safe = False,
     include_package_date=True
     )
