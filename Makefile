@@ -14,8 +14,6 @@ all:
 	git reset -- src
 	git reset -- .project .pydevproject .settings
 	git commit -a -m "updating the github pages"
-	git commit -a _sources
-	git commit -a _static
 	git push
 	git checkout master
 	rm -rf /tmp/vc
