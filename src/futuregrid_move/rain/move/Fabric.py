@@ -9,7 +9,7 @@ __version__ = '0.1'
 
 import pymongo
 from pymongo import Connection
-from pymongo.objectid import ObjectId
+from bson import ObjectId
   
 import abc
 import json
