@@ -24,7 +24,8 @@ from futuregrid_move.rain.move.OpenStackService import OpenStackService
 from futuregrid_move.rain.move.NimbusService import NimbusService
 from futuregrid_move.rain.move.HPCService import HPCService
 
-from teefaa.teefaa import Teefaa
+#from teefaa.teefaa import Teefaa
+from teefaa.api import baremetal_provisioning
 
 class Inventory(object):
     '''Abstract base class that defines inventory for a fabric.
@@ -294,7 +295,7 @@ class Fabric(object):
         self._clusters={}
         self._services={}
         
-        self.teefaaobj=Teefaa() #default config file (fg-server.conf) and no verbose
+        #self.teefaaobj=Teefaa() #default config file (fg-server.conf) and no verbose
         
         self.update(nodes, clusters, services)
     
@@ -337,7 +338,7 @@ class Fabric(object):
             if aservice.load_config(self._moveConf):  # Load configuration to contact remote sites
                 aservice.setLogger(self.logger)  # include log descriptor
                 aservice.setVerbose(self.verbose)  # enable print on the screen
-                aservice.setTeefaa(self.teefaaobj)
+                #aservice.setTeefaa(self.teefaaobj)
             else:
                 msg = "Loading configuration of the Service " + str(aservice.identifier) + ". The service will not be included. " + \
                                   " Please add service configuration in the fg-server.conf file under a section called Move-<service>-<site> (i.e. Move-eucalyptus-sierra)"
@@ -387,7 +388,7 @@ class Fabric(object):
             if aservice.load_config(self._moveConf):  # Load configuration to contact remote sites
                 aservice.setLogger(self.logger)  # include log descriptor
                 aservice.setVerbose(self.verbose)  # enable print on the screen
-                aservice.setTeefaa(self.teefaaobj)
+                #aservice.setTeefaa(self.teefaaobj)
             else:
                 msg = "Loading configuration of the Service " + str(aservice.identifier) + ". The service will not be included. " + \
                                   " Please add service configuration in the fg-server.conf file under a section called Move-<service>-<site> (i.e. Move-eucalyptus-sierra)"
@@ -462,7 +463,7 @@ class Fabric(object):
         if service.load_config(self._moveConf):  # Load configuration to contact remote sites
             service.setLogger(self.logger)  # include log descriptor
             service.setVerbose(self.verbose)  # enable print on the screen
-            service.setTeefaa(self.teefaaobj)
+            #service.setTeefaa(self.teefaaobj)
             self._services[service.identifier]=service
             
             try:

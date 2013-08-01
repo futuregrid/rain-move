@@ -17,7 +17,9 @@ import re
 
 from futuregrid_move.rain.move.RainMoveServerConf import RainMoveServerConf
 
-from teefaa.teefaa import Teefaa
+#from teefaa.teefaa import Teefaa
+from teefaa.api import baremetal_provisioning
+TFIMAGES = {"eucalyptus":"euca", "openstack":"openstack", "hpc":"hpc"}
 
 class Resource(object):
     '''Abstract base class for Resource'''
@@ -232,10 +234,10 @@ class Service(object):
         self._port = None
         self.logger = None
         self.verbose = True
-        self.teefaaobj = None
+        #self.teefaaobj = None
     
-    def setTeefaa(self, teefaaobj):
-        self.teefaaobj = teefaaobj
+    #def setTeefaa(self, teefaaobj):
+    #    self.teefaaobj = teefaaobj
         
     def setLogger(self, log):
         self.logger = log
@@ -531,8 +533,10 @@ class Service(object):
         if self.verbose:
             print msg
             
-        status = self.teefaaobj.provision(ares.name, self._id, ares.cluster)        
-        
+        #status = self.teefaaobj.provision(ares.name, self._id, ares.cluster)
+        tfimage = "%s_%s_v1" % ( ares.cluster.lower(), TFIMAGES[self._type.lower()] )
+	self.logger.debug("Ready to provisiong image '%s' on node '%s'" % (tfimage, ares.name) )
+        status = baremetal_provisioning(ares.name, tfimage)
         if status != 'OK':
             self.logger.error(status)
             if self.verbose:
