@@ -255,7 +255,7 @@ def main():
         sys.exit(1)
     
     passwordInput = args.password
-    if passwordInput = None:
+    if passwordInput == None:
         print "Please insert the password for the user " + args.user + ""
         passwordInput = getpass()
         
