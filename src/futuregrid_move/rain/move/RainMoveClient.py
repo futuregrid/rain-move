@@ -206,6 +206,7 @@ def main():
     parser = argparse.ArgumentParser(prog="fg-move", formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description="FutureGrid Move Help ")    
     parser.add_argument('-u', '--user', dest='user', required=True, metavar='user', help='FutureGrid User name.')
+    parser.add_argument('-p', '--password', dest='password', required=False, metavar='password', help='FutureGrid Password for the user.')
     
     subparsers = parser.add_subparsers(dest='subparser_name', help='Positional arguments group different options that can be' 
                                        ' displayed by specifying <positional_argument> -h')
@@ -252,11 +253,14 @@ def main():
     if not rainmoveclient.connection():
         print "ERROR: Connection with the server failed"
         sys.exit(1)
-
     
-    print "Please insert the password for the user " + args.user + ""
+    passwordInput = args.password
+    if passwordInput = None:
+        print "Please insert the password for the user " + args.user + ""
+        passwordInput = getpass()
+        
     m = hashlib.md5()
-    m.update(getpass())
+    m.update(passwordInput)
     passwd = m.hexdigest()
     
     if (args.subparser_name == 'cluster'):
